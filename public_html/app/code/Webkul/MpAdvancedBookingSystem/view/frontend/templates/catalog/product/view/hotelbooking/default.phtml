@@ -1,0 +1,286 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$customerHelper = $viewModel->getCustomerHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+$bookedHotelDates = $helper->getBookedHotelDates($product);
+$availableHotelDates = $helper->getAvailableHotelDates($product);
+
+$options = $helper->getProductOptions();
+$optionsJson = $helper->getJsonEcodedString($options);
+$bookingInfo = $helper->getBookingInfo($productId);
+$bookingSlotData = $helper->getJsonDecodedString($bookingInfo['info']);
+$bookingAvailableFrom = date('d M, Y');
+
+$configBlock = $block->getLayout()->createBlock(
+    \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable::class
+);
+$_attributes = $configBlock->decorateArray($configBlock->getAllowAttributes());
+$bookingCustomOptions = $helper->getHotelbookingOptions($product);
+$bookingDateOptions = $helper->getHotelBookingDateOptions($product);
+$bookingFromDate = $bookingToDate = "";
+if (!empty($bookingDateOptions)) {
+    foreach ($bookingDateOptions as $optionId => $optionValues) {
+        if ($optionValues['title'] == "Booking From") {
+            $bookingFromDate = "options[".$optionId."]";
+        } elseif ($optionValues['title'] == "Booking Till") {
+            $bookingToDate = "options[".$optionId."]";
+        }
+    }
+}
+$allowedAdults = $product['max_adults'];
+$priceChargedPer = "";
+if ($product['price_charged_per_hotel'] && $product['price_charged_per_hotel']==1) {
+    $priceChargedPer = __("Night");
+}
+$configurableOptLabels = [];
+$i = 1;
+$stateName = $helper->getRegionName($product['hotel_state'], $product['hotel_country']);
+$formattedAddress = $product['hotel_address'] . ", " . $product['location']
+                    . "<br>" . $stateName . ", " . $product['hotel_country'];
+$formattedAddressForGoogleMap = "//maps.google.com/maps?q=";
+if ($product['hotel_address']) {
+    $formattedAddressForGoogleMap .= $product['hotel_address'];
+}
+if ($product['location']) {
+    $formattedAddressForGoogleMap .= ", " . $product['location'];
+}
+if ($stateName) {
+    $formattedAddressForGoogleMap .= ", " . $stateName;
+}
+if ($product['hotel_country']) {
+    $formattedAddressForGoogleMap .= ", " . $product['hotel_country'];
+}
+?>
+<div class="wk-bk-design">
+    <div class="wk-bk-detail-container" style="padding-bottom: 20px;">
+        <div class="wk-bk-block">
+            <div class="wk-bk-addr-title">
+                <?= /* @noEscape */ __('Location') ?>:
+            </div>
+            <div class="wk-bk-addr-right">
+                <div>
+                    <?= /* @noEscape */ $formattedAddress ?>
+                </div>
+                <?php if ($product['show_map_loction']) { ?>
+                <div>
+                    <a href="<?= /* @noEscape */ $formattedAddressForGoogleMap ?>" 
+                        class="wk-bk-location-link" target="blank">
+                        <?= /* @noEscape */ __('View on Map') ?>
+                    </a>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php if (!$product['show_contact_button_to'] || $customerHelper->isCustomerLoggedIn()) { ?>
+            <div class="wk-bk-block wk-bk-padding-block">
+                <div class="wk-bk-contact-title">
+                    <?= /* @noEscape */ __('Contact Info') ?>:
+                </div>
+                <div class="wk-bk-addr-right">
+                    <a id="wk-bk-contact-us"><?= /* @noEscape */ __('Contact Us') ?></a>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+    <?php if ($product['check_in_time']): ?>
+        <br>
+        <div class="wk-bk-block">
+            <div class="wk-bk-addr-title time-clock">
+                <?= /* @noEscape */ __('Check In') ?>:
+            </div>
+            <div class="wk-bk-addr-right">
+                <div>
+                    <?= /* @noEscape */ $product['check_in_time'] ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+    <?php if ($product['check_out_time']): ?>
+        <br>
+        <div class="wk-bk-block">
+            <div class="wk-bk-addr-title time-clock">
+                <?= /* @noEscape */ __('Check Out') ?>:
+            </div>
+            <div class="wk-bk-addr-right">
+                <div>
+                    <?= /* @noEscape */ $product['check_out_time'] ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+    <div class="wk-bk-dates-container">
+        <h3>
+            <?= /* @noEscape */  __('Book a Room')?>
+        </h3>
+        <?php if ($product->isSaleable() && count($_attributes)):?>
+            <?php foreach ($_attributes as $_attribute): ?>
+                <div class="wk-bk-hotel-attr-container">
+                    <label class="label hotel-super-attr-label hotel-attr-labels" 
+                        for="hotel-attribute<?= /* @noEscape */ $_attribute->getAttributeId() ?>">
+                        <?php $configurableOptLabels[] =
+                            $block->escapeHtml($_attribute->getProductAttribute()->getStoreLabel()); ?>
+                        <span><?= $block->escapeHtml($_attribute->getProductAttribute()->getStoreLabel()) ?></span>
+                    </label>
+                    <div class="hotel-super-attribute-select" 
+                        id="hotel-attribute<?= /* @noEscape */ $_attribute->getAttributeId() ?>" 
+                        data-supername="super_attribute[<?= /* @noEscape */ $_attribute->getAttributeId() ?>]" 
+                        data-position="<?= /* @noEscape */ $i++; ?>">
+                        <?php foreach ($_attribute->getOptions() as $option): ?>
+                            <div id="<?= /* @noEscape */ $option['value_index'] ?>" class="room-config-types">
+                                <?= /* @noEscape */ $option['store_label'] ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        <div id="date_range">
+            <div class="wk-bk-dates-left-container checkin">
+                <div class="hotel-attr-labels">
+                    <span><?= /* @noEscape */ __('Check-In Date')?></span>
+                </div>
+                <input type="text" name="<?= /* @noEscape */ $bookingFromDate ?>" 
+                    class="required-entry input-text wk-bk-hotel-datetype" 
+                    id="wk-bk-select-date-from" 
+                    value="<?= /* @noEscape */ $bookingAvailableFrom?>" 
+                    placeholder="<?= /* @noEscape */ date("d M, Y", strtotime($bookingAvailableFrom)) ?>" 
+                    readonly />
+                <label for="wk-bk-select-date-from" class="wk-bk-hotel-select-date-label"></label>
+            </div>
+            <div class="date_from_advice"></div>
+            <div class="wk-bk-dates-left-container checkout">
+                <div class="hotel-attr-labels">
+                    <span><?= /* @noEscape */ __('Check-Out Date')?></span>
+                </div>
+                <input type="text" name="<?= /* @noEscape */ $bookingToDate ?>" 
+                    class="required-entry input-text wk-bk-hotel-datetype" 
+                    id="wk-bk-select-date-to" value="" 
+                    placeholder="<?= /* @noEscape */ date("d M, Y", strtotime($bookingAvailableFrom)) ?>" 
+                    readonly/>
+                <label for="wk-bk-select-date-to" class="wk-bk-hotel-select-date-label"></label>
+            </div>
+        </div>
+    </div>
+    <?php
+    if (!empty($bookingCustomOptions)) { ?>
+        <div class="wk-bk-hotel-options">
+            <div id="wk-bk-optionqty" class="wk-hotel-options">
+                <label class="hotel-attr-labels">
+                    <?= /* @noEscape */ __("Rooms")?>
+                </label>
+                <div class="hotel-number-quantity">
+                    <div class="quantity-nav">
+                            <div class="quantity-button quantity-up">+</div>
+                            <div class="quantity-button quantity-down">-</div>
+                    </div>
+                    <input type="number" name="qty" 
+                        id="qty" 
+                        class="input-text product-custom-option validate-number 
+                            hotel-number-field no-of-rooms validate-greater-than-zero" 
+                        data-validate='{"required":true, "validate-digits": true}' 
+                        value="" 
+                        aria-required="true" 
+                        step="1" min="1" />
+                </div>
+            </div>
+            <?php foreach ($bookingCustomOptions as $optionId => $optionValues) { ?>
+                <div id="wk-bk-option<?= /* @noEscape */ $optionId?>" class="wk-hotel-options">
+                    <label class="hotel-attr-labels">
+                        <?= /* @noEscape */ $optionValues['title']?>
+                    </label>
+                    <div class="hotel-number-quantity">
+                        <div class="quantity-nav">
+                                <div class="quantity-button quantity-up">+</div>
+                                <div class="quantity-button quantity-down">-</div>
+                        </div>
+                        <input id="options_<?= /* @noEscape */ $optionId ?>_text"
+                            class="input-text product-custom-option validate-number hotel-number-field validate-digits "
+                            <?php if ($optionValues['title'] !== "Kids") { ?> 
+                                data-validate='{"required":true, "validate-digits": true}' 
+                            <?php } ?>
+                            name="options[<?= /* @noEscape */ $optionId ?>]"
+                            data-selector="options[<?= /* @noEscape */ $optionId ?>]"
+                            value=""
+                            aria-required="true"
+                            type="number"
+                            <?php if ($optionValues['title'] !== "Kids" && $allowedAdults > 0) { ?>
+                                max="<?= /** @escapeNotVerified */ $allowedAdults ?>"
+                            <?php } ?>
+                            <?php if ($optionValues['title'] == "Kids") { ?>
+                                min="0" 
+                            <?php } else { ?>
+                                min="1" 
+                            <?php } ?>/>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+        <?php
+    } ?>
+</div>
+
+<?php
+$jsData = [
+    'optionsJson' => $optionsJson,
+    'titleClosed' => __('Closed'),
+    "priceRangeText" => "",
+    "productId"=> $productId,
+    "product_type"=> "hotelbooking",
+    "required_config_text" => "",
+    "bookedDates" => $helper->getJsonEcodedString($bookedHotelDates),
+    "availableDates" => $helper->getJsonEcodedString($availableHotelDates)
+];
+$catalogProduct = [
+    "productId"=> $productId,
+    "product_type"=> "hotelbooking"
+];
+if ($priceChargedPer && $priceChargedPer!=="") {
+    $jsData['priceRangeText'] = __('Charged Per %1', $priceChargedPer);
+}
+if (count($configurableOptLabels)>0) {
+    $configurableOptLabels = implode(", ", $configurableOptLabels);
+    $jsData['required_config_text'] = __(
+        "Please select %1's %2",
+        $product->getName(),
+        $configurableOptLabels
+    );
+}
+$encodedJsData = $viewModel->getJsonEncoded($jsData);
+$encodedCatalogJsData = $viewModel->getJsonEncoded($catalogProduct);
+?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Webkul_MpAdvancedBookingSystem/js/validate-product": <?= /* @noEscape */ $encodedCatalogJsData; ?>
+        },
+        "body": {
+            "hotelbooking": <?= /* @noEscape */ $encodedJsData; ?>
+        }
+    }
+</script>
+<script>
+    require([
+        "jquery"
+    ], function($) {
+        $('body').trigger('contentUpdated');
+    });
+</script>

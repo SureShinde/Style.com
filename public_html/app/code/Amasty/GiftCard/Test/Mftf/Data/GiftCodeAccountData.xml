@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <!--default gift code account data-->
+    <entity name="defaultGiftCodeAccount" type="giftCodeAccount">
+        <data key="image">1</data>
+        <data key="website">1</data>
+        <data key="websiteTitle">Main Website</data>
+        <data key="status">1</data>
+        <data key="statusTitle">Active</data>
+        <data key="balance">10</data>
+        <data key="decimalBalanceGrid">10.00</data>
+        <data key="decimalBalance">10.0000</data>
+        <data key="decimalCurrentBalanceGrid">10.00</data>
+        <data key="decimalCurrentBalance">10.0000</data>
+        <data key="comment">Gift Code Account Comment</data>
+        <data key="validTill">unlimited</data>
+        <data key="wrongCode">wrongCode</data>
+    </entity>
+
+    <entity name="usedDefGiftCodeAccount" type="giftCodeAccount" extends="defaultGiftCodeAccount">
+        <data key="status">3</data>
+        <data key="statusTitle">Used</data>
+        <data key="decimalBalanceGrid">10.00</data>
+        <data key="decimalBalance">10.0000</data>
+        <data key="decimalCurrentBalanceGrid">0.00</data>
+        <data key="decimalCurrentBalance">0.0000</data>
+    </entity>
+
+    <entity name="giftCodeAccount_100usd" type="giftCodeAccount" extends="defaultGiftCodeAccount">
+        <data key="balance">100</data>
+        <data key="decimalBalanceGrid">100.00</data>
+        <data key="decimalBalance">100.0000</data>
+        <data key="decimalCurrentBalanceGrid">100.00</data>
+        <data key="decimalCurrentBalance">100.0000</data>
+    </entity>
+
+    <entity name="usedGiftCodeAccount_100usd" type="giftCodeAccount" extends="defaultGiftCodeAccount">
+        <data key="status">3</data>
+        <data key="statusTitle">Active</data>
+        <data key="decimalBalanceGrid">100.00</data>
+        <data key="decimalBalance">100.0000</data>
+        <data key="decimalCurrentBalanceGrid">41.00</data>
+        <data key="decimalCurrentBalance">41.0000</data>
+    </entity>
+
+    <entity name="openAmountGiftCodeAccount" type="giftCodeAccount" extends="defaultGiftCodeAccount">
+        <data key="decimalBalanceGrid">15.00</data>
+        <data key="decimalCurrentBalanceGrid">15.00</data>
+        <data key="decimalBalance">15.0000</data>
+        <data key="decimalCurrentBalance">15.0000</data>
+    </entity>
+
+    <entity name="feeGiftCodeAccount" type="giftCodeAccount" extends="defaultGiftCodeAccount">
+        <data key="decimalBalanceGrid">10.00</data>
+        <data key="decimalCurrentBalanceGrid">10.00</data>
+        <data key="decimalBalance">10.0000</data>
+        <data key="decimalCurrentBalance">10.0000</data>
+    </entity>
+
+    <!--gift code account grid columns-->
+    <entity name="giftCodeAccountGridColumns" type="giftCodeAccountGridColumn">
+        <data key="giftCode">Gift Code</data>
+        <data key="initialValue">Initial Value</data>
+        <data key="currentValue">Current Value</data>
+        <data key="status">Status</data>
+        <data key="order">Order</data>
+        <data key="expiryDate">Expiry Date</data>
+    </entity>
+
+    <!--order history columns in gift code account-->
+    <entity name="orderHistoryGridColumns" type="orderHistoryGridColumn">
+        <data key="orderNumber">Order #</data>
+    </entity>
+</entities>

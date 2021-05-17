@@ -1,0 +1,55 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$_productCollection = $block->getSearchModel()->getProductCollection();
+$bookingInfoArray = [];
+$eventType = $helper->getProductAttributeSetIdByLabel('Event Booking');
+$rentType = $helper->getProductAttributeSetIdByLabel('Rental Booking');
+foreach ($_productCollection as $product) {
+    $isBooking = $helper->isBookingProduct($product->getId());
+    $productUrl = $product->getProductUrl();
+    $bookingInfoArray[$productUrl]['booking'] = $isBooking;
+    $bookingInfoArray[$productUrl]['booking_type'] = "default";
+    if ($product->getAttributeSetId() == $eventType) {
+        $bookingInfoArray[$productUrl]['booking_type'] = "event";
+        $eventProduct = $helper->getProduct($product->getId());
+        $currentTime = $helper->getCurrentTime();
+        $fromDate = date('Y-m-d', strtotime($eventProduct['event_date_from']));
+        $fromTime = date('H:i', strtotime($eventProduct['event_date_from']));
+        if ((strtotime($fromDate) > strtotime(date('Y-m-d'))) ||
+            ((strtotime($fromDate) == strtotime(date('Y-m-d'))) && ($currentTime <= strtotime($fromTime)))
+        ) {
+            $bookingInfoArray[$productUrl]['expired'] = false;
+        } else {
+            $bookingInfoArray[$productUrl]['expired'] = true;
+        }
+    } elseif ($product->getAttributeSetId() == $rentType) {
+        $bookingInfoArray[$productUrl]['booking_type'] = "rental";
+    }
+}
+$serializedFormData = $viewModel->getJsonEncoded(["bookingInfoArray" => $bookingInfoArray]);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "Webkul_MpAdvancedBookingSystem/js/bookingsystem": <?= /* @noEscape */ $serializedFormData ?>
+        }
+    }
+
+</script>

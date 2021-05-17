@@ -1,0 +1,77 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$_item = $block->getItem();
+$product = $_item->getProduct();
+$helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$_product=$product;
+$seller_id = '';
+$marketplaceProduct = $helper->getSellerProductDataByProductId($_product['entity_id']);
+foreach ($marketplaceProduct as $value) {
+    $seller_id = $value['seller_id'];
+}
+if ($seller_id!="") {
+    $rowsocial = $helper->getSellerDataBySellerId($seller_id);
+    $shoptitle = '';
+    $shop_url = '';
+    $logo = '';
+    $title_stylist = '';
+    $locsearch = '';
+    foreach ($rowsocial as $value) {
+        $shoptitle = $value['shop_title'];
+        $shop_url = $value['shop_url'];
+        $logo = $value["logo_pic"];
+        $title_stylist = $value["title_stylist"];
+        $locsearch = $escaper->escapeHtml($value["company_locality"]);
+        if (!$shoptitle) {
+            $shoptitle = $value->getShopUrl();
+        }
+    }
+
+    if ($title_stylist == 0) {
+        $title = "Image Consultant";
+    } else {
+        $title = "Personal Stylist";
+    }
+
+
+    $logo = $helper->getMediaUrl().'avatar/'.$logo;
+    $shoptitle = $escaper->escapeHtml($shoptitle);
+    ?>
+    <div class="wk-seller-block wk-block" id="mp-wk-block">
+        <div class="wk-seller-logo">
+            <div class="wk-seller-logo-image">
+                <img src="<?= /* @noEscape */ $logo;?>" alt="<?= $escaper->escapeHtml($shoptitle); ?>">
+            </div>
+        </div>
+        <div class="wk-seller-information">
+            <h4 class="wk-seller-title">
+                <a href="<?= $escaper->escapeUrl($helper->getRewriteUrl('stylist/seller/profile/shop/'.$shop_url));?>" title="<?= /* @noEscape */ __('Visit Shop') ?>" id="profileconnect"><?= $escaper->escapeHtml($shoptitle); ?></a>
+            </h4>
+            <?php if ($title): ?>
+                <p class="wk-seller-specialty">
+                    <?php echo $title;?>
+                </p>
+            <?php endif; ?>
+            <?php if ($locsearch): ?>
+                <p class="wk-seller-location">
+                    <a title="<?= $escaper->escapeHtml(__('Search')) ?>" href="<?= /* @noEscape */ $helper->getRewriteUrl('stylist/seller/location/shop/'.$shop_url)."?loc=".$locsearch?>" target="_blank">
+                        <span class="wk-mp-collection-location wk-mp-collection-header-bottom-txt">
+                            <?= /* @noEscape */ __($locsearch); ?>
+                        </span>
+                    </a>
+                </p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+} ?>

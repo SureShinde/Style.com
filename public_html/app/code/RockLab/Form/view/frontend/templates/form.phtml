@@ -1,0 +1,35 @@
+<?php
+$helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$stylists = $block->getSellers();
+?>
+<div class="seller">
+<ul class="sellers" id="section1">
+    <?php foreach ($stylists as $stylist): ?>
+      <p><?php  $name = $stylist->getName()?></p>
+        <?php $profileurl = $stylist->getShopUrl()?>
+        <?php $logo = $stylist->getLogoPic()?>
+        <?php $logo = $helper->getMediaUrl() . 'avatar/' . $logo ?>
+        <li class="sellers item">
+            <?php echo $name;?>
+            <div class="sellers picture">
+                <img src="<?= $escaper->escapeUrl($logo) ?>"width="100" height="150">
+            </div>
+        </li>
+
+<?php endforeach; ?>
+    <div class="test">
+    <?php
+    echo $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('15')
+    ->toHtml();
+?>
+    </div>
+    <div class="test">
+    <?php
+echo $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('14')
+    ->toHtml();
+?>
+    </div>

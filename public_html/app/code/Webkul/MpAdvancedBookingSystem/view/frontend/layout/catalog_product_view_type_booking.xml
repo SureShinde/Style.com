@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpAdvancedBookingSystem::css/product/seller-block.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/style.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/styles-fontawesome.css"/>
+    </head>
+    <body>
+        <referenceBlock name="product.info.options.wrapper">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Webkul_MpAdvancedBookingSystem::catalog/product/view/options/wrapper.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="product.info.addtocart.additional">
+            <arguments>
+                <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+            </arguments>
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Webkul_MpAdvancedBookingSystem::catalog/product/view/addtocart.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="product.info.addtocart.additional">
+            <block class="Magento\Wishlist\Block\Catalog\Product\View\AddTo\Wishlist" name="view.addto.wishlist.default"
+                        template="Magento_Wishlist::catalog/product/view/addto/wishlist.phtml" />
+            <block class="Magento\Catalog\Block\Product\View\AddTo\Compare" name="view.addto.compare.default" after="view.addto.wishlist.rental" template="Magento_Catalog::product/view/addto/compare.phtml"/>
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.mailto.default" template="Magento_Catalog::product/view/mailto.phtml"/>
+            <block class="Magento\Catalog\Block\Product\View" name="mainBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/main.phtml">
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="mainBooking">
+            <block class="Magento\Catalog\Block\Product\View" name="defaultBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/default.phtml">
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View" name="appointmentTypeBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/appointment.phtml">
+                <block class="Magento\Catalog\Block\Product\View\AddTo\Compare" name="view.addto.compare.appoint" template="Magento_Catalog::product/view/addto/compare.phtml" />
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View" name="eventTypeBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/event.phtml">
+                <block class="Magento\Wishlist\Block\Catalog\Product\View\AddTo\Wishlist" name="view.addto.wishlist.event"
+                        template="Magento_Wishlist::catalog/product/view/addto/wishlist.phtml" />
+                <block class="Magento\Catalog\Block\Product\View\AddTo\Compare" name="view.addto.compare.event" template="Magento_Catalog::product/view/addto/compare.phtml" />
+                <block class="Magento\Catalog\Block\Product\View" name="product.info.mailto.event" template="Magento_Catalog::product/view/mailto.phtml"/>
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View" name="rentTypeBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/rental.phtml">
+                <block class="Magento\Wishlist\Block\Catalog\Product\View\AddTo\Wishlist" name="view.addto.wishlist.rental"
+                        template="Magento_Wishlist::catalog/product/view/addto/wishlist.phtml" />
+                <block class="Magento\Catalog\Block\Product\View\AddTo\Compare" name="view.addto.compare.rental" after="view.addto.wishlist.rental" template="Magento_Catalog::product/view/addto/compare.phtml" />
+                <block class="Magento\Catalog\Block\Product\View" name="product.info.mailto.rental" template="Magento_Catalog::product/view/mailto.phtml"/>
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View" name="tableTypeBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/table.phtml">
+                <block class="Magento\Catalog\Block\Product\View\AddTo\Compare" name="view.addto.compare.table" template="Magento_Catalog::product/view/addto/compare.phtml" />
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="content">
+            <block class="Magento\Catalog\Block\Product\View" name="bookingContactUs" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/contact_us.phtml">
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="view.addto.compare.default">
+            <arguments>
+                <argument name="addToCompareViewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Checker\AddToCompareAvailability</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="view.addto.compare.appoint">
+            <arguments>
+                <argument name="addToCompareViewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Checker\AddToCompareAvailability</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="view.addto.compare.event">
+            <arguments>
+                <argument name="addToCompareViewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Checker\AddToCompareAvailability</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="view.addto.compare.rental">
+            <arguments>
+                <argument name="addToCompareViewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Checker\AddToCompareAvailability</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="view.addto.compare.table">
+            <arguments>
+                <argument name="addToCompareViewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Checker\AddToCompareAvailability</argument>
+            </arguments>
+        </referenceBlock>
+        <move element="product.info" destination="content" after="product.info.media"/>
+    </body>
+</page>

@@ -1,0 +1,1 @@
+/var/www/style.com/public_html/app/code/Amasty/GiftCard/view/adminhtml/web/js/validation-email.js

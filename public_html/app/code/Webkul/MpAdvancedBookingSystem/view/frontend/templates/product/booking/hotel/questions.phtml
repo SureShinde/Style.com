@@ -1,0 +1,89 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$amenitiesArr = [];
+$questionProducts = [];
+$amenitiesStr = "";
+$productId = 0;
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$params = $block->getRequest()->getParams();
+
+if (!(empty($params['id'])) && $helper->isBookingProduct($params['id'])) {
+    $productId = $params['id'];
+    $helper->enableOptions($productId);
+    $helper->checkBookingProduct($productId);
+
+    $product = $helper->getProduct($productId);
+    $set = $product->getAttributeSetId();
+
+    $hotelType = $helper->getProductAttributeSetIdByLabel('Hotel Booking');
+
+    $allowedAttributeSetIds = $helper->getAllowedAttrSetIDs();
+
+    $allowedBookingTypes = [
+        $hotelType => 'hotel',
+    ];
+
+    if ($product->getTypeId() == "hotelbooking"
+        && in_array($set, $allowedAttributeSetIds)
+        && array_key_exists($set, $allowedBookingTypes)
+    ) {
+        $data = $helper->getAttributeSetAndProductTypeForBooking($allowedBookingTypes[$set]);
+        if (!empty($data)
+            && $data['set'] == $set
+            && in_array($allowedBookingTypes[$set], $helper->getAllBookingTypes())
+        ) {
+            $questionProducts = $helper->getAskedQuestions($productId); ?>
+
+            <div id="question-product-block">
+                <h3 class="title">
+                    <?= /* @noEscape */ __('Ask a Question'); ?>
+                </h3>
+                <?php /* @noEscape */
+            //echo __('Related products are shown to customers in addition to the item the customer is looking at.'); ?>
+                <div id="question-product-block-loader" class="admin__data-grid-outer-wrap" style="display:block;">
+                    <div class="admin__data-grid-loading-mask">
+                        <div class="spinner">
+                            <span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="question-product-block-wrapper" style="display:none;">
+                    <?= /* @noEscape */ $block->getChildHtml(); ?>        
+                </div>
+            </div>
+            <?php
+            $formData = [
+                'relatedProductId' => '#wk-bodymain',
+                'gridCheckbox' => '.admin__control-checkbox',
+                'questionProducts' => $viewModel->getJsonHelper()->jsonEncode($questionProducts)
+            ];
+            $serializedFormData = $viewModel->getJsonHelper()->jsonEncode($formData);
+            ?>
+
+            <script type="text/x-magento-init">
+                {
+                    "#question-product-block": {
+                        "questionsList": <?= /* @noEscape */ $serializedFormData; ?>
+                    }
+                }
+            </script>
+    <?php }
+    }
+} ?>

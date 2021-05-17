@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCheckOrderWithAppliedCardCodeOnCheckoutMoreTotal" extends="GiftCardApplyCardCodeOnCheckoutMoreTotal">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Apply Gift Card Code on Checkout"/>
+            <title value="Apply Gift Card Code on Checkout"/>
+            <description value="Check Order Information on Front and Admin Parts After Apply Gift Card Code on Checkout. Card Code Is More Than Total Order"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-13"/>
+            <group value="AmGiftCard"/>
+            <group value="AmApplyGiftCard"/>
+            <group value="AmGiftCardCheckout"/>
+        </annotations>
+
+        <remove keyForRemoval="checkCardCodeIsAppliedOnCheckout"/>
+        <actionGroup ref="StorefrontCheckOrderAfterCardCodeIsAppliedActionGroup" after="createOrderAndGrabOrderNumber" stepKey="checkOrderAfterCardCodeIsAppliedStorefront">
+            <argument name="productPrice" value="SimpleProductByFusionBackpack.price"/>
+            <argument name="cardCodeDiscount" value="fusionCardCodeFullDiscount"/>
+        </actionGroup>
+        <actionGroup ref="AdminOpenOrderOnId" after="checkOrderAfterCardCodeIsAppliedStorefront" stepKey="openOrderOnId">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAndGrabOrderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckOrderAfterCardCodeIsAppliedActionGroup" after="openOrderOnId" stepKey="checkOrderAfterCardCodeIsAppliedAdmin">
+            <argument name="productPrice" value="SimpleProductByFusionBackpack.price"/>
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+            <argument name="cardCodeDiscount" value="fusionCardCodeFullDiscount"/>
+        </actionGroup>
+    </test>
+</tests>

@@ -1,0 +1,279 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $block->getMpHelper();
+if (!$helper->getIsSeparatePanel()) {
+    $isPartner= $helper->isSeller();
+    $sellerId= $helper->getCustomerId();
+    $magentoCurrentUrl = $escaper->escapeUrl($block->getCurrentUrl());
+    $allow_pro_type=$helper->getAllowedProductType();
+    $isSellerGroup = $helper->isSellerGroupModuleInstalled();
+    $productNotificationCount = $block->getProductNotificationCount();
+    $orderNotificationCount = $block->getOrderNotificationCount();
+    $transactionCount = $block->getTransactionNotificationCount();
+    ?>
+    <div class="block account-nav block-collapsible-nav wk-mp-main">
+        <div class="title block-collapsible-nav-title" data-mage-init='{"toggleAdvanced": {"toggleContainers": "#block-collapsible-nav-seller", "selectorsToggleClass": "active"}}'>
+            <strong><?= /* @noEscape */ __('Stylists'); ?></strong>
+        </div>
+        <div class="content block-collapsible-nav-content" id="block-collapsible-nav-seller">
+            <nav class="account-nav">
+                <ul class="nav items">
+                    <?php
+                    if ($isPartner) { ?>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/account/dashboard')) || !$isSellerGroup) { ?>
+                            <li class="nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/account/dashboard')? "current":"";?>">
+                                <?php
+                                if (strpos($magentoCurrentUrl, 'stylist/account/dashboard') !== false) { ?>
+                                    <strong><?= /* @noEscape */ __('Stylist Dashboard') ?></strong>
+                                    <?php
+                                } else { ?>
+                                    <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/dashboard', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                        <?=/* @noEscape */__('Stylist Dashboard') ?>
+                                    </a>
+                                    <?php
+                                } ?>
+                            </li>
+                            <?php
+                        } ?>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/account/editprofile')) || !$isSellerGroup) { ?>
+                            <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                                <li class="nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/account/editprofile')? "current":"";?>">
+                                    <?php if (strpos($magentoCurrentUrl, 'stylist/account/editprofile') !== false) { ?>
+                                        <strong><?= /* @noEscape */ __('Stylist Profile') ?></strong>
+                                        <?php
+                                    } else { ?>
+                                        <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/editprofile', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                            <?= /* @noEscape */__('Stylist Profile') ?>
+                                        </a>
+                                        <?php
+                                    } ?>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/product_attribute/new')) || !$isSellerGroup) {
+                            if (strpos($allow_pro_type, 'configurable') !== false) { ?>
+                                <li class="nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/product_attribute/new')? "current":"";?>">
+                                <?php if (strpos($magentoCurrentUrl, 'stylist/product_attribute/new') !== false) { ?>
+                                    <strong><?= /* @noEscape */ __('Create Attribute') ?></strong>
+                                    <?php } else { ?>
+                                        <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/product_attribute/new', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                            <?= /* @noEscape */ __('Create Attribute') ?></a>
+                                    <?php } ?>
+                                </li>
+                                <?php
+                            }
+                        } ?>
+                        <li class="nav item <?= /* @noEscape */  (strpos($magentoCurrentUrl, 'stylist/product/productlist') !== false)? "current":"";?>">
+                            <?php
+                            if (strpos($magentoCurrentUrl, 'stylist/product/productlist') !== false) { ?>
+                                <strong><?= /* @noEscape */ __('My Calendar') ?></strong>
+                                <?php
+                            } else { ?>
+                                <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/product/productlist', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                    <?= /* @noEscape */ __('My Calendar') ?>
+                                </a>
+                                <?php
+                            } ?>
+                        </li>
+                        <li class="nav item <?= /* @noEscape */ (strpos($magentoCurrentUrl, 'mpadvancebooking/product/add') !== false)? "current":"";?>">
+                            <?php
+                            if (strpos($magentoCurrentUrl, 'mpadvancebooking/product/create') !== false) { ?>
+                                <strong><?= /* @noEscape */ __('Add Availability') ?></strong>
+                                <?php
+                            } else { ?>
+                                <a href="<?= $escaper->escapeUrl($block->getUrl('mpadvancebooking/product/create', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                    <?= /* @noEscape */ __('Add Availability') ?>
+                                </a>
+                                <?php
+                            } ?>
+                        </li>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/order/history')) || !$isSellerGroup) { ?>
+                            <li class="nav item notification-link  <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/order') && (!strpos($magentoCurrentUrl, 'stylist/order/shipping/'))? "current":"";?>">
+                                <?php
+                                if (strpos($magentoCurrentUrl, 'stylist/order/history') !== false) { ?>
+                                    <strong><?= /* @noEscape */ __('My Appointments') ?></strong>
+                                    <?php
+                                } else { ?>
+                                    <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/order/history', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                        <?= /* @noEscape */ __('My Appointments') ?>
+                                    </a>
+                                    <?php if ($block->getMarketplaceOrderCollection()->getSize()) { ?>
+                                        <!-- Orders Notification -->
+                                        <div class="notification-block">
+                                            <a href="" class="notifications-action marketplace-dropdown">
+                                                <img height="20" width="20" src="<?= /* @noEscape */ $block->getViewFileUrl('Webkul_Marketplace::images/icons_notifications.png'); ?>" class="notifications-img" />
+                                                <?php if ($orderNotificationCount > 5): ?>
+                                                    <span class="notification-count">5+</span>
+                                                <?php else: ?>
+                                                    <span class="notification-count"><?= $escaper->escapeHtml($orderNotificationCount); ?></span>
+                                                <?php endif; ?>
+                                            </a>
+                                            <ul class="marketplace-dropdown-menu">
+                                                <span class="notify-point"></span>
+                                                <?php
+                                                $orderDisplayCount = 1;
+                                                foreach ($block->getMarketplaceOrderCollection() as $order):
+                                                    if ($orderDisplayCount <= 5):
+                                                        ?>
+                                                        <li class="notifications-entry">
+                                                            <strong class="notifications-entry-title">
+                                                                <?= $escaper->escapeHtml($block->getOrderNotificationTitle($order->getOrderId())); ?>
+                                                            </strong>
+                                                            <p class="notifications-entry-description _cutted">
+                                                                <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/order/view', ['id'=>$order->getOrderId(), 'n' => 1,'_secure' => $this->getRequest()->isSecure()]))?>" class="notifications-entry-description-start">
+                                                        <span>
+                                                            <?= /* @noEscape */ $block->getOrderNotificationDesc($order->getOrderId()); ?>
+                                                        </span>
+                                                                </a>
+                                                            </p>
+                                                            <time class="notifications-entry-time">
+                                                                <?= /* @noEscape */ $block->getOrderCreatedDate($order->getOrderId()); ?>
+                                                            </time>
+                                                        </li>
+                                                        <?php
+                                                        $orderDisplayCount++;
+                                                    endif;
+                                                endforeach; ?>
+                                                <?php
+                                                if ($orderDisplayCount > 5):
+                                                    ?>
+                                                    <li class="notifications-entry notifications-entry-last">
+                                                        <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/order/history', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                                            <?= /* @noEscape */ __('Click here to view your appointments'); ?>
+                                                        </a>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                    <?php } ?>
+                                    <!-- Orders Notification End -->
+                                    <?php
+                                } ?>
+                            </li>
+                        <?php } ?>
+                        <li class="nav item
+        <?= /* @noEscape */ strpos($magentoCurrentUrl, 'mpsellerslider/mpslider/index') ? "current":"";?>">
+                            <?php
+                            if (strpos($magentoCurrentUrl, 'mpsellerslider/mpslider/index')!==false) { ?>
+                                <strong><?= /* @noEscape */ __('My Work Examples') ?></strong>
+                            <?php   } else { ?>
+                                <a href="<?= /* @noEscape */
+                                $block->getUrl('mpsellerslider/mpslider/index', ['_secure' => $this->getRequest()->isSecure()]); ?>">
+                                    <?= /* @noEscape */   __('My Work Examples') ?>
+                                </a>
+                            <?php } ?>
+                        </li>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/account/earning')) || !$isSellerGroup) { ?>
+                            <li class="nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/account/earning')? "current":"";?>">
+                                <?php
+                                if (strpos($magentoCurrentUrl, 'stylist/account/earning') !== false) { ?>
+                                    <strong><?= /* @noEscape */ __('Earnings') ?></strong>
+                                    <?php
+                                } else { ?>
+                                    <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/earning', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                        <?=/* @noEscape */__('Earnings') ?>
+                                    </a>
+                                    <?php
+                                } ?>
+                            </li>
+                            <?php
+                        } ?>
+                        <?= $block->getChildHtml();?>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/account/customer')) || !$isSellerGroup) { ?>
+                            <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                                <li class="nav item notification-link <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/account/customer')? "current":"";?>">
+                                    <?php if (strpos($magentoCurrentUrl, 'stylist/account/customer') !== false) { ?>
+                                        <strong><?= /* @noEscape */ __('Customers') ?></strong>
+                                    <?php } else { ?>
+                                        <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/customer', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                            <?= /* @noEscape */ __('Customers') ?>
+                                        </a>
+                                    <?php } ?>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if (($isSellerGroup && $helper->isAllowedAction('stylist/account/review')) || !$isSellerGroup) { ?>
+                            <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                                <li class="nav item notification-link <?= /* @noEscape */ strpos($magentoCurrentUrl, 'stylist/account/review')? "current":"";?>">
+                                    <?php if (strpos($magentoCurrentUrl, 'stylist/account/review') !== false) { ?>
+                                        <strong><?= /* @noEscape */ __('Review') ?></strong>
+                                    <?php } else { ?>
+                                        <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/review', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                            <?= /* @noEscape */ __('Review') ?>
+                                        </a>
+                                        <?php
+                                        $nHelper = $this->helper(\Webkul\Marketplace\Helper\Notification::class);
+                                        $notificationCount = $nHelper->getAllReviewNotificationCount($sellerId);
+                                        $reviewNotificationColl = $nHelper->getAllReviewNotification($sellerId);
+                                        if ($reviewNotificationColl->getSize()) { ?>
+                                        <!-- Review Notification -->
+                                        <div class="notification-block">
+                                            <a href="" class="notifications-action marketplace-dropdown">
+                                                <img height="20" width="20" src="<?= /* @noEscape */ $block->getViewFileUrl('Webkul_Marketplace::images/icons_notifications.png'); ?>" class="notifications-img" />
+                                                <?php if ($notificationCount > 5): ?>
+                                                <span class="notification-count">5+</span>
+                                                <?php else: ?>
+                                                    <span class="notification-count"><?= $escaper->escapeHtml($notificationCount); ?></span>
+                                                <?php endif; ?>
+                                            </a>
+                                            <ul class="marketplace-dropdown-menu">
+                                            <span class="notify-point"></span>
+                                            <?php
+                                            $reviewDisplayCount = 1;
+                                            foreach ($reviewNotificationColl as $review):
+                                                if ($reviewDisplayCount <= 5):
+                                                    ?>
+                                                <li class="notifications-entry">
+                                                    <strong class="notifications-entry-title">
+                                                        <?= /* @noEscape */ __('Review Notification'); ?>
+                                                    </strong>
+                                                    <?php
+                                                    $url = $block->getUrl('stylist/account/review', ['_secure' => $this->getRequest()->isSecure()]);
+                                                    /* @noEscape */ echo $nHelper->getReviewNotificationDetails($review, $url);
+                                                    ?>
+                                                </li>
+                                                    <?php
+                                                    $reviewDisplayCount++;
+                                                endif;
+                                            endforeach; ?>
+                                            <?php if ($reviewDisplayCount > 5): ?>
+                                                <li class="notifications-entry notifications-entry-last">
+                                                    <a href="<?= $escaper->escapeUrl($block->getUrl('stylist/account/review', ['_secure' => $this->getRequest()->isSecure()])); ?>">
+                                                        <?= /* @noEscape */ __('Click here to view all reviews'); ?>
+                                                    </a>
+                                                </li>
+                                            <?php endif; ?>
+                                            </ul>
+                                        </div>
+                                        <?php } ?>
+                                        <!-- Review Notification End -->
+                                    <?php } ?>
+                                </li>
+                            <?php } ?>
+                        <?php } ?>
+                        <div id="marketplace-notification-component" data-bind="scope:'notification-content'">
+                            <script type="text/x-magento-init">
+                            {
+                                "#marketplace-notification-component": {
+                                    "Magento_Ui/js/core/app":  <?= /* @escapeNotVerified */ $block->getJsLayout();?>
+                                }
+                            }
+                            </script>
+                            <?= $block->getChildHtml('reply_template'); ?>
+                        </div>
+                        <?php
+                    }  ?>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <?php
+} ?>

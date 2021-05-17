@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <container name="product.top.info" htmlTag="div" htmlClass="product-top-info" before="-"/>
+        </referenceContainer>
+
+        <block class="Magento\Cms\Block\Block" name="top.page.block" before="main.content">
+            <arguments>
+                <argument name="block_id" xsi:type="string">gift-certificate-top-block</argument>
+            </arguments>
+        </block>
+        <block class="Magento\Cms\Block\Block" name="bottom.page.block" before="main.content">
+            <arguments>
+                <argument name="block_id" xsi:type="string">our-benefits</argument>
+            </arguments>
+        </block>
+        
+        <move element="top.page.block" destination="page.wrapper" before="main.content"/>
+        <move element="product.info.media" destination="product.top.info" before="-"/>
+        <move element="product.info.main" destination="product.top.info" after="-"/>
+        <move element="product.info.overview" destination="product.info.main" after="product.info.price" />
+        <move element="bottom.page.block" destination="main.content" after="-"/>
+
+        <referenceBlock name="breadcrumbs" remove="true" />
+        <referenceBlock name="product.info.stock.sku" remove="true" />
+        <referenceBlock name="product.info.review" remove="true" />
+        <referenceBlock name="reviews.tab" remove="true" />
+        <referenceBlock name="view.addto.compare" remove="true" />
+        <referenceBlock name="product.info.details" remove="true" />
+    </body>
+</page>

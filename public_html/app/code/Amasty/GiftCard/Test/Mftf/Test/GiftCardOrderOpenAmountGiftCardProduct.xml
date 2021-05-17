@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardOrderOpenAmountGiftCardProduct" extends="GiftCardOrderDefaultGiftCardProduct">
+        <annotations>
+            <features value="Gift Card Product"/>
+            <stories value="Order Gift Card Product"/>
+            <title value="Order Gift Card Product"/>
+            <description value="Order Open Amount Gift Card Product. Check Product Data in Order on Storefront and Admin Part"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-33"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardProduct"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateOpenAmountGiftCardProductActionGroup" stepKey="createGiftCardProductActionGroup">
+                <argument name="giftCardProductData" value="defOpenAmountGiftCardProduct"/>
+                <argument name="categoryName" value="$$simpleCategory.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGiftCardProduct">
+                <argument name="product" value="defOpenAmountGiftCardProduct"/>
+            </actionGroup>
+        </after>
+
+        <!--check gift card product data on checkout-->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="{{defOpenAmountGiftCardProduct.name}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddOpenAmountGiftCardProductToCartActionGroup" stepKey="addGiftCardProductToCart"/>
+        <actionGroup ref="StorefrontCheckCardCodeProductOnCheckoutActionGroup" stepKey="checkCardCodeProductOnCheckout">
+            <argument name="giftCardProductData" value="defOpenAmountGiftCardProduct"/>
+        </actionGroup>
+        <!--check gift card product data on order page-->
+        <actionGroup ref="StorefrontCheckOrderWithCardCodeProductActionGroup" stepKey="checkOrderWithCardCodeProduct">
+            <argument name="giftCardProductData" value="defOpenAmountGiftCardProduct"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckGiftCardProductDataInOrderActionGroup" stepKey="checkGiftCardProductData">
+            <argument name="giftCardProductData" value="defOpenAmountGiftCardProduct"/>
+        </actionGroup>
+    </test>
+</tests>

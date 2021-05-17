@@ -1,0 +1,72 @@
+[2021-02-05 13:01:21] mpsellerslider.INFO: Block_Slider getImagesCollection : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 13:05:03] mpsellerslider.INFO: Block_Slider getImagesCollection : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 13:35:55] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 13:36:22] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:14:18] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:14:32] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:14:46] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:16:45] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:17:03] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:17:41] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:17:47] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:17:48] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:18:28] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:18:45] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:19:17] mpsellerslider.INFO: Helper_Data_unserializeData : 
+ [] []
+[2021-02-05 14:19:17] mpsellerslider.INFO: Helper_Data_unserializeData InvalidArgumentException : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 14:19:18] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 14:20:07] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:25:41] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:25:48] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:29:10] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:33:15] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:40:31] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:44:44] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:51:40] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:53:20] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:53:40] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:54:00] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:54:13] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/
+): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 15:56:43] mpsellerslider.INFO: Block_Slider getImagesCollection : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 15:56:59] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 15:57:24] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:02:55] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:03:19] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:03:44] mpsellerslider.INFO: Helper_Data_unserializeData : a:5:{i:0;a:2:{s:5:"image";s:15:"67062slide3.jpg";s:3:"url";s:7:"erterer";}i:1;a:2:{s:5:"image";s:14:"9914slide2.jpg";s:3:"url";s:0:"";}i:2;a:2:{s:5:"image";s:15:"87248slide2.jpg";s:3:"url";s:0:"";}i:3;a:2:{s:5:"image";s:15:"56531slide3.jpg";s:3:"url";s:0:"";}i:4;a:2:{s:5:"image";s:2:"
+";s:3:"url";s:1:"#";}} [] []
+[2021-02-05 16:03:44] mpsellerslider.INFO: Helper_Data_unserializeData InvalidArgumentException : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:03:45] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:05:23] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:05:40] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:06:29] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:07:04] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:14:49] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/a:5:{i:0;a:2:{s:5:&quot;image&quot;;s:15:&quot;67062slide3.jpg&quot;;s:3:&quot;url&quot;;s:7:&quot;erterer&quot;;}i:1;a:2:{s:5:&quot;image&quot;;s:14:&quot;9914slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:2;a:2:{s:5:&quot;image&quot;;s:15:&quot;87248slide2.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:3;a:2:{s:5:&quot;image&quot;;s:15:&quot;56531slide3.jpg&quot;;s:3:&quot;url&quot;;s:0:&quot;&quot;;}i:4;a:2:{s:5:&quot;image&quot;;s:2:&quot;
+&quot;;s:3:&quot;url&quot;;s:1:&quot;#&quot;;}}): failed to open stream: File name too long in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:15:19] mpsellerslider.INFO: Block_Slider getImagesCollection : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:15:25] mpsellerslider.INFO: Block_Profile getSellerData : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:20:42] mpsellerslider.INFO: Helper_Data_unserializeData : [{"image":"91819slide2.jpg","url":"444444qwerty"}] [] []
+[2021-02-05 16:20:42] mpsellerslider.INFO: Helper_Data_unserializeData InvalidArgumentException : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:20:48] mpsellerslider.INFO: Block_Slider getImagesCollection : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:20:56] mpsellerslider.INFO: Helper_Data_unserializeData : ["[{\"image\":\"91819slide2.jpg\"","\"url\":\"444444qwerty\"}]"] [] []
+[2021-02-05 16:20:56] mpsellerslider.INFO: Helper_Data_unserializeData InvalidArgumentException : Unable to unserialize value, string is corrupted. [] []
+[2021-02-05 16:20:57] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/[&quot;[{/&quot;image/&quot;:/&quot;91819slide2.jpg/&quot;&quot;): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []
+[2021-02-05 16:20:57] mpsellerslider.INFO: Helper_Data validateImage : Warning: getimagesize(/var/www/style.com/public_html/pub/media/avatar/4/&quot;/&quot;url/&quot;:/&quot;444444qwerty/&quot;}]&quot;]): failed to open stream: No such file or directory in /var/www/style.com/public_html/app/code/Webkul/Mpsellerslider/Helper/Data.php on line 100 [] []

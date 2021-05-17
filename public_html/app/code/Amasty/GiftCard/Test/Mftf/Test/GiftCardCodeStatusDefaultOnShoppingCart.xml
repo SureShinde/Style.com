@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCodeStatusDefaultOnShoppingCart">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Gift Card Code Status and Expire Date on Shopping Cart"/>
+            <title value="Gift Card Code Status and Expire Date on Shopping Cart"/>
+            <description value="Check Gift Card Code Status on Shopping Cart. Check Limited Expire Date on Shopping Cart and Accounts Grid"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-14"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardShoppingCart"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <createData entity="SimpleProductByFusionBackpack" stepKey="simpleProduct">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateFullInformationGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+        <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminDeleteGiftCodeAccountActionGroup" stepKey="deleteGiftCodeAccount"/>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <actionGroup ref="AdminGrabGiftCardCodeActionGroup" stepKey="grabGiftCode"/>
+        <!--open shopping cart before check code status-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="addCreatedSimpleProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <!--check code status. Grab and check expire date on gift code accounts grid-->
+        <actionGroup ref="StorefrontCheckCardCodeStatusOnShoppingCartActionGroup" stepKey="checkGiftCardCodeStatusOnShoppingCart">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontGrabCardCodeExpDateOnShoppingCartActionGroup" stepKey="grabExpireDateOnShoppingCart"/>
+        <actionGroup ref="AdminFindGiftCodeAccountOnGridActionGroup" stepKey="findGiftCodeAccountOnGrid"/>
+        <actionGroup ref="AdminCheckGiftCodeExpDateOnGridActionGroup" stepKey="checkGiftCodeExpireDateOnGrid">
+            <argument name="giftCodeExpireDate" value="{$grabCardCodeExpireDateGrabExpireDateOnShoppingCart}"/>
+        </actionGroup>
+    </test>
+</tests>

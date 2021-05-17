@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mpadvancedbookingsystem>
+            <settings>
+                <auto_approve_question>1</auto_approve_question>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+            </settings>
+            <email>
+                <contact_template>mpadvancedbookingsystem_email_contact_template</contact_template>
+                <question_template>mpadvancedbookingsystem_email_question_template</question_template>
+            </email>
+            <mp_settings>
+                <enable_booking>1</enable_booking>
+                <booking_types>default,hotel,appointment,event,rental,table</booking_types>
+            </mp_settings>
+        </mpadvancedbookingsystem>
+    </default>
+</config>

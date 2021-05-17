@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardActivateCardCodeOnCustomerAccount">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Activate Gift Card Code on Customer Account"/>
+            <title value="Activate Gift Card Code on Customer Account"/>
+            <description value="Activate Limited Gift Card Code on Customer Account. Gift Card Code Data Is Valid"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-23"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardCustomerAccount"/>
+        </annotations>
+
+        <before>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateFullInformationGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+        <after>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminDeleteGiftCodeAccountActionGroup" stepKey="deleteGiftCodeAccount"/>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <actionGroup ref="AdminGrabGiftCardCodeActionGroup" stepKey="grabGiftCode"/>
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontActivateGiftCardCodeActionGroup" stepKey="activateGiftCardCode">
+            <argument name="giftCardCode" value="$grabSelectedGiftCardCodeGrabGiftCode"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckActivatedGiftCardCodeActionGroup" stepKey="checkCardCode">
+            <argument name="giftCardCode" value="$grabSelectedGiftCardCodeGrabGiftCode"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontGrabCardCodeExpDateOnAccPageActionGroup" stepKey="grabCardCodeExpDate"/>
+        <actionGroup ref="AdminFindGiftCodeAccountOnGridActionGroup" stepKey="findGiftCodeAccountOnGrid"/>
+        <actionGroup ref="AdminCheckGiftCodeExpDateOnGridActionGroup" stepKey="checkGiftCodeExpireDateOnGrid">
+            <argument name="giftCodeExpireDate" value="{$grabExpireDateGrabCardCodeExpDate}"/>
+        </actionGroup>
+    </test>
+</tests>

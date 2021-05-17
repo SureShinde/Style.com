@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="mpadvancedbookingsystem" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Marketplace Advanced Booking System</label>
+            <!-- Assign section to tab -->
+            <tab>webkul</tab>
+            <resource>Webkul_MpAdvancedBookingSystem::config_MpAdvancedBookingSystem</resource>
+
+            <!-- settings -->
+            <group id="settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Settings</label>
+                <field id="api_key" translate="label comment" sortOrder="1" type="obscure" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment><![CDATA[google map api key]]></comment>
+                </field>
+                <field id="auto_approve_question" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Admin/Seller approval required for questions</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <!-- create group for fields in section -->
+            <group id="email" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Transactional Emails</label>
+                <field id="contact_template" translate="label comment" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Contact to Seller Regarding Booking Product Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="question_template" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer asked a Question Regarding Hotel Booking Product Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+            </group>
+            
+            <!-- create group for marketplace booking -->
+            <group id="mp_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Booking Configuration</label>
+                <field id="enable_booking" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Booking System for Sellers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="booking_types" translate="label comment" sortOrder="1" type="multiselect" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed Booking types for seller</label>
+                    <validate>required-entry</validate>
+                    <source_model>Webkul\MpAdvancedBookingSystem\Model\Config\Source\BookingProductType</source_model>
+                    <depends>
+                        <field id="enable_booking">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,395 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$customerHelper = $viewModel->getCustomerHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+
+$validBookingDates = $helper->getValidBookingDates($product);
+
+if (is_array($validBookingDates)) {
+    $arr = [];
+    $flag = false;
+    $currentLocalTime = $helper->getCurrentTime();
+    $currentDate = strtotime($helper->getCurrentDate());
+
+    $bookingAvailableFrom = $validBookingDates['booking_available_from'];
+    $bookingAvailableTo = $validBookingDates['booking_available_to'];
+
+    $fromDay = date("l", strtotime($bookingAvailableFrom));
+    $fromDayIndex = $helper->getDayIndexId($fromDay);
+
+    if (!$product['available_every_week']) {
+        $range = $helper->calculateBookedDatesFromRange($bookingAvailableFrom, $bookingAvailableTo);
+        $noOfDays = count($range) + 1;
+        if ($noOfDays < 7) {
+            if ($fromDayIndex <= 7) {
+                $arr[1] = $fromDayIndex;
+                for ($i=2; $i<=$noOfDays; $i++) {
+                    if ($arr[$i-1]+1 <=7) {
+                        $arr[$i] = $arr[$i-1]+1;
+                    } else {
+                        $arr[$i] = ($arr[$i-1]+1) -7;
+                    }
+                }
+            }
+            if (count($arr)>0) {
+                $flag = true;
+            }
+        }
+    }
+
+    $options = $helper->getProductOptions();
+    $bookingInfo = $helper->getBookingInfo($productId);
+    $bookingSlotData = $helper->getJsonDecodedString($bookingInfo['info']);
+    $bookedData = $helper->getBookedAppointmentDates($productId);
+    // Calculated current day slot data
+    $today = date("l");
+    $todayIndex = $helper->getDayIndexId($today);
+
+    if (empty($bookingSlotData[1])) {
+        $bookingSlotData[1] = [];
+    }
+    if (empty($bookingSlotData[2])) {
+        $bookingSlotData[2] = [];
+    }
+    if (empty($bookingSlotData[3])) {
+        $bookingSlotData[3] = [];
+    }
+    if (empty($bookingSlotData[4])) {
+        $bookingSlotData[4] = [];
+    }
+    if (empty($bookingSlotData[5])) {
+        $bookingSlotData[5] = [];
+    }
+    if (empty($bookingSlotData[6])) {
+        $bookingSlotData[6] = [];
+    }
+    if (empty($bookingSlotData[7])) {
+        $bookingSlotData[7] = [];
+    }
+    ?>
+    <div class="wk-bk-design">
+        <div class="wk-bk-detail-container">
+
+            <div class="wk-bk-block wk-bk-padding-block">
+                <div class="wk-bk-availability-title">
+                    <?= /* @noEscape */ __('Availability') ?>:
+                </div>
+                <?php
+                    $currentDate = strtotime($helper->getCurrentDate());
+                    $totalTodaySlots = count($bookingSlotData[$todayIndex]);
+                    $closed = true;
+                ?>
+                <div class="wk-bk-addr-right <?php if (!$totalTodaySlots || $closed) { ?>wk-bk-closed-today<?php } ?>">
+                    <div class="wk-bk-avail-today-title">
+                        <?= /* @noEscape */ __('Today') ?>
+                    </div>
+                    <div class="wk-bk-avail-today">
+                        <?php
+                        if (($flag && in_array($todayIndex, $arr) && $currentDate>=strtotime($bookingAvailableFrom))
+                            || !$flag
+                        ) {
+                            $closed = false;
+                            foreach ($bookingSlotData[$todayIndex] as $key => $value) {
+                                if ($key < 2) { ?>
+                                    <span class="wk-bk-span-slot <?php if ($key===0) {?>wk-bk-first<?php } ?>">
+                                        <?= /* @noEscape */ $value['from'].' - '.$value['to'] ?>
+                                    </span>
+                                    <?php
+                                } else { ?>
+                                    <span class="wk-bk-span-slot
+                                        <?php if ($key===($totalTodaySlots-1)) {?>wk-bk-last<?php } ?>
+                                        wk-bk-showall-today-slots">
+                                        <?= /* @noEscape */ $value['from'].' - '.$value['to'] ?>
+                                    </span>
+                                    <?php
+                                }
+                            }
+                        }
+                        if (!$totalTodaySlots || $closed) { ?>
+                            <span class="wk-bk-slot-today-close">
+                                <?= /* @noEscape */ __('Closed') ?>
+                            </span>
+                            <?php
+                        } elseif ($totalTodaySlots > 2) { ?>
+                            <a href="#" class="wk-bk-avail-today-more"
+                                data-mage-init='{"dropdown":{}}'
+                                data-text-show="<?= /* @noEscape */ __('+%1 More', ($totalTodaySlots-2)) ?>"
+                                data-text-hide="<?= /* @noEscape */ __('Show Less') ?>">
+                            </a>
+                            <?php
+                        } ?>
+                    </div>
+                    <div class="wk-bk-avail-show-all-container">
+                        <a href="#" class="wk-bk-avail-show-all" data-mage-init='{"dropdown":{}}'>
+                       <?= /* @noEscape */ __('Show for all days')?>
+                        </a>
+                        <div class="wk-bk-avail-show-all-wrapper">
+                       <?php $availableSlotArr = [];
+                        foreach ($bookingSlotData as $dayKey => $dayValue) {
+                            $availableSlotArr[$dayKey] = [];
+                            $slotIndex = 1;
+                            $currentSlots = 0; ?>
+                            <div class="wk-bk-avail-day-row">
+                                <div class="wk-bk-avail-day-title">
+                                    <?= /* @noEscape */ $helper->getDayLabel($dayKey)?>
+                                </div>
+                                <?php if (count($dayValue) && (($flag && in_array($dayKey, $arr)) || !$flag)) { ?>
+                                    <div class="wk-bk-avail-day-slots">
+                                        <?php foreach ($dayValue as $key => $value) {
+                                            $availableSlotArr[$dayKey][$key] = $value['slots_info']; ?>
+                                            <div>
+                                                <?= /* @noEscape */ $value['from'].' - '.$value['to']?>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="wk-bk-avail-day-slots wk-bk-slot-close">
+                                        <?= /* @noEscape */ __('Closed') ?>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <?php
+                        } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+        $availableTodaySlotArr = $availableSlotArr;
+        $preventDuration = (float)$product['prevent_scheduling_before'];
+        $currentTime = strtotime('+'.$preventDuration.' minutes', $currentLocalTime);
+        $todayFlag = 0;
+        $index = 0;
+        $slotIndex = 0;
+        $bookedTimeSlot = [];
+        // if ($currentDate === strtotime($bookingAvailableFrom)) {
+        //     $todayFlag = 1;
+        //     foreach ($availableTodaySlotArr[$fromDayIndex] as $key => $value) {
+        //         foreach ($value as $slotKey => $slotValue) {
+        //             if ($currentTime >= strtotime($slotValue['time'])) {
+        //                 unset($availableTodaySlotArr[$fromDayIndex][$key][$slotKey]);
+        //             } elseif (!empty($bookedData[$currentDate][$slotValue['time']])) {
+        //                 $remainingQty = $slotValue['qty'] - $bookedData[$currentDate][$slotValue['time']];
+        //                 if ($remainingQty <= 0) {
+        //                     $bookedTimeSlot[] = $slotValue['time'];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        if (gmdate("Y-m-d", $currentDate) === gmdate("Y-m-d", strtotime($bookingAvailableFrom))) {
+            $todayFlag = 1;
+            foreach ($availableTodaySlotArr[$fromDayIndex] as $key => $value) {
+                foreach ($value as $slotKey => $slotValue) {
+                    if ($currentTime >= strtotime($slotValue['time'])) {
+                        unset($availableTodaySlotArr[$fromDayIndex][$key][$slotKey]);
+                    } elseif (!empty($bookedData[$currentDate][$slotValue['time']])) {
+                        $remainingQty = $slotValue['qty'] - $bookedData[$currentDate][$slotValue['time']];
+                        if ($remainingQty <= 0) {
+                            $bookedTimeSlot[] = $slotValue['time'];
+                        }
+                    }
+                }
+            }
+        }
+        $defaultTime = '';
+        $defaultTimeLabel = __('Closed');
+        foreach ($availableTodaySlotArr[$fromDayIndex] as $key => $value) {
+            foreach ($value as $slotKey => $slotValue) {
+                if (!in_array($slotValue['time'], $bookedTimeSlot)) {
+                    $defaultTime = $slotValue['time'];
+                    $defaultTimeLabel = $slotValue['time'];
+                    $index = $key;
+                    $slotIndex = $slotKey;
+                    break;
+                }
+            }
+        }
+        ?>
+        <div class="wk-bk-dates-container-holder">
+            <h4><?= /* @noEscape */ __('Select Date and Time Slot')?></h4>
+            <div class="wk-bk-dates-container">
+                <input type="text" name="booking_date"
+                    class="required-entry input-text wk-bk-datetype"
+                    id="wk-bk-select-date"
+                    value="<?= /* @noEscape */ $bookingAvailableFrom?>"
+                    placeholder="<?= /* @noEscape */ date("d M, Y", strtotime($bookingAvailableFrom)) ?>"
+                    readonly/>
+                <label for="wk-bk-select-date" class="wk-bk-select-date-label">
+                    <?= /* @noEscape */ date("d M, Y", strtotime($bookingAvailableFrom)) ?>
+                </label>
+            </div>
+            <div class="wk-bk-time-container">
+                <input type="hidden" name="booking_time"
+                    id="wk-bk-booking-time-field"
+                    value="<?= /* @noEscape */ $defaultTime?>"/>
+                <input type="hidden" name="qty" id="qty" value="1">
+                <label for="wk-bk-select-time" class="wk-bk-select-time-label" data-mage-init='{"dropdown":{}}'>
+                    <?= /* @noEscape */ $defaultTimeLabel?>
+                </label>
+                <div class="wk-bk-select-time-opt-wrapper"
+                    <?php if (empty($availableTodaySlotArr[$fromDayIndex])) {
+                        echo 'style="display: none;"';
+                    }?>>
+                    <?php
+                    $parentSlotIndex = 0;
+                    $childSlotIndex = 0;
+                    $bookingSlotTime = '';
+                    foreach ($availableSlotArr[$fromDayIndex] as $key => $value) {
+                        foreach ($value as $slotKey => $slotValue) { ?>
+                            <?php
+                            if ($key===$index && $slotKey===$slotIndex && $defaultTime!=="") {
+                                $parentSlotIndex = $key;
+                                $childSlotIndex = $slotKey;
+                                $bookingSlotTime = $slotValue['time'];
+                                break;
+                            }
+                        }
+                    } ?>
+                </div>
+            </div>
+            <input type="hidden" name="parent_slot_id"
+                id="wk-bk-parent-slot-id"
+                value="<?= /* @noEscape */ $parentSlotIndex?>">
+            <input type="hidden" name="slot_id"
+                id="wk-bk-slot-id"
+                value="<?= /* @noEscape */ $childSlotIndex?>">
+            <input type="hidden" name="slot_day_index"
+                id="wk-bk-slot-day-index"
+                value="<?= /* @noEscape */ $fromDayIndex?>">
+            <?php foreach ($options as $key => $value) {
+                if ($value['title'] === 'Booking Date') { ?>
+                    <input type="hidden"
+                        name="options[<?= /* @noEscape */ $value['id']?>]"
+                        id="options_<?= /* @noEscape */ $value['id']?>_text"
+                        value="<?= /* @noEscape */ date("d M, Y", strtotime($bookingAvailableFrom)) ?>">
+                    <?php
+                }
+                if ($value['title'] === 'Booking Slot') { ?>
+                    <input type="hidden"
+                        name="options[<?= /* @noEscape */ $value['id']?>]"
+                        id="options_<?= /* @noEscape */ $value['id']?>_text"
+                        value="<?= /* @noEscape */ $bookingSlotTime?>">
+                    <?php
+                }
+            }?>
+        </div>
+    </div>
+    <script id="wk-bk-select-time-opt-template-today" type="text/x-magento-template">
+        <?php foreach ($availableTodaySlotArr[$fromDayIndex] as $key => $value) {
+            foreach ($value as $slotKey => $slotValue) { ?>
+                <span class="wk-bk-select-time-opt
+                        <?php if ($slotValue['qty']<=0 || in_array($slotValue['time'], $bookedTimeSlot)) {?>
+                            wk-bk-slot-booked
+                        <?php } ?>
+                        <?php if ($key===$index && $slotKey===$slotIndex) {?>wk-bk-slot-selected<?php } ?>"
+                    data-type-time="<?= /* @noEscape */ $slotValue['time']?>"
+                    data-day-index="<?= /* @noEscape */ $fromDayIndex?>"
+                    data-index="<?= /* @noEscape */ $key?>"
+                    data-slot-index="<?= /* @noEscape */ $slotKey?>"
+                    data-slot-qty="<?= /* @noEscape */ $slotValue['qty'] ?>">
+                    <?= /* @noEscape */ $slotValue['time']?>
+                </span>
+                <?php
+                if ($key===$index && $slotKey===$slotIndex) {
+                    $parentSlotIndex = $key;
+                    $childSlotIndex = $slotKey;
+                    $bookingSlotTime = $slotValue['time'];
+                }
+            }
+        } ?>
+    </script>
+    <?php for ($i=1; $i<=7; $i++) { ?>
+        <script id="wk-bk-select-time-opt-template<?= /* @noEscape */ $i?>" type="text/x-magento-template">
+            <?php
+            if (!empty($availableSlotArr[$i])) {
+                $j = 0;
+                foreach ($availableSlotArr[$i] as $key => $value) {
+                    foreach ($value as $slotKey => $slotValue) { ?>
+                        <span
+                            class="wk-bk-select-time-opt
+                                <?php if ($slotValue['qty']<=0) {?>wk-bk-slot-booked<?php } ?>
+                                <?php if ($slotValue['qty']>0 && !$j) {?>wk-bk-slot-selected<?php } ?>"
+                            data-type-time="<?= /* @noEscape */ $slotValue['time']?>"
+                            data-day-index="<?= /* @noEscape */ $i?>"
+                            data-index="<?= /* @noEscape */ $key?>"
+                            data-slot-index="<?= /* @noEscape */ $slotKey?>"
+                            data-slot-qty="<?= /* @noEscape */ $slotValue['qty'] ?>">
+                            <?= /* @noEscape */ $slotValue['time']?>
+                        </span>
+                        <?php
+                        $j++;
+                        if ($slotValue['qty']<=0) {
+                            $j--;
+                        }
+                    }
+                }
+            } ?>
+        </script>
+    <?php } ?>
+    <?php
+    $monthArr = [
+        '01'=>"January",
+        '02'=>"February",
+        '03'=>"March",
+        '04'=>"April",
+        '05'=>"May",
+        '06'=>"June",
+        '07'=>"July",
+        '08'=>"August",
+        '09'=>"September",
+        '10'=>"October",
+        '11'=>"November",
+        '12'=>"December"
+    ];
+    $jsData = [
+        'monthArr' => $monthArr,
+        'optionsJson' => $helper->getJsonEcodedString($options),
+        'bookingAvailableFrom' => $bookingAvailableFrom,
+        'bookingAvailableTo' => $bookingAvailableTo,
+        'titleClosed' => __('Closed'),
+        'bookedData' => $bookedData,
+        'appointmentUnavailableDates' => $helper->getUnvailableDates(
+            $bookingSlotData,
+            $bookingAvailableFrom,
+            $bookingAvailableTo
+        )
+    ];
+    $encodedJsData = $viewModel->getJsonEncoded($jsData);
+    ?>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "appointmentbooking": <?= /* @noEscape */ $encodedJsData; ?>
+            }
+        }
+    </script>
+    <script>
+        require([
+            "jquery"
+        ], function($) {
+            $('body').trigger('contentUpdated');
+        });
+    </script>
+    <?php
+} ?>

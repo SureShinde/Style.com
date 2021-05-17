@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing_data_source</item>
+            <item name="deps" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">hotelbooking_questions_listing_columns</item>
+    </argument>
+    <dataSource name="hotelbooking_questions_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">hotelbooking_questions_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">entity_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">entity_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="stickyTmpl" xsi:type="string">ui/grid/sticky/toolbar</item>
+            </item>
+        </argument>
+        <bookmark name="bookmarks">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="namespace" xsi:type="string">hotelbooking_questions_listing</item>
+                    </item>
+                </item>
+            </argument>
+        </bookmark>
+        <component name="columns_controls">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="columnsData" xsi:type="array">
+                        <item name="provider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.hotelbooking_questions_listing_columns</item>
+                    </item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/controls/columns</item>
+                    <item name="displayArea" xsi:type="string">dataGridActions</item>
+                </item>
+            </argument>
+        </component>
+        <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="columnsProvider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.hotelbooking_questions_listing_columns</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.filters</item>
+                    </item>
+                    <item name="templates" xsi:type="array">
+                        <item name="filters" xsi:type="array">
+                            <item name="select" xsi:type="array">
+                                <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                                <item name="template" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                            </item>
+                        </item>
+                    </item>
+                    <item name="childDefaults" xsi:type="array">
+                        <item name="provider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.listing_top.listing_filters</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.hotelbooking_questions_listing_columns.${ $.index }:visible</item>
+                        </item>
+                    </item>
+                </item>
+                <item name="observers" xsi:type="array">
+                    <item name="column" xsi:type="string">column</item>
+                </item>
+            </argument>
+        </filters>
+        <paging name="listing_paging">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.paging</item>
+                    </item>
+                    <item name="selectProvider" xsi:type="string">hotelbooking_questions_listing.hotelbooking_questions_listing.hotelbooking_questions_listing_columns.bookings</item>
+                </item>
+            </argument>
+        </paging>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Delete selected items?</message>
+                        <title translate="true">Delete questions</title>
+                    </confirm>
+                    <url path="mpadvancebooking/hotelbooking/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="status">
+                <settings>
+                    <type>status</type>
+                    <label translate="true">Change status</label>
+                    <actions>
+                        <action name="0">
+                            <type>enable</type>
+                            <label translate="true">Enable</label>
+                            <url path="mpadvancebooking/hotelbooking/massStatus">
+                                <param name="status">1</param>
+                            </url>
+                        </action>
+                        <action name="1">
+                            <type>disable</type>
+                            <label translate="true">Disable</label>
+                            <url path="mpadvancebooking/hotelbooking/massStatus">
+                                <param name="status">2</param>
+                            </url>
+                        </action>
+                    </actions>
+                </settings>
+            </action>
+        </massaction>
+    </container>
+    <columns name="hotelbooking_questions_listing_columns">
+        <selectionsColumn name="ids" sortOrder="0">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="entity_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="product_id" sortOrder="20" class="Webkul\MpAdvancedBookingSystem\Ui\Component\Listing\Columns\Productlink">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Webkul_MpAdvancedBookingSystem/js/grid/columns/link</item>
+                    <item name="truncate" xsi:type="number">50</item>
+                    <item name="nl2br" xsi:type="boolean">true</item>
+                    <item name="escape" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Product</label>
+            </settings>
+        </column>
+        <column name="nick_name" sortOrder="30">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="truncate" xsi:type="number">50</item>
+                    <item name="nl2br" xsi:type="boolean">true</item>
+                    <item name="escape" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nick Name</label>
+            </settings>
+        </column>
+        <column name="type" class="Webkul\MpAdvancedBookingSystem\Ui\Component\Listing\Columns\Type" sortOrder="40">
+            <settings>
+                <label translate="true">Type</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="question" sortOrder="50">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Question</label>
+            </settings>
+        </column>
+        <column name="replies" sortOrder="60">
+            <settings>
+                <label translate="true">Replies</label>
+            </settings>
+        </column>
+        <column name="status" class="Webkul\MpAdvancedBookingSystem\Ui\Component\Listing\Columns\Status" sortOrder="70">
+            <settings>
+                <filter>select</filter>
+                <options class="Webkul\MpAdvancedBookingSystem\Ui\Component\Listing\Columns\Status"/>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="80">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Submitted At</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Webkul\MpAdvancedBookingSystem\Ui\Component\Listing\Columns\ViewQuestionAction" sortOrder="100">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

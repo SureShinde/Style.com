@@ -1,0 +1,276 @@
+<h1>Register Stylist</h1>
+
+<form action="<?php echo $block->getFormAction() ?>" method="post">
+
+    <label for="firstname" class="label"><span>Firstname</span></label>
+    <div class="control">
+        <input type="text"
+               name="firstname"
+               value=""
+               id="firstname"
+               title="firstname"
+               class="input-text"
+        >
+    </div>
+
+    <label for="lastname" class="label"><span>Lastname</span></label>
+    <div class="control">
+        <input type="text"
+               name="lastname"
+               value=""
+               id="lastname"
+               title="lastname"
+               class="input-text"
+        >
+    </div>
+
+    <label for="profileurl" class="label"><span>Profileurl</span></label>
+    <div class="control">
+        <input type="text"
+               name="profileurl"
+               value=""
+               id="profileurl"
+               title="profileurl"
+               class="input-text"
+        >
+    </div>
+
+    <label for="email" class="label"><span>Email</span></label>
+    <div class="control">
+        <input type="email"
+               name="email"
+               autocomplete="email"
+               value=""
+               id="email"
+               title="Email"
+               class="input-text"
+        >
+    </div>
+
+    <label for="address1" class="label"><span>Address Line 1</span></label>
+    <div class="control">
+        <input type="text"
+               name="address1"
+               value=""
+               id="address1"
+               title="address1"
+               class="input-text"
+        >
+    </div>
+
+    <label for="address2" class="label"><span>Address Line 2</span></label>
+    <div class="control">
+        <input type="text"
+               name="address2"
+               value=""
+               id="address2"
+               title="address2"
+               class="input-text"
+        >
+    </div>
+
+    <label for="state" class="label"><span>State</span></label>
+    <div class="control">
+        <input type="text"
+               name="state"
+               value=""
+               id="state"
+               title="state"
+               class="input-text"
+        >
+    </div>
+
+    <label for="city" class="label"><span>City</span></label>
+    <div class="control">
+        <input type="text"
+               name="city"
+               value=""
+               id="city"
+               title="city"
+               class="input-text"
+        >
+    </div>
+
+    <label for="zip" class="label"><span>Zip</span></label>
+    <div class="control">
+        <input type="text"
+               name="zip"
+               value=""
+               id="zip"
+               title="zip"
+               class="input-text"
+        >
+    </div>
+
+    <label for="phone" class="label"><span>Phone</span></label>
+    <div class="control">
+        <input type="text"
+               name="phone"
+               autocomplete="phone"
+               value=""
+                id="phone"
+               title="phone"
+               class="input-text"
+        >
+    </div>
+
+    <label for="title_stylist"> <?= /* @noEscape */ __('Title (Image Consultant or Personal Stylist)') ?> </label>
+    <div class="control">
+         <select name="title_stylist" id="title_stylist">
+             <option value="0">Image Consultant</option>
+             <option value="1">Personal Stylist</option>
+        </select>
+    </div>
+
+    <label for="experience"> <?= /* @noEscape */ __('Experience') ?> </label>
+    <div class="control">
+        <?php $experienceYears = range(0, 25);?>
+         <select name="experience" id="experience">
+            <option value="" selected="selected" disabled="disabled"><?= /* @noEscape */ __('Select Experience')?></option>
+            <?php foreach ($experienceYears as $year):?>
+                <option value="<?= $escaper->escapeHtml($year); ?>"><?= $escaper->escapeHtml($year);?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div class="field stylist-profile-register">
+        <label for="specialties_general"> <?= /* @noEscape */ __('Specialties(General)') ?> </label>
+        <div class="control">
+            <?php
+                $specialties_general = array(
+                    '-' => 0,
+                    'Menswear' => 1,
+                    'Womenswear' => 2,
+                    'Mature Style' => 3,
+                    'Specialty Sizes (Petite/Plus/Tall)' => 4,
+                    'Color Advice' => 5,
+                    'Wardrobe Review' => 6,
+                    'Shape Analysis' => 7,
+                    'Life Transitions' => 8,
+                    'Maternity/Nursing' => 9,
+                    'Bespoke/Couture' => 10,
+                    'Tailoring' => 11,
+                    'Secondhand/Thrift Shopping' => 12,
+                    'Personal Shopping' => 13,
+                    'Accessories' => 14,
+                    'Hair' => 15,
+                    'Skincare/Makeup' => 16,
+                    'Religious Modesty' => 17,
+                    'Non-binary' => 18,
+                    'Physical Changes Due to Surgery' => 19,
+                    'Children/Teen Style' => 20
+                );
+            ?>
+
+            <select name="specialties_general[]" id="specialties_general" multiple size='10'>
+                <?php foreach ($specialties_general as $specialties_general_option => $key):?>
+                    <option value="<?= $escaper->escapeHtml($key); ?>"><?= $escaper->escapeHtml($specialties_general_option);?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="field stylist-profile-register">
+        <label for="specialties_work"> <?= /* @noEscape */ __('Specialties(Work)') ?> </label>
+        <div class="control">
+            <?php
+                $specialties_work = array(
+                    '-' => 0,
+                    'Job Interview' => 1,
+                    'Corporate/Business Wear' => 2,
+                    'On Camera/Video Conferences' => 3,
+                    'Public Speaking (Including Voice & Media Training)' => 4,
+                    'Business Trip (Domestic)' => 5,
+                    'Business Trip (Foreign, Including Protocol)' => 6,
+                    'Headshots/Photoshoots' => 7,
+                    'Business Casual/Work from Home' => 8,
+                    'Personal Branding' => 9,
+                    'Executive Presence' => 10
+                );
+            ?>
+            <select name="specialties_work[]" id="specialties_work" multiple size='10'>
+                <?php foreach ($specialties_work as $specialties_work_option => $key):?>
+                    <option value="<?= $escaper->escapeHtml($key); ?>"><?= $escaper->escapeHtml($specialties_work_option);?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="field stylist-profile-register">
+        <label for="specialties_social"> <?= /* @noEscape */ __('Specialties(Social)') ?> </label>
+        <div class="control">
+            <?php
+                $specialties_social = array(
+                    '-' => 0,
+                    'Social Media Profile' => 1,
+                    'Dating Profile' => 2,
+                    'Bridal' => 3,
+                    'Holiday Party' => 4,
+                    'Dating' => 5,
+                    'Travel Packing' => 6,
+                    'Travel Etiquette' => 7,
+                    'Formalwear' => 8,
+                    'Semi-formal Events' => 9
+                );
+            ?>
+            <select name="specialties_social[]" id="specialties_social" multiple size='10'>
+                <?php foreach ($specialties_social as $specialties_social_option => $key):?>
+                    <option value="<?= $escaper->escapeHtml($key); ?>"><?= $escaper->escapeHtml($specialties_social_option);?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="field stylist-profile-register">
+        <label for="certification"> <?= /* @noEscape */ __('AICI certification') ?> </label>
+        <div class="control">
+            <select name="certification[]" id="certification" multiple>
+                <option value="0">No</option>
+                <option value="1">CIC</option>
+                <option value="2">CIP</option>
+                <option value="3">CIM</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field stylist-profile-register">
+        <label for="password" class="label"><span>password</span></label>
+        <div class="control">
+            <input type="password"
+                   name="password"
+                   autocomplete="off"
+                   id="password"
+                   title="password"
+                   class="input-text"
+            >
+        </div>
+    </div>
+
+
+    <!-- <input type="text"
+           name="is_seller"
+           id="is_seller"
+           value="1"
+           title="is_seller"
+           hidden
+    > -->
+    <div class="field stylist-profile-register">
+        <input type="submit" value="Send informations">
+    </div>
+</form>
+
+
+
+Name
+Email
+Address Line 1
+Address Line 2
+City
+State
+Zip
+Phone
+Title (Image Consultant or Personal Stylist)
+Years of Experience (as a Personal Stylist or Image Consultant)
+Specialties (list attached)
+AICI certification (potential answers: no, CIC, CIP, CIM;

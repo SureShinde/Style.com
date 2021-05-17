@@ -1,0 +1,36 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php $product = $block->getProduct(); ?>
+<?php
+    $productType = $product->getTypeId();
+    $productSetId = $product->getAttributeSetId();
+    $helper = $block->getBookingViewModel()->getHelper();
+    $appointmentType = $helper->getProductAttributeSetIdByLabel('Appointment Booking');
+    $eventType = $helper->getProductAttributeSetIdByLabel('Event Booking');
+    $rentType = $helper->getProductAttributeSetIdByLabel('Rental Booking');
+    $tableType = $helper->getProductAttributeSetIdByLabel('Table Booking');
+?>
+<?php if ($productType == "booking"): ?>
+    <?php if ($productSetId == $appointmentType) {
+        echo $block->getChildHtml('appointmentTypeBooking');
+    } elseif ($productSetId == $eventType) {
+        echo $block->getChildHtml('eventTypeBooking');
+    } elseif ($productSetId == $rentType) {
+        echo $block->getChildHtml('rentTypeBooking');
+    } elseif ($productSetId == $tableType) {
+        echo $block->getChildHtml('tableTypeBooking');
+    } else {
+        echo $block->getChildHtml('defaultBooking');
+    }?>
+<?php elseif ($productType == "hotelbooking"): ?>
+    <?= /* @noEscape */ $block->getChildHtml('hotelTypeBooking'); ?>
+<?php endif; ?>

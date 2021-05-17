@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCheckCardCodeAndPoolAfterOrderPercentFeeGiftCardProd" extends="GiftCardCheckCardCodeAndPoolAfterOrderDefGiftCardProd">
+        <annotations>
+            <features value="Gift Card Product"/>
+            <stories value="Order Gift Card Product"/>
+            <title value="Order Gift Card Product"/>
+            <description value="Order Gift Card Product. Check Card Account And Code Pool After Order Percent Fee Gift Card Product"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-38"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardProduct"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateFeeGiftCardProductActionGroup" stepKey="createGiftCardProductActionGroup">
+                <argument name="giftCardProductData" value="percentFeeGiftCardProduct"/>
+                <argument name="categoryName" value="$$simpleCategory.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGiftCardProduct">
+                <argument name="product" value="percentFeeGiftCardProduct"/>
+            </actionGroup>
+        </after>
+
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="{{percentFeeGiftCardProduct.name}}"/>
+        </actionGroup>
+        <!--check gift code account information-->
+        <actionGroup ref="AdminCheckGiftCodeAccountDataOnGridActionGroup" stepKey="checkGiftCodeAccountDataOnGrid">
+            <argument name="giftCode" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+            <argument name="giftCodeAccount" value="feeGiftCodeAccount"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckGiftCodeAccAfterOrderGiftProdActionGroup" stepKey="checkGiftCodeAccAfterOrderGiftProd">
+            <argument name="giftCode" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+            <argument name="giftCodeAccount" value="feeGiftCodeAccount"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRecipientInformationInCardAccActionGroup" stepKey="checkRecipientInformation">
+            <argument name="giftCardProductData" value="percentFeeGiftCardProduct"/>
+        </actionGroup>
+    </test>
+</tests>

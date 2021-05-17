@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--check card code is applied in order-->
+    <actionGroup name="AdminCheckOrderAfterCardCodeIsAppliedActionGroup">
+        <arguments>
+            <argument name="productPrice"/>
+            <argument name="giftCode" type="string"/>
+            <argument name="cardCodeDiscount"/>
+        </arguments>
+        <scrollTo selector="{{AdminOrderTotalSection.subTotal}}" stepKey="scrollToOrderTotalSection"/>
+        <see selector="{{AdminOrderTotalSection.subTotal}}" userInput="{{productPrice}}" stepKey="seeCartSubTotal"/>
+        <see selector="{{AdminOrderViewSection.GiftCard(giftCode)}}" userInput="{{cardCodeDiscount.discountAmount}}" stepKey="seeGiftCardAmount"/>
+        <see selector="{{AdminOrderTotalSection.grandTotal}}" userInput="{{cardCodeDiscount.orderTotal}}" stepKey="seeGrandTotal"/>
+    </actionGroup>
+
+    <!--check gift code product data in order-->
+    <actionGroup name="AdminCheckGiftCardProductDataInOrderActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+        </arguments>
+        <scrollTo selector="{{AdminOrderViewSection.ProductName}}" stepKey="scrollToPurchasedProductName"/>
+        <see selector="{{AdminOrderViewSection.ProductName}}" userInput="{{giftCardProductData.name}}" stepKey="seeGiftCardProductName"/>
+        <see selector="{{AdminOrderViewSection.ProductSKU}}" userInput="{{giftCardProductData.sku}}" stepKey="seeGiftCardProductSKU"/>
+        <seeElement selector="{{AdminOrderViewSection.GiftCardInfoBlock}}" stepKey="seeGiftCardInfoBlock"/>
+        <see selector="{{AdminOrderViewSection.CardValue}}" userInput="{{giftCardProductData.giftCardAmount}}" stepKey="seeCardValue"/>
+        <see selector="{{AdminOrderViewSection.CardType}}" userInput="{{giftCardProductData.typeTitle}}" stepKey="seeCardType"/>
+        <seeElement selector="{{AdminOrderViewSection.CardImage(giftCardProductData.selectedImage)}}" stepKey="seeCardImage"/>
+        <see selector="{{AdminOrderViewSection.CardRecipient}}" userInput="{{giftCardProductData.recipientName}}" stepKey="seeRecipientName"/>
+        <see selector="{{AdminOrderViewSection.CardRecipient}}" userInput="{{giftCardProductData.recipientEmail}}" stepKey="seeRecipientEmail"/>
+    </actionGroup>
+
+    <actionGroup name="AdminGrabCardAccountOnOrderPageActionGroup">
+        <grabTextFrom selector="{{AdminOrderViewSection.CardAccounts}}" stepKey="grabSelectedGiftCardCode"/>
+        <setCookie userInput="setSelectedGiftCardCodeInCookie" value="{$grabSelectedGiftCardCode}" stepKey="setSelectedGiftCardCodeInCookie"/>
+        <grabTextFrom selector="{{AdminOrderViewSection.CardAccounts}}" stepKey="grabCardAccount"/>
+    </actionGroup>
+</actionGroups>

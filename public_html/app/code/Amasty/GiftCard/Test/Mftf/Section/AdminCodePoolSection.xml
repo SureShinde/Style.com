@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminCodePoolSection">
+        <element name="SaveAndContinueEdit" type="button" selector="//button[@id='save_and_continue']"/>
+        <element name="Save" type="button" selector="//button[@id='save']"/>
+        <element name="CodePoolName" type="input" selector="//input[@name='general[title]']"/>
+        <element name="GeneralSettingsTab" type="button" selector="//a[@id='tab_general']"/>
+        <element name="CodesSettingsTab" type="button" selector="//a[@id='tab_codes']"/>
+        <element name="CodesTemplate" type="input" selector="//input[@name='codes[template]']"/>
+        <element name="CodesQtyToGenerate" type="input" selector="//input[@name='codes[qty]']"/>
+        <element name="CsvFile" type="input" selector="//input[@name='codes[csv]']"/>
+        <element name="GenerateCodePool" type="button" selector="//button[contains(string(), 'Generate')]"/>
+        <element name="QtyRecordsFound" type="button" selector="//div[@class='admin__control-support-text'][contains(string(), '{{qty}}')]" parameterized="true"/>
+        <!--code grid on Code Pool page-->
+        <element name="FiltersButton" type="button" selector="//button[@data-action='grid-filter-expand']"/>
+        <element name="CodeName" type="input" selector="//input[@name='code']"/>
+        <element name="ApplyFilter" type="button" selector="//button[@data-action='grid-filter-apply']"/>
+        <element name="ActiveFilters" type="text" selector="//*[@class='admin__data-grid-header']//div[@class='admin__data-grid-filters-current _show']"/>
+        <element name="ClearAllFilters" type="button" selector="//button[@data-action='grid-filter-reset']"/>
+        <element name="RecordsFoundMessage" type="text" selector="//*[@class='admin__control-support-text'][contains(string(), '{{qty}} records found')]" parameterized="true"/>
+        <element name="CodeCell" type="text" selector="//tr[1]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., '{{column}}')]/preceding-sibling::th) +1 ]" parameterized="true"/>
+    </section>
+</sections>

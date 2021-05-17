@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Webkul\MpAdvancedBookingSystem\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpAdvancedBookingSystem\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">MpAdvancedBookingSystemLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Webkul\MpAdvancedBookingSystem\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Webkul\Marketplace\Helper\Data">
+        <plugin name="Webkul_MpAdvancedBookingSystem::afterGetAllowedSets" type="Webkul\MpAdvancedBookingSystem\Plugin\Helper\Marketplace" sortOrder="10" />
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="Webkul_MpAdvancedBookingSystem::afterGetIsVirtual" type="Webkul\MpAdvancedBookingSystem\Plugin\Model\Catalog\Product" sortOrder="1" />
+    </type>
+    <type name="Magento\CatalogInventory\Model\Stock\Item">
+        <plugin name="Webkul_MpAdvancedBookingSystem::afterGetQty" type="Webkul\MpAdvancedBookingSystem\Plugin\Model\CatalogInventory\Stock\Item" sortOrder="1" />
+    </type>
+    <type name="Magento\CatalogInventory\Model\StockStateProvider">
+        <plugin name="Webkul_MpAdvancedBookingSystem::afterCheckQty" type="Webkul\MpAdvancedBookingSystem\Plugin\Model\CatalogInventory\StockStateProvider" sortOrder="1" />
+    </type>
+    <type name="Magento\Checkout\Controller\Cart\Configure">
+        <plugin name="Webkul_MpAdvancedBookingSystem::afterConfigure" type="Webkul\MpAdvancedBookingSystem\Plugin\Controller\Checkout\Cart\Configure" sortOrder="1" />
+    </type>
+
+    <preference for="Magento\Checkout\CustomerData\DefaultItem" type="Webkul\MpAdvancedBookingSystem\CustomerData\DefaultItem" /> 
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mpadvancedbookingsystem_bookings_list_data_source" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Booked\Grid\Collection</item>
+                <item name="hotelbooking_questions_listing_data_source" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question\Grid\Collection</item>
+                <item name="hotelbooking_answers_listing_data_source" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Booked\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wk_mp_booking_booked</argument>
+            <argument name="eventPrefix" xsi:type="string">mpadvancedbookingsystem_bookings_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">bookings_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Booked</argument>
+        </arguments>
+    </type>
+    <virtualType name="MpAdvancedBookingSystemGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MpAdvancedBookingsGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Booked\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">MpAdvancedBookingSystemGirdFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wk_mp_hotelbooking_question</argument>
+            <argument name="eventPrefix" xsi:type="string">mpadvancedbookingsystem_questions_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">questions_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question</argument>
+        </arguments>
+    </type>
+    <virtualType name="MpAdvancedBookingSystemQuestionGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MpAdvancedBookingsQuestionGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">MpAdvancedBookingSystemQuestionGirdFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wk_mp_hotelbooking_answer</argument>
+            <argument name="eventPrefix" xsi:type="string">mpadvancedbookingsystem_answers_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">answers_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer</argument>
+        </arguments>
+    </type>
+    <virtualType name="MpAdvancedBookingSystemAnswerGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MpAdvancedBookingsAnswerGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">MpAdvancedBookingSystemAnswerGirdFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Catalog\Model\Product\TypeTransitionManager">
+        <plugin name="hotelbooking_product_transition" type="Webkul\MpAdvancedBookingSystem\Plugin\Model\Product\TypeTransitionManager\Hotelbooking" sortOrder="40" />
+        <arguments>
+            <argument name="compatibleTypes" xsi:type="array">
+                <item name="hotel-configurable" xsi:type="const">Webkul\MpAdvancedBookingSystem\Model\Product\Type\Hotelbooking::TYPE_CODE</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Magento\Catalog\Api\Data\ProductInterface" xsi:type="array">
+                    <item name="create" xsi:type="array">
+                        <item name="create_hotelbooking_options" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\Product\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="update_hotelbooking_options" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\Product\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Webkul\MpAdvancedBookingSystem\Api\OptionRepositoryInterface" type="Webkul\MpAdvancedBookingSystem\Model\OptionRepository" />
+
+    <virtualType name="Webkul\MpAdvancedBookingSystem\Pricing\Price\Pool" type="Magento\Framework\Pricing\Price\Pool">
+        <arguments>
+            <argument name="prices" xsi:type="array">
+                <item name="regular_price" xsi:type="string">Magento\ConfigurableProduct\Pricing\Price\ConfigurableRegularPrice</item>
+                <item name="final_price" xsi:type="string">Webkul\MpAdvancedBookingSystem\Pricing\Price\FinalPrice</item>
+                <item name="wishlist_configured_price" xsi:type="string">Webkul\MpAdvancedBookingSystem\Pricing\Wishlist\ConfiguredPrice\HotelbookingProduct</item>
+            </argument>
+            <argument name="target" xsi:type="object">Magento\Catalog\Pricing\Price\Pool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Webkul\MpAdvancedBookingSystem\Pricing\Price\Collection" type="Magento\Framework\Pricing\Price\Collection">
+        <arguments>
+            <argument name="pool" xsi:type="object">Webkul\MpAdvancedBookingSystem\Pricing\Price\Pool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Pricing\PriceInfo\Factory">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="hotelbooking" xsi:type="array">
+                    <item name="infoClass" xsi:type="string">Magento\Framework\Pricing\PriceInfo\Base</item>
+                    <item name="prices" xsi:type="string">Webkul\MpAdvancedBookingSystem\Pricing\Price\Collection</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\ConfigurableProduct\Pricing\Price\ConfigurableRegularPrice">
+        <arguments>
+            <argument name="priceResolver" xsi:type="object">ConfigurableRegularPriceResolver</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpAdvancedBookingSystem\Pricing\Price\FinalPrice">
+        <arguments>
+            <argument name="priceResolver" xsi:type="object">ConfigurableFinalPriceResolver</argument>
+        </arguments>
+    </type>
+    <virtualType name="ConfigurableRegularPriceResolver" type="Webkul\MpAdvancedBookingSystem\Pricing\Price\ConfigurablePriceResolver">
+        <arguments>
+            <argument name="priceResolver" xsi:type="object">Webkul\MpAdvancedBookingSystem\Pricing\Price\RegularPriceResolver</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ConfigurableFinalPriceResolver" type="Webkul\MpAdvancedBookingSystem\Pricing\Price\ConfigurablePriceResolver">
+        <arguments>
+            <argument name="priceResolver" xsi:type="object">Webkul\MpAdvancedBookingSystem\Pricing\Price\FinalPriceResolver</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Catalog\Helper\Product\Configuration">
+        <plugin name="hotelbooking_product" type="Webkul\MpAdvancedBookingSystem\Helper\Product\Configuration\Plugin" sortOrder="100" />
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="disable_mpadvancedbooking_module" xsi:type="object">Webkul\MpAdvancedBookingSystem\Console\Command\DisableModule</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Attribute\Backend\Price">
+        <plugin name="hotelbooking" type="Webkul\MpAdvancedBookingSystem\Model\Plugin\PriceBackend" sortOrder="100" />
+    </type>
+</config>

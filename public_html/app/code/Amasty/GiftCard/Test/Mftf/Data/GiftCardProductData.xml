@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="defaultGiftCardProduct" type="giftCardProductData">
+        <data key="type">1</data>
+        <data key="typeTitle">Virtual</data>
+        <data key="image">1</data>
+        <data key="selectedImage">_gift-card-1</data>
+        <data key="name" unique="suffix">amGiftCard-</data>
+        <data key="sku" unique="suffix">amGiftCardSKU-</data>
+        <data key="taxClass">0</data>
+        <data key="quantity">10</data>
+        <data key="giftCardAmount">10.00</data>
+        <data key="price">10</data>
+        <data key="priceCheckout">10.00</data>
+        <data key="subtotalCheckout">10.00</data>
+        <data key="totalCheckout">10.00</data>
+        <data key="recipientName">John Doe</data>
+        <data key="recipientEmail">john.doe@example.com</data>
+    </entity>
+
+    <entity name="defOpenAmountGiftCardProduct" type="giftCardProductData" extends="defaultGiftCardProduct">
+        <data key="isEnabled">1</data>
+        <data key="isDisabled">0</data>
+        <data key="price">10</data>
+        <data key="initialPrice">0</data>
+        <data key="minValue">10.00</data>
+        <data key="amount">15.00</data>
+        <data key="subtotalCheckout">15.00</data>
+        <data key="totalCheckout">15.00</data>
+        <data key="priceCheckout">15.00</data>
+        <data key="giftCardAmount">15.00</data>
+        <data key="maxValue">20.00</data>
+    </entity>
+
+    <entity name="percentFeeGiftCardProduct" type="giftCardProductData">
+        <data key="type">1</data>
+        <data key="image">1</data>
+        <data key="name" unique="suffix">amGiftCard-</data>
+        <data key="sku" unique="suffix">amGiftCardSKU-</data>
+        <data key="taxClass">0</data>
+        <data key="quantity">10</data>
+        <data key="giftCardAmount">10.00</data>
+        <data key="price">10</data>
+        <data key="recipientName">John Doe</data>
+        <data key="recipientEmail">john.doe@example.com</data>
+        <data key="isEnabled">1</data>
+        <data key="isDisabled">0</data>
+        <data key="feeType">1</data>
+        <data key="finalPrice">11</data>
+        <data key="feeValue">10</data>
+        <data key="subtotalCheckout">11.00</data>
+        <data key="totalCheckout">11.00</data>
+        <data key="priceCheckout">11.00</data>
+        <data key="typeTitle">Virtual</data>
+        <data key="selectedImage">_gift-card-1</data>
+    </entity>
+
+    <entity name="fixedFeeGiftCardProduct" type="giftCardProductData" extends="percentFeeGiftCardProduct">
+        <data key="finalPrice">12</data>
+        <data key="feeType">2</data>
+        <data key="feeValue">2</data>
+        <data key="subtotalCheckout">12.00</data>
+        <data key="totalCheckout">12.00</data>
+        <data key="priceCheckout">12.00</data>
+    </entity>
+</entities>

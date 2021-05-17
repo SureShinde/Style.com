@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_catalog_product_save_entity_after">
+        <observer name="mpadvancedbookingsystem_AfterProductSave" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterProductSave" />
+    </event>
+    <event name="catalog_product_edit_action">
+        <observer name="mpadvancedbookingsystem_BeforeViewProduct" instance="Webkul\MpAdvancedBookingSystem\Observer\BeforeViewProduct" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="mpadvancedbookingsystem_AfterCancelOrder" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterCancelOrder" />
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="mpadvancedbookingsystem_AfterRefundOrder" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterRefundOrder" />
+    </event>
+    <event name="sales_order_invoice_save_after">
+        <observer name="mpadvancedbookingsystem_AfterInvoiceSave" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterInvoiceSave" />
+    </event>
+    <event name="catalog_product_validate_after">
+        <observer name="mpadvancedbookingsystem_AfterValidateProduct" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterValidateProduct" />
+    </event>
+</config>

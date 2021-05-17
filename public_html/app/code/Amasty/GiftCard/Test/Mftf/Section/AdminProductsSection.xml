@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminProductsGridSection">
+        <element name="GiftCardProButton" type="button" selector="//*[@data-ui-id='products-list-add-new-product-button-item-amgiftcard']"/>
+    </section>
+
+    <section name="AdminProductSection">
+        <element name="CardType" type="select" selector="//select[@name='product[am_giftcard_type]']"/>
+        <element name="GiftCardCodePool" type="select" selector="//select[@name='product[am_giftcard_code_set]']"/>
+        <element name="GiftCardImages" type="select" selector="//select[@name='product[am_giftcard_code_image]']"/>
+        <element name="ProductDetailsTab" type="button" selector="//strong[@class='admin__collapsible-title']//span[text()='Product Details']"/>
+        <element name="ProductName" type="input" selector="//input[@name='product[name]']"/>
+        <element name="ProductSKU" type="input" selector="//input[@name='product[sku]']"/>
+        <element name="TaxClass" type="select" selector="//select[@name='product[tax_class_id]']"/>
+        <element name="Quantity" type="input" selector="//input[@name='product[quantity_and_stock_status][qty]']"/>
+        <element name="CategoriesDropdown" type="multiselect" selector="div[data-index='category_ids']"/>
+        <element name="SelectCategory" type="input" selector="//*[@data-index='category_ids']//label[contains(., '{{categoryName}}')]" parameterized="true"/>
+        <element name="Done" type="button" selector="//*[@data-index='category_ids']//button[@data-action='close-advanced-select']"/>
+        <element name="AmastyGiftCardPricesTab" type="button" selector="//strong[@class='admin__collapsible-title']//span[text()='Amasty Gift Card Prices']"/>
+        <element name="AddAmountButton" type="button" selector="//table[@data-index='am_giftcard_prices']//span[contains(string(), 'Add')]"/>
+        <element name="AmountField" type="input" selector="//input[@name='product[am_giftcard_prices][0][value]']"/>
+        <element name="Save" type="button" selector="#save-button"/>
+        <element name="SuccessSavedProductMsg" type="button" selector="//div[@data-ui-id='messages-message-success']"/>
+        <element name="OpenAmount" type="button" selector="//*[@data-index='am_allow_open_amount']//span[contains(string(), 'Open Amount')]"/>
+        <element name="OpenAmountEnabled" type="checkbox" selector="//*[@name='product[am_allow_open_amount]'][@value='{{enabled}}']" parameterized="true"/>
+        <element name="OpenAmountMinValue" type="input" selector="//*[@name='product[am_open_amount_min]']"/>
+        <element name="OpenAmountMaxValue" type="input" selector="//*[@name='product[am_open_amount_max]']"/>
+        <element name="FeeForPurchase" type="button" selector="//*[@data-index='am_giftcard_fee_enable']//span[contains(string(), 'Enable Fee for Purchase')]"/>
+        <element name="FeeForPurchaseEnabled" type="checkbox" selector="//*[@name='product[am_giftcard_fee_enable]'][@value='{{enabled}}']" parameterized="true"/>
+        <element name="FeeType" type="select" selector="//select[@name='product[am_giftcard_fee_type]']"/>
+        <element name="FeeValue" type="input" selector="//input[@name='product[am_giftcard_fee_value]']"/>
+    </section>
+</sections>

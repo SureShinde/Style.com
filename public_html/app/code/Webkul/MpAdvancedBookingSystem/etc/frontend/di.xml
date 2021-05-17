@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Customer\CustomerData\Customer">
+        <plugin name="Webkul_MpAdvancedBookingSystem::customer_section_data"
+                type="Webkul\MpAdvancedBookingSystem\Plugin\CustomerData\Customer"
+                sortOrder="1" />
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mpadvancebooking_hotelbooking_questions_data_source" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question\FrontGrid\Collection</item>
+                <item name="mpadvancebooking_hotelbooking_answers_data_source" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer\FrontGrid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question\FrontGrid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wk_mp_hotelbooking_question</argument>
+            <argument name="eventPrefix" xsi:type="string">mpadvancebooking_hotelbooking_questions_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">mpadvancebooking_hotelbooking_questions_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Question</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer\FrontGrid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wk_mp_hotelbooking_answer</argument>
+            <argument name="eventPrefix" xsi:type="string">mpadvancebooking_hotelbooking_answers_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">mpadvancebooking_hotelbooking_answers_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\MpAdvancedBookingSystem\Model\ResourceModel\Answer</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Option\SaveHandler">
+        <plugin name="mpadvancedbookingsystem_option_save_handler"
+                type="Webkul\MpAdvancedBookingSystem\Plugin\Catalog\Model\Product\Option\SaveHandler"
+                sortOrder="10" />
+    </type>
+</config>

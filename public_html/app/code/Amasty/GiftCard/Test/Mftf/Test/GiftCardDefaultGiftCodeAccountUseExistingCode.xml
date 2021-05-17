@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardDefaultGiftCodeAccountUseExistingCode" extends="GiftCardDefaultGiftCodeAccount">
+        <annotations>
+            <features value="Gift Code Account"/>
+            <stories value="Gift Code Account"/>
+            <title value="Create Gift Code Account"/>
+            <description value="Check Gift Code Account Uses Existing Code"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-4"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCodeAccount"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool">
+                <argument name="codePool" value="codePoolQtyUsedCode_1"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool">
+                <argument name="codePool" value="codePoolQtyUsedCode_1.codePoolName"/>
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="checkGiftCodeAccount"/>
+        <remove keyForRemoval="checkGiftCodeAccountDataOnGrid"/>
+        <actionGroup ref="AdminFindCodePoolOnGridActionGroup" after="grabGiftCode" stepKey="findCodePoolToCheckUnusedCodeQty">
+            <argument name="codePool" value="codePoolQtyUsedCode_1.codePoolName"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCodePoolDataOnGridActionGroup" after="findCodePoolToCheckUnusedCodeQty" stepKey="checkCodePoolDataAndUnusedCodeQty">
+            <argument name="codePool" value="codePoolQtyUsedCode_1"/>
+        </actionGroup>
+        <actionGroup ref="AdminOpenCodePoolFromGridActionGroup" after="checkCodePoolDataAndUnusedCodeQty" stepKey="openCodePoolFromGrid"/>
+        <actionGroup ref="AdminFindCodeOnCodePoolPageActionGroup" after="openCodePoolFromGrid" stepKey="findCodeOnCodePoolPage">
+            <argument name="code" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCodeOnCodePoolPageActionGroup" after="findCodeOnCodePoolPage" stepKey="checkCodeOnCodePoolPage">
+            <argument name="code" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+    </test>
+</tests>

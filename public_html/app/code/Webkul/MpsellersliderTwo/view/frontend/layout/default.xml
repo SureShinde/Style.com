@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_MpsellersliderTwo
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="layout2_seller_account_navigation">
+            <block class="Webkul\MpsellersliderTwo\Block\Navigation" ifconfig="marketplace/general_settings/mpsellerslidertwo_enable" name="sellerslider_account_navigation_layout2" before="-" template="Webkul_MpsellersliderTwo::layout2/account/navigationtwo.phtml">
+            <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\MpsellersliderTwo\ViewModel\Common</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

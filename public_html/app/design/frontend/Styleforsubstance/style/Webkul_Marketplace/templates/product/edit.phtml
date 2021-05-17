@@ -1,0 +1,291 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+/** @var $block \Webkul\Marketplace\Block\Product\Create */
+
+$helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$product_hint_status = $helper->getProductHintStatus();
+$currency_code = $helper->getCurrentCurrencyCode();
+$currency_symbol = $helper->getCurrencySymbol();
+$product_id=$this->getRequest()->getParam('id');
+$product_coll = $block->getProduct($product_id);
+$websiteIds= $product_coll->getWebsiteIds();
+$attribute_set_id = $product_coll['attribute_set_id'];
+if ($this->getRequest()->getParam('set')) {
+    $attribute_set_id = $this->getRequest()->getParam('set');
+}
+$skuType = $helper->getSkuType();
+$weightUnit = $helper->getWeightUnit();
+?>
+<form action="<?= $escaper->escapeUrl($block->getUrl('marketplace/product/save', ['_secure' => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" id="edit-product" data-form="edit-product" data-mage-init='{"validation":{}}'>
+    <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <div data-mage-init='{"formButtonAction": {}}' class="wk-mp-page-title legend">
+                <span><?= $escaper->escapeHtml(__('Edit Product')) ?></span>
+                <button class="button wk-mp-btn" title="<?= $escaper->escapeHtml(__('Save')) ?>" type="submit" id="save-btn">
+                    <span><span><?= $escaper->escapeHtml(__('Save')) ?></span></span>
+                </button>
+                <!-- <button class="button wk-mp-btn" title="<?= $escaper->escapeHtml(__('Save & Duplicate')) ?>" type="button" id="wk-mp-save-duplicate-btn">
+                    <span><span><?= $escaper->escapeHtml(__('Save & Duplicate')) ?></span></span>
+                </button> -->
+            </div>
+            <?= $block->getBlockHtml('formkey')?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <input id="product_type_id" name="type" type="hidden" value="<?= /* @noEscape */ $product_coll['type_id']?>">
+            <input type="hidden" name="id" value="<?= /* @noEscape */ $product_id; ?>" />
+            <input type="hidden" name="product_id" value="<?= /* @noEscape */ $product_id; ?>" />
+            <?php if (count($helper->getAllowedSets()) > 1) { ?>
+                <div class="field required">
+                    <label class="label"><?= $escaper->escapeHtml(__('Attribute Set')) ?>:</label>
+                    <div class="control">
+                        <select name="set" id="attribute-set-id"  class="required-entry">
+                        <?php foreach ($helper->getAllowedSets() as $set) {?>
+                            <option value="<?= /* @noEscape */ $set['value'] ?>" <?php if ($attribute_set_id==$set['value']) { ?> selected="selected" <?php } ?>><?= /* @noEscape */ $set['label']?></option>
+                        <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <?php
+            } else {
+                $allowedSets = $helper->getAllowedSets();
+                if (!empty($allowedSets)) { ?>
+                    <input type="hidden" name="set" id="attribute-set-id" value="<?= /* @noEscape */ $allowedSets[0]['value'] ?>" />
+                    <?php
+                } else { ?>
+                    <input type="hidden" name="set" id="attribute-set-id" value="<?= /* @noEscape */ $attribute_set_id ?>" />
+                    <?php
+                }
+            } ?>
+            <div class="field required">
+                <label class="label"><?= $escaper->escapeHtml(__('Time Slot')) ?>:</label>
+                <div class="choose-time">
+                    <input type="button" id="15" name="slot[10]" value="10 Mins">
+                    <input type="button" id="30" name="slot[25]" value="25 Mins">
+                    <input type="button" id="45" name="slot[40]" value="40 Mins">
+                    <input type="button" id="60" name="slot[55]" value="55 Mins">
+                    <script>
+                        require([
+                            "jquery"
+                        ], function($){
+                            $('.choose-time input[value="'+$("#name").val()+'"]').addClass('selected');
+                            jQuery('.choose-time input').each(function() {
+                                $(this).click(function() {
+                                    $('.choose-time input').removeClass('selected');
+                                    $(this).addClass('selected');
+                                    var inputVal = this.value;
+                                    var inputId = this.id;
+                                    var description = 'time session - ' + inputVal;
+                                    jQuery("#name").val(inputVal);
+                                    jQuery("#wk-slot-duration").val(inputId);
+                                    jQuery(".wk-border-box-sizing #description").val(description);
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="field required" style="display:none;">
+                <label class="label"><?= $escaper->escapeHtml(__('Service Name')) ?>:</label>
+                <?php
+                if ($product_hint_status && $helper->getProductHintName()) {?>
+                    <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintName()) ?>"/>
+                    <?php
+                } ?>
+                <div class="control">
+                    <input type="text" class="required-entry input-text" name="product[name]" id="name" value="<?= $escaper->escapeHtml($product_coll->getName()); ?>"/>
+                </div>
+            </div>
+            <div class="field required" style="display:none">
+                <label class="label"><?= $escaper->escapeHtml(__('Description')) ?>:</label>
+                <?php
+                if ($product_hint_status && $helper->getProductHintDesc()) {?>
+                    <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintDesc()) ?>"/>
+                    <?php
+                } ?>
+                <div class="control wk-border-box-sizing">
+                    <textarea name="product[description]" class="required-entry input-text" id="description" rows="5" cols="75" ><?= /* @noEscape */ $product_coll->getDescription(); ?></textarea>
+                    <!-- <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygDescription = new wysiwygSetup("description", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce4" : {
+                                        "toolbar":"formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap","plugins":"advlist autolink lists link charmap media noneditable table contextmenu paste code help table",
+                                    },
+                                    files_browser_window_url: "<?=$block->getWysiwygUrl();?>"
+                                });
+                                wysiwygDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?> -->
+                </div>
+            </div>
+            <!-- <input type="hidden" name="status"   value="1" /> -->
+            <div class="field">
+                <label class="label"><?= $escaper->escapeHtml(__('Status')) ?>:</label>
+                <div class="control">
+                    <input type="radio" name="status" id="status1" value="1" <?php if ($product_coll->getStatus()==1) { echo 'checked="checked"'; } ?>/><?= $escaper->escapeHtml(__("Enable")); ?><br>
+                    <input type="radio" name="status" id="status2" value="2" <?php if ($product_coll->getStatus()==2) { echo 'checked="checked"'; } ?>/><?= $escaper->escapeHtml(__("Disable")); ?>
+                </div>
+            </div>
+            <?php
+            if ($skuType == 'static') { ?>
+                <div class="field required">
+                    <label class="label"><?= $escaper->escapeHtml(__('SKU')) ?>:</label>
+                    <?php
+                    if ($product_hint_status && $helper->getProductHintSku()) {?>
+                        <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintSku()) ?>"/>
+                        <?php
+                    } ?>
+                    <div class="control">
+                        <input name="product[sku]" id="sku" class="required-entry validate-length maximum-length-64 input-text" type="text" value="<?= $escaper->escapeHtml($product_coll->getsku()); ?>"/>
+                    </div>
+                    <div id="skuavail" >
+                        <span class="success-msg skuavailable"><?= $escaper->escapeHtml(__('SKU Available')) ?></span>
+                    </div>
+                    <div id="skunotavail" >
+                        <span class="error-msg skunotavailable"><?= $escaper->escapeHtml(__('SKU Already Exist')) ?></span>
+                    </div>
+                </div>
+                <?php
+            } ?>
+            <div class="field required <?php if ($product_coll['type_id']=='configurable') { ?> no-display <?php } ?>">
+                <label class="label"><?= $escaper->escapeHtml(__('Price')) ?><b><?= /* @noEscape */ " (".$currency_symbol.")"; ?></b>:</label>
+                <?php
+                if ($product_hint_status && $helper->getProductHintPrice()) {?>
+                    <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintPrice()) ?>"/>
+                    <?php
+                } ?>
+                <?php
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $priceHelper = $objectManager->create('Magento\Framework\Pricing\PriceCurrencyInterface');
+                ?>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text" name="product[price]" id="price" value="<?php echo $priceHelper->round($product_coll->getPrice());  ?>" data-ui-id="product-tabs-attributes-tab-fieldset-element-text-product-price"/>
+                </div>
+            </div>
+            <?php if ($product_coll['type_id']!='configurable') { ?>
+                <div class="field">
+                    <label class="label"><?= $escaper->escapeHtml(__('Special Price')) ?><b><?= /* @noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                    <?php
+                    if ($product_hint_status && $helper->getProductHintSpecialPrice()) {?>
+                        <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintSpecialPrice()) ?>"/>
+                        <?php
+                    } ?>
+                    <div class="control">
+                        <input type="text" class="widthinput input-text validate-zero-or-greater" name="product[special_price]" id="special-price" value="<?= /* @noEscape */ $product_coll->getSpecialPrice() ?>"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label"><?= $escaper->escapeHtml(__('Special Price From')) ?>:</label>
+                    <?php
+                    if ($product_hint_status && $helper->getProductHintStartDate()) {?>
+                        <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintStartDate()) ?>"/>
+                        <?php
+                    } ?>
+                    <?php
+                    if ($product_coll->getData('special_from_date')) {
+                        $special_from_date = $block->formatDate($product_coll->getData('special_from_date'));
+                    } else {
+                        $special_from_date = '';
+                    } ?>
+                    <div class="control">
+                        <input type="text" name="product[special_from_date]" id="special-from-date" class="input-text" value="<?= /* @noEscape */ $special_from_date; ?>"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label"><?= $escaper->escapeHtml(__('Special Price To')) ?>:</label>
+                    <?php
+                    if ($product_hint_status && $helper->getProductHintEndDate()) {?>
+                        <img src="<?= $escaper->escapeUrl($this->getViewFileUrl('Webkul_Marketplace::images/quest.png')); ?>" class='questimg' title="<?= $escaper->escapeHtml($helper->getProductHintEndDate()) ?>"/>
+                        <?php
+                    } ?>
+                    <?php
+                    if ($product_coll->getData('special_to_date')) {
+                        $special_to_date = $block->formatDate($product_coll->getData('special_to_date'));
+                    } else {
+                        $special_to_date = '';
+                    } ?>
+                    <div class="control">
+                        <input type="text" name="product[special_to_date]" id="special-to-date" class="input-text" value="<?= /* @noEscape */ $special_to_date; ?>" />
+                    </div>
+                </div>
+                <?php
+            } ?>
+            <input id="inventory_manage_stock" type="hidden" name="product[stock_data][manage_stock]" value="1">
+            <input type="hidden" value="1" name="product[stock_data][use_config_manage_stock]" id="inventory_use_config_manage_stock">
+            <input type="hidden" class="input-text" name="product[quantity_and_stock_status][qty]" id="qty" value="9999999"/>
+            <input type="hidden" name="product[quantity_and_stock_status][is_in_stock]" value="1"/>
+            <input type="hidden" name="product[visibility]" value="4"/>
+            <input type="hidden" name="product[tax_class_id]" value="0"/>
+
+
+
+            <?= $block->getChildHtml(); ?>
+        </fieldset>
+    </div>
+</form>
+<?php
+$formData = [
+    'productTypeId' => $product_coll['type_id'],
+    'countryPicSelector' => '#country-pic',
+    'verifySkuAjaxUrl' => $block->getUrl('marketplace/product/verifysku', ['_secure' => $this->getRequest()->isSecure()]),
+    'productid'  => $product_id,
+    'categoryTreeAjaxUrl' => $block->getUrl('marketplace/product/categorytree/', ['_secure' => $this->getRequest()->isSecure()])
+];
+$serializedFormData = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($formData);
+?>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "sellerEditProduct": <?= /* @noEscape */ $serializedFormData; ?>
+        }
+    }
+</script>
+<script type='text/javascript'>
+    require(['jquery', 'prototype', 'domReady!'], function($) {
+        var qty = $('#qty'),
+            productType = $('#product_type_id').val(),
+            stockAvailabilityField = $('#quantity_and_stock_status'),
+            manageStockField = $('#inventory_manage_stock'),
+            useConfigManageStockField = $('#inventory_use_config_manage_stock'),
+            fieldsAssociations = {
+                'qty': 'inventory_qty',
+                'quantity_and_stock_status': 'inventory_stock_availability'
+            };
+
+        var qtyDefaultValue = qty.val();
+    })
+</script>
+<script>
+    require([
+        "jquery",
+        "Webkul_Marketplace/catalog/type-events"
+    ], function($, TypeSwitcher){
+        var $form = $('[data-form=edit-product]');
+        $form.data('typeSwitcher', TypeSwitcher.init());
+    });
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Webkul_Marketplace/js/product/weight-handler": {},
+            "Webkul_Marketplace/catalog/apply-to-type-switcher": {}
+        }
+    }
+</script>

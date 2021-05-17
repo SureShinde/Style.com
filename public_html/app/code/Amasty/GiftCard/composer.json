@@ -1,0 +1,26 @@
+{
+    "name": "amasty/module-gift-card",
+    "description": "Gift Card by Amasty",
+    "require": {
+        "php": "^7.1.0",
+        "amasty/base": ">=1.10.11",
+        "amasty/module-gift-card-account": ">=1.0.8"
+    },
+    "suggest": {
+        "amasty/module-gift-card-graph-ql": "We recommend to install Gift Card GraphQL module if you use Magento 2.3.3+.",
+        "amasty/module-common-tests": "Install module-common-tests module to be able to run Gdpr MFTF tests."
+    },
+    "type": "magento2-module",
+    "version": "2.2.6",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\GiftCard\\": ""
+        }
+    }
+}

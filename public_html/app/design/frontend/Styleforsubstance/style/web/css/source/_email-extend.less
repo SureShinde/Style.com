@@ -1,0 +1,173 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+//
+//  Email extend styles
+//  _____________________________________________
+
+//  This file should be used for theme-specific styles for emails that extend or modify the styles in _email.less
+//  This will allow you to edit email styles without copying and editing the _email.less file
+
+//  Importing fonts from an external CSS file, rather than embedding @font-face declarations inside the <style> tag,
+//  as the latter will cause font rendering issues if the web fonts are inaccessible.
+
+@import url('@{baseUrl}css/email-fonts.css');
+
+table.wrapper {
+  font-family: @MetropolisRegular, sans-serif;
+  font-size: 14px;
+  color: @color-gray1;
+  .email-intro {
+    border-bottom: 1px solid @color-gray5;
+  }
+  .title-email {
+    color: @color-white1;
+    font-size: 70px;
+    line-height: 1.25;
+    text-align: center;
+    padding: 10px;
+    height: 106px;
+    width: 516px;
+    margin: 0 auto 43px;
+    font-family: @EyeCatchingRegular;
+    background-image: url('@{imgDirEmail}email/background-title.png');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .title-block {
+    color: @color-green1;
+    font-family: @MetropolisSemiBold;
+    font-weight: normal;
+    font-size: 20px;
+    margin: 0 0 28px;
+  }
+  .subtitle-block {
+    font-size: 16px;
+  }
+  td {
+    font-family: @MetropolisRegular, sans-serif;
+    font-size: 14px;
+  }
+  p {
+    margin: 0 0 20px;
+    font-family: @MetropolisRegular, sans-serif;
+    .strong {
+      font-weight: normal;
+      font-family: @MetropolisSemiBold, sans-serif;
+    }
+    a {
+      font-family: @MetropolisSemiBold, sans-serif;
+    }
+  }
+  .link {
+    font-size: 12px;
+    a {
+      text-decoration: underline;
+    }
+  }
+  strong {
+    font-family: @MetropolisBold, sans-serif;
+  }
+  a {
+    color: @color-green1;
+    &:visited,
+    &:hover {
+      color: @color-green1!important;
+      text-decoration: none;
+    }
+  }
+  .wish {
+    font-size: 60px;
+    font-family: @EyeCatchingRegular;
+    line-height: 1;
+    color: @color-green1;
+    margin: 0 0 8px;
+  }
+  .description {
+    font-size: 16px;
+    font-family: @MetropolisMedium;
+  }
+}
+
+.steps-holder {
+  padding: 43px 0 0;
+  .step-number {
+    font-size: 60px;
+    font-family: @EyeCatchingRegular;
+    line-height: 1;
+    padding: 0 20px;
+    color: @color-green1;
+  }
+  .step-content {
+    padding: 15px 30px 20px 0;
+    .subtitle-block {
+      margin: 0 0 6px;
+    }
+  }
+}
+
+.header {
+  background-color: @color-white1;
+  padding: 34px @email-body__padding 5px;
+}
+
+.footer {
+  background-color: @color-green3;
+  background-image: url('@{imgDirEmail}email/footer.png');
+  background-position: center;
+  background-size: cover;
+  padding: 42px @email-body__padding 20px;
+  text-align: center;
+  font-size: 12px;
+  .social-message {
+    font-family: @EyeCatchingRegular, sans-serif;
+    color: @color-green1;
+    line-height: 1;
+    margin: 0 0 9px;
+    font-size: 42px;
+  }
+  ul {
+    list-style: none;
+    margin: 0 0 16px;
+    line-height: 1;
+    li {
+      display: inline-block;
+      padding: 0 10px;
+      border-left: 1px solid @color-gray1;
+      &:first-child {
+        border: none;
+      }
+      a {
+        color: @color-gray1!important;
+        text-decoration: underline;
+        &:hover {
+          text-decoration: none !important;
+          color: @color-gray1!important;
+        }
+      }
+    }
+    &.social {
+      margin: 0 0 28px;
+      li {
+        border: none;
+        padding: 0 2px;
+        a {
+          text-decoration: none;
+          width: 48px;
+          height: 48px;
+          display: block;
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
+      }
+    }
+  }
+}
+.main-content {
+  padding: 25px @email-body__padding 40px;
+}

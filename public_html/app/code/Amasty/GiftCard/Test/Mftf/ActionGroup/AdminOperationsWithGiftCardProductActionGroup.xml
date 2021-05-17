@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--create default gift card product-->
+    <actionGroup name="AdminCreateGiftCardProductActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+            <argument name="categoryName" type="string"/>
+        </arguments>
+        <amOnPage url="{{AdminGridProductsPage.url}}" stepKey="openProductsGridPage"/>
+        <waitForPageLoad stepKey="waitForProductsGridPageLoad"/>
+        <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickAddProductToggle"/>
+        <click selector="{{AdminProductsGridSection.GiftCardProButton}}" stepKey="clickGiftCardProButton"/>
+        <waitForPageLoad stepKey="waitForNewProductPageLoad"/>
+        <selectOption selector="{{AdminProductSection.CardType}}" userInput="{{giftCardProductData.type}}" stepKey="selectCardType"/>
+        <grabCookie userInput="setCodePoolIdInCookie" stepKey="grabCodePoolIdInCookie"/>
+        <selectOption selector="{{AdminProductSection.GiftCardCodePool}}" userInput="{$grabCodePoolIdInCookie}" stepKey="selectCardCodePool"/>
+        <selectOption selector="{{AdminProductSection.GiftCardImages}}" userInput="{{giftCardProductData.image}}" stepKey="selectGiftCardImages"/>
+        <click selector="{{AdminProductSection.ProductDetailsTab}}" stepKey="clickDesignTab"/>
+        <waitForPageLoad stepKey="waitForDesignTabOpen"/>
+        <fillField selector="{{AdminProductSection.ProductName}}" userInput="{{giftCardProductData.name}}" stepKey="fillProductName"/>
+        <fillField selector="{{AdminProductSection.ProductSKU}}" userInput="{{giftCardProductData.sku}}" stepKey="fillProductSKU"/>
+        <selectOption selector="{{AdminProductSection.TaxClass}}" userInput="{{giftCardProductData.taxClass}}" stepKey="selectTaxClass"/>
+        <fillField selector="{{AdminProductSection.Quantity}}" userInput="{{giftCardProductData.Quantity}}" stepKey="fillProductQuantity"/>
+        <click selector="{{AdminProductSection.CategoriesDropdown}}" stepKey="openDropDown"/>
+        <checkOption selector="{{AdminProductSection.SelectCategory(categoryName)}}" stepKey="selectCategory"/>
+        <click selector="{{AdminProductSection.Done}}" stepKey="clickDone"/>
+        <waitForPageLoad stepKey="waitForApplyCategory"/>
+        <click selector="{{AdminProductSection.AmastyGiftCardPricesTab}}" stepKey="clickAmastyGiftCardPricesTab"/>
+        <waitForPageLoad stepKey="waitForAmastyGiftCardPricesTabOpen"/>
+        <click selector="{{AdminProductSection.AddAmountButton}}" stepKey="clickAddAmountButton"/>
+        <fillField selector="{{AdminProductSection.AmountField}}" userInput="{{giftCardProductData.giftCardAmount}}" stepKey="fillGiftCardAmount"/>
+        <click selector="{{AdminProductSection.Save}}" stepKey="saveGiftCardProduct"/>
+        <see selector="{{AdminProductSection.SuccessSavedProductMsg}}" userInput="{{successSavedProductMsg.message}}" stepKey="seeSuccessMessage"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateOpenAmountGiftCardProductActionGroup" extends="AdminCreateGiftCardProductActionGroup">
+        <arguments>
+            <argument name="openAmountGiftCardProduct" defaultValue="defOpenAmountGiftCardProduct"/>
+        </arguments>
+        <remove keyForRemoval="clickAddAmountButton"/>
+        <remove keyForRemoval="fillGiftCardAmount"/>
+        <conditionalClick selector="{{AdminProductSection.OpenAmount}}"
+                          dependentSelector="{{AdminProductSection.OpenAmountEnabled(defOpenAmountGiftCardProduct.isEnabled)}}"
+                          visible="false" after="waitForAmastyGiftCardPricesTabOpen" stepKey="enableOpenAmount"/>
+        <fillField selector="{{AdminProductSection.OpenAmountMinValue}}" userInput="{{openAmountGiftCardProduct.minValue}}"
+                   after="enableOpenAmount" stepKey="fillOpenAmountMinValue"/>
+        <fillField selector="{{AdminProductSection.OpenAmountMaxValue}}" userInput="{{openAmountGiftCardProduct.maxValue}}"
+                   after="fillOpenAmountMinValue" stepKey="fillOpenAmountMaxValue"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateFeeGiftCardProductActionGroup" extends="AdminCreateGiftCardProductActionGroup">
+        <conditionalClick selector="{{AdminProductSection.FeeForPurchase}}"
+                          dependentSelector="{{AdminProductSection.FeeForPurchaseEnabled(percentFeeGiftCardProduct.isEnabled)}}"
+                          visible="false" after="fillGiftCardAmount" stepKey="enableFeeForPurchase"/>
+        <selectOption selector="{{AdminProductSection.FeeType}}" userInput="{{giftCardProductData.feeType}}"
+                      after="enableFeeForPurchase" stepKey="selectFeeType"/>
+        <fillField selector="{{AdminProductSection.FeeValue}}" userInput="{{giftCardProductData.feeValue}}"
+                   after="selectFeeType" stepKey="fillFeeValue"/>
+    </actionGroup>
+</actionGroups>

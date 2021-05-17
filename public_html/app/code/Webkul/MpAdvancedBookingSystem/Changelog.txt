@@ -1,0 +1,45 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.0 --------------------------------------
+    + Compatible with Magento 2.4.x.
+
+-------------------------------- Version 3.0.1 --------------------------------------
+
+    + Compatible with Magento v2.3.5.
+    - Resolved minor bugs.
+
+-------------------------------- Version 3.0.0 --------------------------------------
+
+    + Compatible with Magento v2.3.x.
+    - Resolved minor bugs.
+
+-------------------------------- Version 2.1.0 --------------------------------------
+
+    + Compatible with Magento v2.3.x.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+    + Check In and Check Out time for hotel booking
+    + Added Room type attribute
+    + New menu in admin and seller penal to manage asked questions and answers on hotel booking
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+    + Allows Seller and Admin to add and edit advanced booking products from their panel
+    + Seller and Admin can manage booking products list
+    + Added Hotel type booking option with separate design view.
+    + Added Table type booking option with separate design view.
+    + Added Appointment type booking option with separate design view.
+    + Added Event type booking option with separate design view.
+    + Added Rent type booking option with separate design view.
+    + Compatible with Magento v2.2.x.
+    + Any day can be selected for "end day" for "one booking for many days" type of booking product.
+    + Admin can use site as Booking Site.
+    + Can be used as Ticket Booking Site.
+    + Can be used as Appointment Booking Site.
+    + Quantity can be managed for each time slot.
+    + Dynamic time setting.
+    + Time and event display at product checkout.

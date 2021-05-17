@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="wk_mp_booking_booked" resource="default" engine="innodb" comment="Marketplace Booking System Bookings Booked Table">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="order_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Order ID"/>
+    <column xsi:type="int" name="order_item_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Order Item ID"/>
+    <column xsi:type="int" name="item_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Item ID"/>
+    <column xsi:type="int" name="qty" padding="11" unsigned="false" nullable="false" identity="false" comment="Quantity"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="int" name="slot_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Slot ID"/>
+    <column xsi:type="int" name="parent_slot_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Parent Slot ID"/>
+    <column xsi:type="int" name="customer_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Customer ID"/>
+    <column xsi:type="varchar" name="customer_email" nullable="false" length="255" comment="Customer Email"/>
+    <column xsi:type="timestamp" name="booking_from" nullable="false" default="NULL" onCreate="migrateDataFrom(booking_from)" on_update="false" comment="Booking From"/>
+    <column xsi:type="timestamp" name="booking_too" nullable="false" default="NULL" onCreate="migrateDataFrom(booking_too)" on_update="false" comment="Booking To"/>
+    <column xsi:type="varchar" name="time" nullable="false" length="255" comment="Time"/>
+    <column xsi:type="int" name="slot_day_index" padding="11" unsigned="false" nullable="false" identity="false" comment="Slot Day Index"/>
+    <column xsi:type="date" name="slot_date" comment="Slot Date"/>
+    <column xsi:type="text" name="slot_time" nullable="false" comment="Slot Time"/>
+    <column xsi:type="smallint" name="rent_type" padding="6" unsigned="false" nullable="false" identity="false" comment="Rent Type"/>
+    <column xsi:type="int" name="child_product_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Child Product ID"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="wk_mp_booking_info" resource="default" engine="innodb" comment="Marketplace Booking System Bookings Info Table">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="varchar" name="start_date" nullable="false" length="255" comment="Start Date"/>
+    <column xsi:type="varchar" name="end_date" nullable="false" length="255" comment="End Date"/>
+    <column xsi:type="longblob" name="info" nullable="false" onCreate="migrateDataFrom(info)" comment="Info"/>
+    <column xsi:type="int" name="qty" padding="11" unsigned="false" nullable="false" identity="false" comment="Qunatity"/>
+    <column xsi:type="int" name="type" padding="11" unsigned="false" nullable="false" identity="false" comment="Type"/>
+    <column xsi:type="int" name="total_slots" padding="11" unsigned="false" nullable="false" identity="false" comment="Total Slots"/>
+    <column xsi:type="int" name="attribute_set_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Booking Item Attribute Set Id"/>
+    <column xsi:type="int" name="available_qty" padding="11" unsigned="false" nullable="false" identity="false" comment="Available Qty"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="wk_mp_booking_slot" resource="default" engine="innodb" comment="ID">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="int" name="type" padding="11" unsigned="false" nullable="false" identity="false" comment="Type"/>
+    <column xsi:type="mediumtext" name="info" nullable="false" disabled="true" comment="Info"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" comment="Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="wk_mp_quote_item" resource="default" engine="innodb" comment="Marketplace Booking System Quote Table">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="item_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" onCreate="migrateDataFrom(item_id)" comment="Item ID"/>
+    <column xsi:type="int" name="slot_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Slot ID"/>
+    <column xsi:type="int" name="parent_slot_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Parent Slot ID"/>
+    <column xsi:type="int" name="product_id" padding="9" unsigned="true" nullable="false" identity="false" default="0" comment="Product ID"/>
+    <column xsi:type="int" name="quote_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Quote ID"/>
+    <column xsi:type="int" name="slot_day_index" padding="11" unsigned="false" nullable="false" identity="false" comment="Slot Day Type"/>
+    <column xsi:type="date" name="slot_date" comment="Slot Date"/>
+    <column xsi:type="text" name="slot_time" nullable="false" comment="Slot Time"/>
+    <column xsi:type="date" name="to_slot_date" comment="To Slot Date"/>
+    <column xsi:type="text" name="to_slot_time" nullable="false" comment="To Slot Time"/>
+    <column xsi:type="smallint" name="rent_type" padding="6" unsigned="false" nullable="false" identity="false" comment="Rent Type"/>
+    <column xsi:type="int" name="qty" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Qty"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="WK_MP_QUOTE_ITEM_ITEM_ID_QUOTE_ITEM_ITEM_ID" table="wk_mp_quote_item" column="item_id" referenceTable="quote_item" referenceColumn="item_id" onDelete="CASCADE"/>
+  </table>
+  <table name="catalog_product_option_type_value" resource="default" engine="innodb">
+    <column xsi:type="int" name="qty" padding="9" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="is_in_stock" padding="9" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="text" name="description" nullable="false"/>
+  </table>
+  <table name="wk_mp_hotelbooking_question" resource="default" engine="innodb" comment="Webkul Marketplace Booking System Question Table">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="customer_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Customer ID"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="smallint" name="status" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Status"/>
+    <column xsi:type="varchar" name="nick_name" nullable="false" length="255" comment="Nickname"/>
+    <column xsi:type="text" name="question" nullable="false" comment="Question"/>
+    <column xsi:type="date" name="created_at" comment="Created At"/>
+    <column xsi:type="date" name="updated_at" comment="Updated At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+  <table name="wk_mp_hotelbooking_answer" resource="default" engine="innodb">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="int" name="customer_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="question_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="smallint" name="status" padding="6" unsigned="false" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="nick_name" nullable="false" length="255"/>
+    <column xsi:type="text" name="answer" nullable="false"/>
+    <column xsi:type="date" name="created_at"/>
+    <column xsi:type="date" name="updated_at"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+</schema>

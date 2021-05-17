@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--check gift card code status on checkout-->
+    <!--action group does not check expire date. There is a separate action group to check expire date-->
+    <actionGroup name="StorefrontCheckCardCodeStatusOnCheckoutActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <fillField selector="{{StorefrontCheckoutSection.GiftCardCodeField}}" userInput="{{giftCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontCheckoutSection.CheckStatus}}" stepKey="clickCheckStatus"/>
+        <waitForPageLoad stepKey="waitForStatusDataLoad"/>
+        <seeElement selector="{{StorefrontCheckoutSection.StatusBlock}}" stepKey="seeCodeStatusBlock"/>
+        <see selector="{{StorefrontCheckoutSection.GiftCardCode}}" userInput="{{giftCode}}" stepKey="seeGiftCardCode"/>
+        <see selector="{{StorefrontCheckoutSection.CodeStatus}}" userInput="{{giftCodeAccount.statusTitle}}" stepKey="seeCodeStatus"/>
+        <see selector="{{StorefrontCheckoutSection.CodeCurrentBalance}}" userInput="{{giftCodeAccount.decimalCurrentBalanceGrid}}" stepKey="seeCodeCurrentBalance"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckUnLimCardCodeOnCheckoutActionGroup" extends="StorefrontCheckCardCodeStatusOnCheckoutActionGroup">
+        <see selector="{{StorefrontCheckoutSection.CodeValid}}" userInput="{{giftCodeAccount.validTill}}" stepKey="seeValidTill"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontGrabCardCodeExpireDateOnCheckoutActionGroup">
+        <grabTextFrom selector="{{StorefrontCheckoutSection.CodeValid}}" stepKey="grabCardCodeExpireDate"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckWrongCardCodeStatusOnCheckoutActionGroup">
+        <fillField selector="{{StorefrontCheckoutSection.GiftCardCodeField}}" userInput="{{defaultGiftCodeAccount.wrongCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontCheckoutSection.CheckStatus}}" stepKey="clickCheckStatus"/>
+        <waitForElementVisible selector="{{StorefrontCheckoutSection.WrongCardCodeMsg}}" stepKey="waitForWrongCardCodeMsg"/>
+        <seeElement selector="{{StorefrontCheckoutSection.WrongCardCodeMsg}}" stepKey="seeWrongCardCodeMsg"/>
+        <waitForPageLoad stepKey="waitForCheckoutLoad"/>
+        <dontSeeElement selector="{{StorefrontCheckoutSection.StatusBlock}}" stepKey="dontSeeCodeStatusBlock"/>
+    </actionGroup>
+
+    <!--check gift card code status on shopping cart-->
+    <actionGroup name="StorefrontCheckCardCodeStatusOnShoppingCartActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForShoppingCartLoad"/>
+        <fillField selector="{{StorefrontShoppingCartSection.GiftCardCodeField}}" userInput="{{giftCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontShoppingCartSection.CheckStatus}}" stepKey="clickCheckStatus"/>
+        <waitForPageLoad stepKey="waitForStatusDataLoad"/>
+        <seeElement selector="{{StorefrontShoppingCartSection.StatusBlock}}" stepKey="seeCodeStatusBlock"/>
+        <see selector="{{StorefrontShoppingCartSection.GiftCardCode}}" userInput="{{giftCode}}" stepKey="seeGiftCardCode"/>
+        <see selector="{{StorefrontShoppingCartSection.CodeStatus}}" userInput="{{giftCodeAccount.statusTitle}}" stepKey="seeCodeStatus"/>
+        <see selector="{{StorefrontShoppingCartSection.CodeCurrentBalance}}" userInput="{{giftCodeAccount.decimalCurrentBalanceGrid}}" stepKey="seeCodeCurrentBalance"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckUnLimCardCodeOnShoppingCartActionGroup" extends="StorefrontCheckCardCodeStatusOnShoppingCartActionGroup">
+        <see selector="{{StorefrontShoppingCartSection.CodeValid}}" userInput="{{giftCodeAccount.validTill}}" stepKey="seeValidTill"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontGrabCardCodeExpDateOnShoppingCartActionGroup">
+        <grabTextFrom selector="{{StorefrontShoppingCartSection.CodeValid}}" stepKey="grabCardCodeExpireDate"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckWrongCardCodeStatusOnShoppingCartActionGroup">
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForShoppingCartLoad"/>
+        <fillField selector="{{StorefrontShoppingCartSection.GiftCardCodeField}}" userInput="{{defaultGiftCodeAccount.wrongCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontShoppingCartSection.CheckStatus}}" stepKey="clickCheckStatus"/>
+        <waitForElementVisible selector="{{StorefrontShoppingCartSection.WrongCardCodeMsg}}" stepKey="waitForWrongCardCodeMsg"/>
+        <seeElement selector="{{StorefrontShoppingCartSection.WrongCardCodeMsg}}" stepKey="seeWrongCardCodeMsg"/>
+        <waitForPageLoad stepKey="waitForStatusBlockDisappeared"/>
+        <dontSeeElement selector="{{StorefrontShoppingCartSection.StatusBlock}}" stepKey="dontSeeCodeStatusBlock"/>
+    </actionGroup>
+
+    <!--apply gift card code-->
+    <actionGroup name="StorefrontApplyCardCodeOnCheckoutActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+        </arguments>
+        <fillField selector="{{StorefrontCheckoutSection.GiftCardCodeField}}" userInput="{{giftCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontCheckoutSection.AddCode}}" stepKey="clickAddCode"/>
+        <waitForElementVisible selector="{{StorefrontCheckoutSection.CardCodeAddedMsg(giftCode)}}" stepKey="waitForCardCodeAddedMsg"/>
+        <seeElement selector="{{StorefrontCheckoutSection.CardCodeAddedMsg(giftCode)}}" stepKey="seeCardCodeAddedMsg"/>
+        <waitForPageLoad stepKey="waitForCheckoutLoad"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontApplyCardCodeOnShoppingCartActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForShoppingCartLoad"/>
+        <fillField selector="{{StorefrontShoppingCartSection.GiftCardCodeField}}" userInput="{{giftCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontShoppingCartSection.AddCode}}" stepKey="clickAddCode"/>
+        <waitForElementVisible selector="{{StorefrontShoppingCartSection.CardCodeAddedMsg(giftCode)}}" stepKey="waitForCardCodeAddedMsg"/>
+        <seeElement selector="{{StorefrontShoppingCartSection.CardCodeAddedMsg(giftCode)}}" stepKey="seeCardCodeAddedMsg"/>
+        <waitForPageLoad stepKey="waitForCardApplied"/>
+    </actionGroup>
+
+    <!--use after gift card code is applied-->
+    <actionGroup name="StorefrontCheckCardCodeIsAppliedOnCheckoutActionGroup">
+        <arguments>
+            <argument name="productPrice"/>
+            <argument name="giftCode" type="string"/>
+            <argument name="cardCodeDiscount"/>
+        </arguments>
+        <see selector="{{StorefrontCheckoutSection.CartSubtotal}}" userInput="{{productPrice}}" stepKey="seeCartSubtotal"/>
+        <see selector="{{StorefrontCheckoutSection.CardCode}}" userInput="{{giftCode}}" stepKey="seeCardCode"/>
+        <see selector="{{StorefrontCheckoutSection.DiscountAmount}}" userInput="{{cardCodeDiscount.discountAmount}}" stepKey="seeDiscountAmount"/>
+        <see selector="{{FrontCartSection.OrderTotal}}" userInput="{{cardCodeDiscount.orderTotal}}" stepKey="seeOrderTotal"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckCardCodeIsAppliedOnShoppingCartActionGroup">
+        <arguments>
+            <argument name="productPrice"/>
+            <argument name="giftCode" type="string"/>
+            <argument name="cardCodeDiscount"/>
+        </arguments>
+        <see selector="{{StorefrontShoppingCartSection.CartSubtotal}}" userInput="{{productPrice}}" stepKey="seeCartSubtotal"/>
+        <see selector="{{StorefrontShoppingCartSection.CardCode}}" userInput="{{giftCode}}" stepKey="seeCardCode"/>
+        <see selector="{{StorefrontShoppingCartSection.DiscountAmount}}" userInput="{{cardCodeDiscount.discountAmount}}" stepKey="seeDiscountAmount"/>
+        <see selector="{{FrontCartSection.OrderTotal}}" userInput="{{cardCodeDiscount.orderTotal}}" stepKey="seeOrderTotal"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCreateNoMoneyOrderAndGrabOrderNumberActionGroup" extends="StorefrontCreateOrderAsCustomerWithPaymentMethods">
+        <remove keyForRemoval="choosePaymentMethod"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterAssertSuccessPage"/>
+        <grabTextFrom selector="{{SuccessPageSection.OrderNumberAfterPlaceOrder}}" stepKey="grabOrderNumber"/>
+    </actionGroup>
+
+</actionGroups>

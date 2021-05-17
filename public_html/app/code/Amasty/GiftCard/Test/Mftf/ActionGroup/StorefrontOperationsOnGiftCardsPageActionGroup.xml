@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontActivateGiftCardCodeActionGroup">
+        <arguments>
+            <argument name="giftCardCode" type="string"/>
+        </arguments>
+        <amOnPage url="{{StorefrontGiftCardsPage.url}}" stepKey="openGiftCardsPage"/>
+        <waitForPageLoad stepKey="waitForGiftCardsPageLoad"/>
+        <seeElement selector="{{StorefrontGiftCardsSection.GiftCardCodeInputBlock}}" stepKey="seeGiftCardCodeInputBlock"/>
+        <fillField selector="{{StorefrontGiftCardsSection.GiftCardCodeField}}" userInput="{{giftCardCode}}" stepKey="fillGiftCardCode"/>
+        <click selector="{{StorefrontGiftCardsSection.AddCode}}" stepKey="applyGiftCardCode"/>
+        <waitForPageLoad stepKey="waitForCardCodeApplied"/>
+        <seeElement selector="{{StorefrontGiftCardsSection.GiftCardCodeInfoBlock}}" stepKey="seeGiftCardCodeInfoBlock"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckActivatedGiftCardCodeActionGroup">
+        <arguments>
+            <argument name="giftCardCode" type="string"/>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <amOnPage url="{{StorefrontGiftCardsPage.url}}" stepKey="openGiftCardsPage"/>
+        <waitForPageLoad stepKey="waitForGiftCardsPageLoad"/>
+        <see selector="{{StorefrontGiftCardsSection.GiftCardCodeCode}}" userInput="{{giftCardCode}}" stepKey="seeGiftCardCode"/>
+        <see selector="{{StorefrontGiftCardsSection.GiftCardCodeStatus}}" userInput="{{giftCodeAccount.statusTitle}}" stepKey="seeGiftCardCodeStatus"/>
+        <see selector="{{StorefrontGiftCardsSection.GiftCardCodeCurrentBalance}}" userInput="{{giftCodeAccount.decimalCurrentBalanceGrid}}" stepKey="seeGiftCardCodeCurBalance"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckUnLimCardCodeActionGroup" extends="StorefrontCheckActivatedGiftCardCodeActionGroup">
+        <see selector="{{StorefrontGiftCardsSection.GiftCardCodeValid}}" userInput="{{giftCodeAccount.validTill}}" stepKey="seeValidTill"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontGrabCardCodeExpDateOnAccPageActionGroup">
+        <grabTextFrom selector="{{StorefrontGiftCardsSection.GiftCardCodeValid}}" stepKey="grabExpireDate"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckWrongCardCodeCustomerAccActionGroup">
+        <amOnPage url="{{StorefrontGiftCardsPage.url}}" stepKey="openGiftCardsPage"/>
+        <waitForPageLoad stepKey="waitForGiftCardsPageLoad"/>
+        <fillField selector="{{StorefrontGiftCardsSection.GiftCardCodeField}}" userInput="{{defaultGiftCodeAccount.wrongCode}}" stepKey="fillGiftCardCodeField"/>
+        <click selector="{{StorefrontGiftCardsSection.AddCode}}" stepKey="clickAddCode"/>
+        <waitForElementVisible selector="{{StorefrontGiftCardsSection.WrongCardCodeMsg}}" stepKey="waitForWrongCardCodeMsg"/>
+        <seeElement selector="{{StorefrontGiftCardsSection.WrongCardCodeMsg}}" stepKey="seeWrongCardCodeMsg"/>
+        <waitForPageLoad stepKey="waitForAccPAgeLoad"/>
+        <dontSeeElement selector="{{StorefrontGiftCardsSection.GiftCardCodeInfoBlock}}" stepKey="dontSeeCodeInfoBlock"/>
+    </actionGroup>
+</actionGroups>

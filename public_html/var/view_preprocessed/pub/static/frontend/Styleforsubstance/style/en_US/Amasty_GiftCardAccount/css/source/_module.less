@@ -1,0 +1,97 @@
+//
+//  Gift Card Account
+//  ____________________________________________
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .amcard-codes-list,
+    .amcard-field-container {
+        .amcardacc-template-container & {
+            max-width: 360px;
+        }
+
+        &.-cart {
+            max-width: 500px;
+        }
+
+        &.-paypal {
+            margin: 20px 0;
+        }
+
+        .amcard-check,
+        .amcard-delete {
+            & {
+                position: relative;
+                align-self: flex-start;
+                padding: 0;
+                border: none;
+                background: none;
+                box-shadow: none;
+                color: #1787e0;
+                cursor: pointer;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .amcard-check {
+            margin-top: 10px;
+        }
+    }
+
+    .amcard-field-block {
+        &.-code {
+            margin-top: 10px;
+        }
+
+        .amcard-button {
+            & {
+                font-weight: 600;
+                transition: opacity .3s ease-out;
+            }
+
+            &:hover {
+                opacity: .9;
+            }
+        }
+
+        .amcard-button.-account {
+            background: #3a77bd;
+            color: #fff;
+        }
+    }
+
+    .amcard-card-info {
+        & {
+            display: flex;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #e8f6ff;
+        }
+
+        .amcard-field:not(:last-child) {
+            margin-right: 20px;
+        }
+    }
+
+    .amcardacc-messages-container {
+        & {
+            display: none;
+        }
+
+        &.-visible {
+            display: block;
+        }
+    }
+
+    .amcard-form-container .amcard-field.-validate {
+        position: absolute;
+        width: 0;
+        opacity: 0;
+    }
+}

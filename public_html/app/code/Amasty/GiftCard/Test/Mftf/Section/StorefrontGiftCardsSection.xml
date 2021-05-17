@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="StorefrontGiftCardsSection">
+        <element name="GiftCardCodeInputBlock" type="block" selector=".amcard-field-container"/>
+        <element name="GiftCardCodeField" type="input" selector=".amcard-field-container .amcard-field"/>
+        <element name="AddCode" type="input" selector=".amcard-button"/>
+        <element name="GiftCardCodeInfoBlock" type="block" selector=".amcard-card-info"/>
+        <element name="GiftCardCodeCode" type="text" selector="//*[@class='amcard-field'][contains(string(), 'Code')]"/>
+        <element name="GiftCardCodeStatus" type="text" selector="//*[@class='amcard-field'][contains(string(), 'Status')]"/>
+        <element name="GiftCardCodeCurrentBalance" type="text" selector="//*[@class='amcard-field'][contains(string(), 'Current Balance:')]"/>
+        <element name="GiftCardCodeValid" type="text"  selector="//*[@class='amcard-field'][contains(string(), 'Valid till:')]//strong"/>
+        <element name="GiftCardCodeRemove" type="button" parameterized="true" selector="//*[@class='amcard-card-info'][contains(string(), '{{code}}')]//*[@class='amcard-delete']"/>
+        <element name="WrongCardCodeMsg" type="text" selector="//*[@class='message message-error error'][contains(string(), 'Wrong Gift Card code.')]"/>
+    </section>
+</sections>

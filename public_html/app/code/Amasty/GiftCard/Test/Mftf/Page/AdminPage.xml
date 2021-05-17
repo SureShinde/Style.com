@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<pages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/PageObject.xsd">
+    <page name="AdminCodePoolGridPage" url="/amgcard/codepool/" area="admin" module="GiftCard">
+        <section name="AdminCodePoolGridSection"/>
+    </page>
+    <page name="AdminNewCodePoolPage" url="/amgcard/codepool/create/" area="admin" module="GiftCard">
+        <section name="AdminCodePoolSection"/>
+    </page>
+    <page name="AdminGiftCodeAccountGridPage" url="/amgcard/account/" area="admin" module="GiftCard">
+        <section name="AdminGiftCodeAccountGridSection"/>
+    </page>
+    <page name="AdminNewGiftCodeAccountPage" url="/amgcard/account/new/" area="admin" module="GiftCard">
+        <section name="AdminNewGiftCodeAccountSection"/>
+    </page>
+</pages>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminOrderViewSection">
+        <element name="GiftCard" type="text" selector="//tr[contains(string(), 'Gift Card {{cardCode}}')]/td/span" parameterized="true"/>
+        <element name="ProductName" type="text" selector="//*[@class='product-title']"/>
+        <element name="ProductSKU" type="text" selector="//*[@class='product-sku-block']"/>
+        <element name="GiftCardInfoBlock" type="block" selector="//dl[@class='item-options']"/>
+        <element name="CardValue" type="text" selector="//dt[contains(string(), 'Card Value')]/following::dd[1]"/>
+        <element name="CardType" type="text" selector="//dt[contains(string(), 'Card Type')]/following::dd[1]"/>
+        <element name="CardImage" type="text" selector="//dt[contains(string(), 'Gift Card Image:')]/following::img[contains(@src, '{{img}}')]" parameterized="true"/>
+        <element name="CardRecipient" type="text" selector="//dt[contains(string(), 'Gift Card Recipient:')]/following::dd[1]"/>
+        <element name="CardAccounts" type="text" selector="//dt[contains(string(), 'Gift Card Accounts:')]/following::dd[1]"/>
+    </section>
+</sections>

@@ -1,0 +1,1 @@
+/var/www/style.com/public_html/vendor/magento/module-theme/view/frontend/web/js/cookie-status.js

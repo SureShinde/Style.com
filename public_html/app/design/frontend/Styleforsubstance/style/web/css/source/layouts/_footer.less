@@ -1,0 +1,248 @@
+.page-footer {
+  background-color: @color-green3;
+  background-image: url('@{imgDir}block-background.png');
+  background-position: center;
+  background-size: cover;
+  font-size: 18px;
+  padding: 125px 0 50px;
+  margin: 100px 0 0;
+  @media @desktop-devices-min {
+    padding: 92px 0 50px;
+  }
+  .footer.content {
+    border: none;
+  }
+  .block.newsletter {
+    float: none;
+    max-width: 100%;
+    margin: 0 0 170px;
+    width: 100%;
+    @media @desktop-devices-min {
+      margin: 0 0 100px;
+    }
+  }
+  a {
+    font-family: @MetropolisRegular;
+    text-decoration: none;
+  }
+}
+.block.newsletter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  @media @mobile-devices {
+    padding: 0 24px;
+  }
+  .title {
+    display: block;
+    color: @color-black1;
+    font-size: 48px;
+    font-family: @MetropolisThin, sans-serif;
+    line-height: 1.21;
+    font-weight: normal;
+    max-width: 540px;
+    margin: 0 20px 0 0;
+    @media @desktop-devices-min {
+      max-width: 270px;
+      font-size: 44px;
+      margin: 0 5% 0 0;
+    }
+    @media @mobile-devices {
+      width: 100%;
+      max-width: none;
+      margin: 0 0 28px;
+      font-size: 34px;
+    }
+  }
+  .content {
+    max-width: 570px;
+    width: 46%;
+    padding: 0 0 25px;
+    @media @mobile-devices {
+      width: 100%;
+      max-width: none;
+      padding: 0;
+    }
+  }
+  .form.subscribe {
+    border-bottom: 2px solid @color-green1;
+    display: flex;
+  }
+  .field {
+    &.newsletter {
+      width: calc(~'100% - 52px');
+      max-width: none;
+      @media @mobile-devices {
+        width: calc(~'100% - 40px');
+      }
+    }
+    .control:before {
+      display: none;
+    }
+    label {
+      display: block;
+      position: static;
+    }
+  }
+  input {
+    border: none;
+    background: none;
+    padding: 25px 2px 25px;
+    font-size: 24px;
+    line-height: 1;
+    height: auto;
+    font-family: @MetropolisThin;
+    margin: 0;
+    @media @mobile-devices {
+      font-size: 18px;
+    }
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  .actions {
+    display: block;
+    width: 52px;
+    @media @mobile-devices {
+      width: 40px;
+    }
+  }
+  .action.subscribe {
+    min-width: 0;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 0;
+    line-height: 1;
+    height: 100%;
+    transition: opacity 0.3s ease;
+    &:before {
+      content: '';
+      width: 52px;
+      height: 21px;
+      display: block;
+      background-image: url('@{icon-data}, @{green-long-arrow-right}');
+      background-size: contain;
+      background-repeat: no-repeat;
+      @media @mobile-devices {
+        width: 40px;
+        height: 17px;
+      }
+    }
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+.logo-footer-holder {
+  margin: 0 0 85px;
+  text-align: center;
+  @media @mobile-devices {
+    margin: 0 0 56px;
+  }
+  .logo-footer {
+    display: inline-block;
+    max-width: 134px;
+    @media @mobile-devices {
+      max-width: 100px;
+    }
+  }
+}
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 18px;
+  margin: 0 0 165px;
+  @media @desktop-devices-min {
+    margin: 0 0 150px;
+  }
+  @media @mobile-devices {
+    font-size: 16px;
+    margin: 0 0 83px;
+  }
+  .footer-column {
+    width: 22%;
+    text-align: center;
+    @media @desktop-devices-min {
+      width: 27%;
+    }
+    @media @tablet-devices {
+      width: 50%;
+      margin: 0 0 57px;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      li {
+        margin: 0 0 10px;
+        a {
+          color: @color-gray1;
+        }
+      }
+      &.social-list {
+        li {
+          margin: 0 8px 10px 9px;
+        }
+      }
+    }
+  }
+}
+.social-title {
+  color: @color-green1;
+  font-size: 52px;
+  font-weight: normal;
+  line-height: 1.2;
+  font-family: @EyeCatchingRegular, Sans-Serif;
+  margin: 0 0 5px;
+  @media @mobile-devices {
+    font-size: 42px;
+    margin: 0 0 9px;
+  }
+}
+.social-list {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  a {
+    display: block;
+    width: 42px;
+    height: 42px;
+    text-indent: -9999px;
+    overflow: hidden;
+    background-size: cover;
+    transition: opacity 0.3s ease;
+    @media @mobile-devices {
+      width: 40px;
+      height: 40px;
+    }
+    &.tw {
+      background-image: url('@{icon-data}, @{icon-twitter}');
+    }
+    &.fb {
+      background-image: url('@{icon-data}, @{icon-facebook}');
+    }
+    &.inst {
+      background-image: url('@{icon-data}, @{icon-instagram}');
+    }
+    &.pint {
+      background-image: url('@{icon-data}, @{icon-pinterest}');
+    }
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+.copyright {
+  background: none;
+  padding: 0;
+  color: @color-gray2;
+  font-size: 18px;
+  @media @mobile-devices {
+    font-size: 16px;
+  }
+}

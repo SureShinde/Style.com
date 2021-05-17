@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCreateOpenAmountGiftCardProduct" extends="GiftCardCreateDefaultGiftCardProduct">
+        <annotations>
+            <features value="Gift Card Product"/>
+            <stories value="Create Gift Card Product"/>
+            <title value="Create Gift Card Product"/>
+            <description value="Create Open Amount Gift Card Product. Check Product Data on the Storefront Product Page"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-28"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardProduct"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateOpenAmountGiftCardProductActionGroup" stepKey="createGiftCardProductActionGroup">
+                <argument name="giftCardProductData" value="defOpenAmountGiftCardProduct"/>
+                <argument name="categoryName" value="$$simpleCategory.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGiftCardProduct">
+                <argument name="product" value="defOpenAmountGiftCardProduct"/>
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="assertProductPrice"/>
+        <!-- open and check created product on the category page on storefront -->
+        <actionGroup ref="StorefrontCheckCategorySimpleProduct" stepKey="assertGiftCardCodeProduct">
+            <argument name="product" value="defOpenAmountGiftCardProduct"/>
+        </actionGroup>
+        <!-- open and check created gift card product on storefront -->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="{{defOpenAmountGiftCardProduct.name}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductNameOnProductPageActionGroup" stepKey="assertProductName">
+            <argument name="productName" value="{{defOpenAmountGiftCardProduct.name}}" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductSkuOnProductPageActionGroup" stepKey="assertProductSku">
+            <argument name="productSku" value="{{defOpenAmountGiftCardProduct.sku}}" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertProductPriceOnProductPageActionGroup" stepKey="assertProductPrice">
+            <argument name="productPrice" value="{{defOpenAmountGiftCardProduct.initialPrice}}" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertOpenAmountElementsOnProductPageActionGroup" stepKey="assertOpenAmountElementsOnProductPage"/>
+        <actionGroup ref="StorefrontAssertAvailableImageOnProductPageActionGroup" stepKey="assertAvailableProductImage">
+            <argument name="productImage" value="{{defOpenAmountGiftCardProduct.image}}" />
+        </actionGroup>
+    </test>
+</tests>

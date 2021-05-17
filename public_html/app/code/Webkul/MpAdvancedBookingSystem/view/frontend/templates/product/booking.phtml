@@ -1,0 +1,103 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block \Webkul\Marketplace\Block\Product\Create */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$params = $block->getRequest()->getParams();
+if (!empty($params['booking_type'])) {
+    $data = $helper->getAttributeSetAndProductTypeForBooking($params['booking_type']);
+    if (!empty($data)
+        && $data['set'] == $params['set']
+        && $data['type'] == $params['type']
+        && (($params['type'] == "virtual" && $data['booking_type'] == "booking")
+        || ($params['type'] == "configurable" && $data['booking_type'] == "hotelbooking"))
+    ) {
+        $allowedBookingTypes = explode(',', $helper->getMpConfigValue('booking_types'));
+        if (in_array($params['booking_type'], $allowedBookingTypes)
+        ) {
+            /* @noEscape */ echo "<input id='product_booking_type_id' name='type' type='hidden' value='".
+                $data['booking_type']."'/>";
+            /* @noEscape */ echo "<input id='booking_product_type' name='booking_product_type' type='hidden' value='".
+                $params['booking_type']."'/>";
+            /* @noEscape */ echo $block->getChildHtml($params['booking_type'].'-booking');
+        }
+    } ?>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "mpbooking": ""
+            }
+        }
+    </script>
+<?php } elseif (!(empty($params['id'])) && $helper->isBookingProduct($params['id'])) {
+    $productId = $params['id'];
+    $helper->enableOptions($productId);
+    $helper->checkBookingProduct($productId);
+
+    $product = $helper->getProduct($productId);
+    $set = $product->getAttributeSetId();
+
+    $allowedBookingProductTypes = [
+        "booking",
+        "hotelbooking"
+    ];
+
+    $defaultType = $helper->getProductAttributeSetIdByLabel('Default');
+    $appointmentType = $helper->getProductAttributeSetIdByLabel('Appointment Booking');
+    $rentalType = $helper->getProductAttributeSetIdByLabel('Rental Booking');
+    $eventType = $helper->getProductAttributeSetIdByLabel('Event Booking');
+    $hotelType = $helper->getProductAttributeSetIdByLabel('Hotel Booking');
+    $tableType = $helper->getProductAttributeSetIdByLabel('Table Booking');
+
+    $allowedAttributeSetIds = $helper->getAllowedAttrSetIDs();
+    $allowedAttributeSetIds[] = $defaultType;
+
+    $allowedBookingTypes = [
+        $defaultType => 'default',
+        $appointmentType => 'appointment',
+        $rentalType => 'rental',
+        $eventType => 'event',
+        $hotelType => 'hotel',
+        $tableType => 'table'
+    ];
+
+    if (in_array($product->getTypeId(), $allowedBookingProductTypes)
+        && in_array($set, $allowedAttributeSetIds)
+        && array_key_exists($set, $allowedBookingTypes)
+    ) {
+        $data = $helper->getAttributeSetAndProductTypeForBooking($allowedBookingTypes[$set]);
+        if (!empty($data)
+            && $data['set'] == $set
+            && in_array($allowedBookingTypes[$set], $helper->getAllBookingTypes())
+        ) {
+            /* @noEscape */ echo "<input id='booking_product_type' name='booking_product_type' type='hidden' value='".
+                $allowedBookingTypes[$set]."'/>";
+            echo $block->getChildHtml($allowedBookingTypes[$set].'-booking');
+        }
+    } ?>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "mpbooking": ""
+            }
+        }
+    </script>
+    <?php
+} ?>

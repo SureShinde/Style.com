@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <!--new gift account-->
+    <section name="AdminNewGiftCodeAccountSection">
+        <element name="Save" type="button" selector="//button[@id='save']"/>
+        <element name="SaveAndContinueEdit" type="button" selector="//button[@id='save_and_continue']"/>
+        <element name="CodePool" type="select" selector="//select[@name='code_pool']"/>
+        <element name="Image" type="select" selector="//select[@name='image_id']"/>
+        <element name="Website" type="select" selector="//select[@name='website_id']"/>
+        <element name="Status" type="select" selector="//select[@name='status']"/>
+        <element name="Balance" type="input" selector="//input[@name='balance']"/>
+        <element name="ExpiryDate" type="button" selector="//button[@class='ui-datepicker-trigger v-middle']"/>
+        <element name="ExpiryDateValue" type="input" selector="//input[@name='expired_date']"/>
+        <element name="GoToday" type="button" selector="#ui-datepicker-div button.ui-datepicker-current" timeout="30"/>
+        <element name="Close" type="button" selector="#ui-datepicker-div button.ui-datepicker-close" timeout="30"/>
+        <element name="Comment" type="textarea" selector="//textarea[@name='comment']"/>
+    </section>
+
+    <!--created gift account-->
+    <section name="AdminGiftCodeAccountSection">
+        <element name="GeneralInformationTab" type="button" selector="//a[@id='tab_send_information']"/>
+        <element name="Status" type="select" selector="//select[@name='status']"/>
+        <element name="Website" type="select" selector="//select[@name='website_id']"/>
+        <element name="InitialCodeValue" type="text" selector="//span[@name='initial_value']"/>
+        <element name="CurrentBalance" type="input" selector="//input[@name='current_value']"/>
+        <element name="ExpiryDate" type="input" selector="//input[@name='expired_date']"/>
+        <element name="Comment" type="textarea" selector="//textarea[@name='comment']"/>
+        <element name="SendGiftCardTab" type="button" selector="//a[@id='tab_send_information']"/>
+        <element name="RecipientName" type="input" selector="//input[@name='recipient_name']"/>
+        <element name="RecipientEmail" type="input" selector="//input[@name='recipient_email']"/>
+        <element name="OrderHistoryTab" type="button" selector="//a[@id='tab_order_history']"/>
+        <element name="CodeAccountSavedMessage" type="text" selector="//*[@data-ui-id='messages-message-success'][contains(string(), 'The code account has been saved.')]"/>
+        <element name="GiftCardCode" type="text" selector="//*[@name='code']"/>
+        <!--order history grid on gift account page-->
+        <element name="FiltersButton" type="button" selector="//button[@data-action='grid-filter-expand']"/>
+        <element name="OrderNumber" type="input" selector="//input[@name='increment_id']"/>
+        <element name="ApplyFilter" type="button" selector="//button[@data-action='grid-filter-apply']"/>
+        <element name="ActiveFilters" type="text" selector="//*[@class='admin__data-grid-header']//div[@class='admin__data-grid-filters-current _show']"/>
+        <element name="ClearAllFilters" type="button" selector="//button[@data-action='grid-filter-reset']"/>
+        <element name="RecordsFoundMessage" type="text" selector="//*[@class='admin__control-support-text'][contains(string(), '{{qty}} records found')]" parameterized="true"/>
+        <element name="CodeCell" type="text" selector="//tr[1]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., '{{column}}')]/preceding-sibling::th) +1 ]" parameterized="true"/>
+    </section>
+</sections>

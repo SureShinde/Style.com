@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="3columns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="default_head_blocks"/>
+    <body>
+
+      <block class="Magento\Theme\Block\Html\Topmenu" name="header.navigation" template="Magento_Theme::header-navigation.phtml" />
+      <block class="Magento\Theme\Block\Html\Topmenu" name="footer.content" template="Magento_Theme::footer-content.phtml" />
+
+      <move element="header.navigation" destination="header-wrapper" after="logo" />
+      <move element="minicart" destination="header-wrapper" after="-" />
+      <!-- <move element="top.links" destination="header-wrapper" after="-" /> -->
+      <move element="footer.content" destination="footer-container" before="copyright" />
+      <move element="copyright" destination="footer-container" after="-" />
+
+      <referenceBlock name="header.panel.wrapper" remove="true" />
+      <referenceBlock name="navigation.sections" remove="true" />
+      <!-- <referenceBlock name="minicart" remove="true" /> -->
+      <referenceBlock name="top.search" remove="true" />
+      <referenceBlock name="top.links" remove="true" />
+      <referenceBlock name="compare-link-wrapper" remove="true" />
+      <referenceBlock name="wish-list-link" remove="true" />
+      <referenceBlock name="my-account-link" remove="true" />
+      <referenceBlock name="footer_links" remove="true" />
+    </body>
+</page>

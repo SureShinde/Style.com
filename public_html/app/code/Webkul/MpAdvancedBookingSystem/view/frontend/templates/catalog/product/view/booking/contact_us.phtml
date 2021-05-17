@@ -1,0 +1,153 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$mpHelper = $viewModel->getMpHelper();
+$customerHelper = $viewModel->getCustomerHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+?>
+<div class="wk-bk-contact-cotainer">
+    <div id="wk-bk-contact-wrapper">
+        <div class="wk-bk-modals-wrapper">
+            <aside tabindex="0" data-type="popup" data-role="modal" 
+                class="modal-popup modal-slide _inner-scroll wk-bk-model-popup">
+                <div tabindex="0" data-role="focusable-start"></div>
+                <div data-role="focusable-scope" class="modal-inner-wrap">
+                    <header class="modal-header">
+                        <h4 class="modal-title"><?= /* @noEscape */ __('Contact Us') ?></h4>
+                        <button type="button" data-role="closeBtn" class="action-close wk-close">
+                            <span>Close</span>
+                        </button>
+                        <span  class="wk-clear" ></span>
+                    </header>
+                    <?php
+                    if ($mpHelper->isCustomerLoggedIn()) {
+                        $readonly = "readonly='readonly'";
+                        $customer = $mpHelper->getCustomerData();
+                        $buyerName = $customer->getName();
+                        $buyerEmail = $customer->getEmail();
+                    } else {
+                        $readonly = '';
+                        $buyerName = '';
+                        $buyerEmail = '';
+                    } ?>
+                    <form id="wk-bk-contact-form" method="post" action="#" class="fieldset">
+                        <div class="modal-body form-list field required" data-bind="scope: 'customer'">
+                            <label class="label"><?= /* @noEscape */ __('Name') ?> :</label>
+                            <input type="text" name="name" 
+                                class="queryemail wk-contact_input_fields required-entry" 
+                                value="<?= $block->escapeHtml($buyerName)?>" <?= /* @noEscape */ $readonly?>/>
+                            <label class="label"><?= /* @noEscape */ __('Email') ?> :</label>
+                            <input type="text" name="email" 
+                                class="queryemail required-entry validate-email wk-contact_input_fields" 
+                                value="<?= $block->escapeHtml($buyerEmail)?>" <?= /* @noEscape */ $readonly?>/>
+                            <label class="label"><?= /* @noEscape */ __('Subject') ?> :</label>
+                            <input type="text" name="subject" class="wk-contact_input_fields required-entry"/>
+                            <label class="label"><?= /* @noEscape */ __('Query') ?> :</label>
+                            <textarea  name="query" 
+                                class="queryquestion wk-contact_input_fields required-entry" 
+                                style="width:100%;"></textarea>
+                            <input type="hidden" name="product-id" value="<?= /* @noEscape */ $productId;?>" />
+                        </div>
+                        <div class="modal-footer">
+                            <span class="error"></span>
+                            <span class="errormail"></span>
+                            <input type="reset" 
+                                value="<?= /* @noEscape */ __('Reset') ?>" 
+                                id="wk-bk-contact-reset-btn" 
+                                class="wk-btn wk-btn_default"/>
+                            <input type="submit" 
+                                value="<?= /* @noEscape */ __('Submit') ?>" 
+                                id="wk-bk-contact-submit-btn" 
+                                class="wk-btn wk-btn-primary wk-bk-contact-clicked"/>
+                            <span class="wk-clear"></span>
+                        </div>
+                    </form>
+                    <script type="text/x-magento-init">
+                    {
+                        "*": {
+                            "Magento_Ui/js/core/app": {
+                                "components": {
+                                    "customer": {
+                                        "component": "Magento_Customer/js/view/customer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    </script>
+                </div>
+                <div tabindex="0" data-role="focusable-end"></div>
+            </aside>
+        </div>
+    </div>
+</div>
+<script>
+    require([
+        "jquery",
+        'Magento_Ui/js/modal/alert',
+        "mage/mage"
+    ], function($, alert){
+        var bookingContactForm = $('#wk-bk-contact-form');
+        bookingContactForm.mage('validation', {});
+
+        $('body').append($('#wk-bk-contact-wrapper'));
+
+        $('#wk-bk-contact-us').click(function(){
+            $('#wk-bk-contact-form input, #wk-bk-contact-form textarea').removeClass('mage-error');
+            $('.page-wrapper').css('opacity','0.4');
+            $('.wk-bk-model-popup').addClass('_show');
+            $('#wk-bk-contact-wrapper').show();
+        });
+        $('.wk-close').click(function(){
+            $('.page-wrapper').css('opacity','1');
+            $('#wk-bk-contact-reset-btn').trigger('click');
+            $('#wk-bk-contact-wrapper').hide();
+            $('#wk-bk-contact-form .validation-failed').each(function(){
+                $(this).removeClass('validation-failed');
+            });
+            $('#wk-bk-contact-form .validation-advice').each(function(){
+                $(this).remove();
+            });
+        });
+        $('#wk-bk-contact-submit-btn').click(function(){
+            if(bookingContactForm.valid()!=false){
+                var thisthis = $(this);
+                if(thisthis.hasClass("wk-bk-contact-clicked")){    
+                    thisthis.removeClass('wk-bk-contact-clicked');
+                    $('#wk-bk-contact-wrapper').addClass('mail-procss');
+                    $.ajax({
+                        url:'<?= /* @noEscape */ $viewModel->getContactUrl() ?>',
+                        data:$('#wk-bk-contact-form').serialize(),
+                        type:'post',
+                        dataType:'json',
+                        success:function(d){
+                            thisthis.addClass('wk-bk-contact-clicked');
+                            $('#wk-bk-contact-wrapper').removeClass('mail-procss')
+                            alert({
+                                content: $.mage.__('Mail has been sent.')
+                            });
+                            $('.wk-close, #wk-bk-contact-reset-btn').trigger('click');
+                        }
+                    });
+                }
+                return false;
+            }
+        });    
+    });    
+</script>

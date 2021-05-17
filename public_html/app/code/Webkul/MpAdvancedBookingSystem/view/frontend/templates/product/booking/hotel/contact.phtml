@@ -1,0 +1,298 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$params = $block->getRequest()->getParams();
+if (!empty($params['id'])) {
+    $product = $block->getProduct($params['id']);
+} else {
+    $product['max_adults'] = 2;
+    $product['location'] = "";
+    $product['show_map_loction'] = 1;
+    $product['show_contact_button_to'] = "";
+    $product['hotel_address'] = "";
+    $product['hotel_country'] = "";
+    $product['hotel_state'] = "";
+} ?>
+<div class="field">
+    <label class="label" for="wk-booking-max_adults">
+        <span>
+            <?= /* @noEscape */ __('Adults Allowed in a Room')?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text" type="text"
+            name="product[hotel_address]" id="wk-booking-max_adults"
+            value="<?= /* @noEscape */ $product['max_adults']?>">
+    </div>
+</div>
+
+<div class="field">
+    <label class="label"><?= /* @noEscape */ __('Hotel Location') ?>:</label>
+    <div class="wk-border"></div>
+</div>
+
+<div class="field required">
+    <label class="label" for="wk-booking-hotel_address">
+        <span>
+            <?= /* @noEscape */ __('Address')?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text required-entry" type="text"
+            name="product[hotel_address]" id="wk-booking-hotel_address"
+            value="<?= /* @noEscape */ $product['hotel_address']?>">
+    </div>
+</div>
+<div class="field required">
+    <label class="label" for="wk-booking-hotel_country">
+        <span>
+            <?= /* @noEscape */ __('Country')?>
+        </span>
+    </label>
+    <?php $countries = $helper->getHotelCountryOptions(); ?>
+    <div class="control">
+        <select class="select wk-select-wide required-select hotel_countries" name="product[hotel_country]"
+                id="wk-booking-hotel_country">
+            <?php foreach ($countries as $country): ?>
+                <option data-title="<?= /* @noEscape */ $country->getLabel() ?>"
+                        value="<?= /* @noEscape */ $country->getValue() ?>"
+                        <?php if ($product['hotel_country'] == $country->getValue()) { ?>
+                            selected="selected" 
+                        <?php } ?>>
+                    <?= /* @noEscape */ $country->getLabel()?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+</div>
+<?php $selectedCountry = $product['hotel_country']; ?>
+<div class="field required">
+    <label class="label" for="wk-booking-hotel_state">
+        <span>
+            <?= /* @noEscape */ __('State')?>
+        </span>
+    </label>
+    <div class="control">
+        <?php if ($selectedCountry!=="" && $selectedCountry): ?>
+            <?php $regions = $helper->getHotelStateOptions($selectedCountry);
+            if ($regions && $regions->getSize() > 0): ?>
+                <select class="select wk-select-wide required-select" name="product[hotel_state]"
+                        id="wk-booking-hotel_state">
+                    <?php foreach ($regions as $region): ?>
+                        <option data-title="<?= /* @noEscape */ $region->getName() ?>"
+                            value="<?= /* @noEscape */ $region->getRegionId() ?>"
+                            <?php if ($product['hotel_state'] == $region->getRegionId()) {?>
+                                selected="selected" 
+                            <?php } ?>>
+                            <?= /* @noEscape */ $region->getName() ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php else: ?>
+                <input class="input-text required-entry" type="text"
+                    name="product[hotel_state]" id="wk-booking-hotel_state"
+                    value="<?= /* @noEscape */ $product['hotel_state']?>">
+            <?php endif; ?>
+        <?php else: ?>
+            <input class="input-text required-entry" type="text"
+                name="product[hotel_state]" id="wk-booking-hotel_state"
+                value="<?= /* @noEscape */ $product['hotel_state']?>">
+        <?php endif; ?>
+    </div>
+</div>
+<div class="field required">
+    <label class="label" for="wk-booking-location">
+        <span>
+            <?= /* @noEscape */ __('Location')?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text required-entry" type="text"
+            name="product[location]" id="wk-booking-location"
+            value="<?= /* @noEscape */ $product['location']?>">
+    </div>
+</div>
+<div class="field toggle-field">
+    <label class="label" for="wk-show-map-loction">
+        <span>
+            <?= /* @noEscape */ __('Show Map With Location')?>
+        </span>
+    </label>
+    <!-- <div class="control">
+        <div class="switch" data-role="switcher">
+            <input type="checkbox" class="switch-checkbox"
+                id="wk-show-map-loction" name="product[show_map_loction]"
+                value="1" <?php //if ($product['show_map_loction']==1) { ?> checked="checked" <?php //} ?>>
+        </div>
+    </div> -->
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-show-map-loction" name="product[show_map_loction]"
+                value="1" <?php if ($product['show_map_loction']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-show-map-loction">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="field required" data-index="show_contact_button_to">
+    <label class="label" for="wk-show-contact-btn">
+        <span>
+            <?= /* @noEscape */ __('Show Contact Button to')?>
+        </span>
+    </label>
+    <div class="control">
+        <select class="select wk-select-wide required-select" name="product[show_contact_button_to]"
+                id="wk-show-contact-btn">
+            <option data-title="<?= /* @noEscape */ __('Everyone')?>"
+                    value="0" <?php if ($product['show_contact_button_to'] == 0) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Everyone')?>
+            </option>
+            <option data-title="<?= /* @noEscape */ __('Logged In Customer')?>"
+                    value="1" <?php if ($product['show_contact_button_to'] == 1) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Logged In Customer')?>
+            </option>
+        </select>
+    </div>
+</div>
+<script>
+var FORM_KEY = '<?= /* @noEscape */ $helper->getFormKey()?>';
+require([
+    'prototype'
+], function () {
+    var originModel = Class.create();
+    originModel.prototype = {
+        initialize : function()
+        {
+            this.reload = false;
+            this.loader = new varienLoader(true);
+            this.regionsUrl = "<?= /* @noEscape */ $block->getUrl('mpadvancebooking/index/regions') ?>";
+
+            this.bindCountryRegionRelation();
+        },
+        bindCountryRegionRelation : function(parentId)
+        {
+            if (parentId) {
+                // todo: fix bug in IE
+                var countryElements = $$('#'+parentId+' .hotel_countries');
+            } else {
+                var countryElements = $$('.hotel_countries');
+            }
+            for(var i=0; i<countryElements.size(); i++) {
+                Event.observe(countryElements[i], 'change', this.reloadRegionField.bind(this));
+                this.initRegionField(countryElements[i]);
+                if ($(countryElements[i].id+'_inherit')) {
+                    Event.observe($(countryElements[i].id+'_inherit'), 'change', this.enableRegionZip.bind(this));
+                }
+            }
+        },
+        enableRegionZip : function(event)
+        {
+            this.reload = true;
+            var countryElement = Event.element(event);
+            if (countryElement && countryElement.id && !countryElement.checked) {
+                var regionElement  = $(countryElement.id.replace(/hotel_country/, 'hotel_state'));
+                // var zipElement  = $(countryElement.id.replace(/country_id/, 'postcode'));
+                if (regionElement && regionElement.checked) {
+                    regionElement.click();
+                }
+                // if (zipElement && zipElement.checked) {
+                //     zipElement.click();
+                // }
+            }
+        },
+        initRegionField : function(element)
+        {
+            var countryElement = element;
+            if (countryElement && countryElement.id) {
+                var regionElement  = $(countryElement.id.replace(/hotel_country/, 'hotel_state'));
+                if (regionElement) {
+                    this.regionElement = regionElement;
+                    if (countryElement.value.length) {
+                        var url = this.regionsUrl+'parent/'+countryElement.value;
+                        this.loader.load(url, {}, this.refreshRegionField.bind(this));
+                    } else {
+                        this.clearRegionField(this.regionElement.disabled);
+                    }
+                }
+            }
+        },
+        reloadRegionField : function(event)
+        {
+            this.reload = true;
+            var countryElement = Event.element(event);
+            if (countryElement && countryElement.id) {
+                var regionElement  = $(countryElement.id.replace(/hotel_country/, 'hotel_state'));
+                if (regionElement) {
+                    this.regionElement = regionElement;
+                    if (countryElement.value.length) {
+                        var url = this.regionsUrl+'parent/'+countryElement.value;
+                        this.loader.load(url, {}, this.refreshRegionField.bind(this));
+                    } else {
+                        this.clearRegionField(this.regionElement.disabled);
+                    }
+                }
+            }
+        },
+        refreshRegionField : function(serverResponse)
+        {
+            if (serverResponse) {
+                var data = eval('(' + serverResponse + ')');
+                var value = this.regionElement.value;
+                var disabled = this.regionElement.disabled;
+                if (data.length) {
+                    var html = '<select name="'+this.regionElement.name+'" id="'+this.regionElement.id+
+                        '" class="required-entry select wk-select-wide required-select" title="'+
+                        this.regionElement.title+'"'+(disabled?" disabled":"")+'>';
+                    for (var i in data) {
+                        if (data[i].label) {
+                            html+= '<option value="'+data[i].value+'"';
+                            if (this.regionElement.value
+                             && (this.regionElement.value == data[i].value || this.regionElement.value == data[i].label)
+                            ) {
+                                html+= ' selected';
+                            }
+                            html+='>'+data[i].label+'<\/option>';
+                        }
+                    }
+                    html+= '<\/select>';
+
+                    var parentNode = this.regionElement.parentNode;
+                    var regionElementId = this.regionElement.id;
+                    parentNode.innerHTML = html;
+                    this.regionElement = $(regionElementId);
+                } else if (this.reload) {
+                    this.clearRegionField(disabled);
+                }
+            }
+        },
+        clearRegionField: function(disabled) {
+            var html = '<input type="text" name="' + this.regionElement.name + '" id="' + this.regionElement.id + 
+                    '" class="input-text input-text required-entry" title="' + 
+                    this.regionElement.title + '"' + (disabled ? " disabled" : "") + '>';
+            var parentNode = this.regionElement.parentNode;
+            var regionElementId = this.regionElement.id;
+            parentNode.innerHTML = html;
+            this.regionElement = $(regionElementId);
+        }
+    }
+    originAddress = new originModel();
+});
+</script>

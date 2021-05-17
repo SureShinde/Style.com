@@ -1,0 +1,131 @@
+<!--@subject Gift certificate {{var gcard_email.getGiftCode()}} @-->
+<!--@vars {
+"var store url=\"\"":"Store Url",
+"var gcard_email.getRecipientName()":"Recipient name",
+"var gcard_email.getSenderName()":"Sender name",
+"var gcard_email.getSenderEmail()":"Sender email",
+"var gcard_email.getSenderMessage()":"Sender message",
+"var gcard_email.getBalance()":"Card balance",
+"var gcard_email.getGiftCode()":"Gift Code",
+"var gcard_email.getExpiredDate()":"Gift card expiry date",
+"var gcard_email.getImage()":"Image base64 code"
+} @-->
+<!--@styles
+@-->
+
+<table
+  style="
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-family: 'MetropolisRegular', sans-serif;
+    font-size: 16px;
+    color: #7f7f7f;
+  "
+>
+  <tbody>
+    <tr>
+      <td
+        bgcolor="#f1f1de"
+        style="padding: 50px 30px; border-top: 11px solid #a9b08f"
+      >
+        <table cellspacing="0" cellpadding="0" class="message-container">
+          <tr>
+            <td style="padding: 0 0 30px" align="center" colspan="2">
+              <a href="{{store url=''}}">
+                <img
+                  width="125"
+                  src="{{var logo_url}}"
+                  alt="{{var
+                logo_alt}}"
+                  border="0"
+                />
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td
+              class="amcard-message-body"
+              align="center"
+              width="55%"
+              style="padding: 0 25px"
+            >
+              <p
+                class="amcard-title"
+                style="
+                  color: #546223;
+                  font-family: 'EyeCatchingRegular';
+                  font-size: 55px;
+                  margin: 0;
+                "
+              >
+                {{trans "Dear %recipient_name"
+                recipient_name=$gcard_email.getRecipientName()|escape}},
+              </p>
+              <br />
+              {{if gcard_email.getSenderName()}} {{trans "%sender_name purchased
+              a" sender_name=$gcard_email.getSenderName()|escape}}
+              <span style="color: #000"
+                >{{trans "%balance"
+                balance=$gcard_email.getBalance()|escape}}</span
+              >
+              {{trans "gift card for you at %store_name"
+              store_name=$store.frontend_name|escape}}.<br />
+              {{else}} {{trans "You have been bought a %balance"
+              balance=$gcard_email.getBalance()|escape}} {{trans "gift card for
+              %customer_name" customer_name=$store.frontend_name|escape}}<br /><br />
+              {{/if}} {{if gcard_email.getSenderMessage()}} {{trans "Please find
+              below message from %sender_name"
+              sender_name=$gcard_email.getSenderName()|escape}}:<br /><br />
+              <p
+                class="amcard-mesasge"
+                style="
+                  color: #000;
+                  margin: 0;
+                  font-family: 'MetropolisBold', sans-serif;
+                  font-size: 18px;
+                "
+              >
+                {{var gcard_email.getSenderMessage()|escape}}
+              </p>
+              <br />
+              {{/if}} {{trans "Please use the following gift card code at
+              %store_name:" store_name=$store.frontend_name|escape}}<br /><br />
+              <p class="amcard-code-container">
+                <span
+                  class="amcard-code"
+                  style="
+                    color: #546223;
+                    font-family: 'MetropolisBold', sans-serif;
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    border: 1px dashed #546223;
+                    padding: 7px 25px;
+                    display: inline-block;
+                  "
+                  >{{var gcard_email.getGiftCode()|escape}}</span
+                >
+              </p>
+            </td>
+            <td align="center">
+              {{if gcard_email.getImage()}}
+              <img src="{{var gcard_email.getImage()|escape}}" /><br />
+              {{/if}}
+              <br />
+              <p
+                style="
+                  color: #546223;
+                  font-family: 'EyeCatchingRegular';
+                  font-size: 50px;
+                  margin: 0;
+                  line-height: 0.8;
+                "
+              >
+                {{trans "Looking forward to see you!"}}
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--create gift code account-->
+    <actionGroup name="AdminCreateGiftCodeAccountActionGroup">
+        <arguments>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <amOnPage url="{{AdminGiftCodeAccountGridPage.url}}" stepKey="openGiftCodeAccountGridPage"/>
+        <waitForPageLoad stepKey="waitForGiftCodeAccountGridLoad"/>
+        <click selector="{{AdminGiftCodeAccountGridSection.AddNewGiftCodeAccount}}" stepKey="clickAddNewGiftCodeAccount"/>
+        <waitForPageLoad stepKey="waitForNewGiftCodeAccountPageLoad"/>
+        <grabCookie userInput="setCodePoolIdInCookie" stepKey="grabCodePoolIdInCookie"/>
+        <selectOption selector="{{AdminNewGiftCodeAccountSection.CodePool}}" userInput="{$grabCodePoolIdInCookie}" stepKey="selectCodePool"/>
+        <selectOption selector="{{AdminNewGiftCodeAccountSection.Image}}" userInput="{{giftCodeAccount.image}}" stepKey="selectImage"/>
+        <selectOption selector="{{AdminNewGiftCodeAccountSection.Status}}" userInput="{{giftCodeAccount.status}}" stepKey="selectStatus"/>
+        <fillField selector="{{AdminNewGiftCodeAccountSection.Balance}}" userInput="{{giftCodeAccount.balance}}" stepKey="fillGiftCodeAccountBalance"/>
+        <fillField selector="{{AdminNewGiftCodeAccountSection.Comment}}" userInput="{{giftCodeAccount.comment}}" stepKey="fillGiftCodeAccountComment"/>
+        <click selector="{{AdminNewGiftCodeAccountSection.SaveAndContinueEdit}}" stepKey="saveAndContinueEdit"/>
+        <waitForPageLoad stepKey="waitForNewGiftCodeAccountSave"/>
+        <seeElement selector="{{AdminGiftCodeAccountSection.CodeAccountSavedMessage}}" stepKey="seeCodeAccountSavedMessage"/>
+        <grabTextFrom selector="{{AdminGiftCodeAccountSection.GiftCardCode}}" stepKey="grabSelectedGiftCardCode"/>
+        <setCookie userInput="setSelectedGiftCardCodeInCookie" value="{$grabSelectedGiftCardCode}" stepKey="setSelectedGiftCardCodeInCookie"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateFullInformationGiftCodeAccountActionGroup" extends="AdminCreateGiftCodeAccountActionGroup">
+        <selectOption selector="{{AdminNewGiftCodeAccountSection.Website}}" userInput="{{giftCodeAccount.website}}" after="selectImage" stepKey="selectWebsite"/>
+        <click selector="{{AdminNewGiftCodeAccountSection.ExpiryDate}}" after="fillGiftCodeAccountBalance" stepKey="clickExpiryDate"/>
+        <click selector="{{AdminNewGiftCodeAccountSection.GoToday}}" after="clickExpiryDate" stepKey="clickGoToday"/>
+        <click selector="{{AdminNewGiftCodeAccountSection.Close}}" after="clickGoToday" stepKey="closeDatepicker"/>
+        <grabValueFrom selector="{{AdminNewGiftCodeAccountSection.ExpiryDateValue}}" before="setGrabExpiryDateInCookie" stepKey="grabExpiryDate"/>
+        <setCookie userInput="setGrabExpiryDateInCookie" value="{$grabExpiryDate}" before="saveAndContinueEdit" stepKey="setGrabExpiryDateInCookie"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateUnLimGiftCodeAccountActionGroup" extends="AdminCreateGiftCodeAccountActionGroup">
+        <selectOption selector="{{AdminNewGiftCodeAccountSection.Website}}" userInput="{{giftCodeAccount.website}}" after="selectImage" stepKey="selectWebsite"/>
+        <grabValueFrom selector="{{AdminNewGiftCodeAccountSection.ExpiryDateValue}}" before="setGrabUnlExpiryDateInCookie" stepKey="grabExpiryDate"/>
+        <setCookie userInput="setGrabExpiryDateInCookie" value="{$grabExpiryDate}" before="saveAndContinueEdit" stepKey="setGrabUnlExpiryDateInCookie"/>
+    </actionGroup>
+
+    <actionGroup name="AdminGrabGiftCardCodeActionGroup">
+        <grabTextFrom selector="{{AdminGiftCodeAccountSection.GiftCardCode}}" stepKey="grabSelectedGiftCardCode"/>
+    </actionGroup>
+
+    <!--check gift code account data-->
+    <actionGroup name="AdminCheckGiftCodeAccountActionGroup">
+        <arguments>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <see selector="{{AdminGiftCodeAccountSection.Status}}" userInput="{{giftCodeAccount.statusTitle}}" stepKey="seeGiftCodeAccountStatus"/>
+        <see selector="{{AdminGiftCodeAccountSection.InitialCodeValue}}" userInput="{{giftCodeAccount.decimalBalance}}" stepKey="seeGiftCodeAccountInitialCodeValue"/>
+        <seeInField selector="{{AdminGiftCodeAccountSection.CurrentBalance}}" userInput="{{giftCodeAccount.decimalCurrentBalance}}" stepKey="seeGiftCodeAccountCurrentBalance"/>
+        <seeInField selector="{{AdminGiftCodeAccountSection.Comment}}" userInput="{{giftCodeAccount.comment}}" stepKey="seeGiftCodeAccountComment"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCheckFullInformationGiftCodeAccountActionGroup" extends="AdminCheckGiftCodeAccountActionGroup">
+        <grabCookie userInput="setGrabExpiryDateInCookie" stepKey="grabExpiryDateInCookie"/>
+        <see selector="{{AdminGiftCodeAccountSection.Website}}" userInput="{{giftCodeAccount.websiteTitle}}" stepKey="seeGiftCodeAccountWebsite"/>
+        <seeInField selector="{{AdminGiftCodeAccountSection.ExpiryDate}}" userInput="{$grabExpiryDateInCookie}" stepKey="seeGiftCodeAccountExpiryDate"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCheckGiftCodeAccAfterOrderGiftProdActionGroup" extends="AdminCheckGiftCodeAccountActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+        </arguments>
+        <remove keyForRemoval="seeGiftCodeAccountComment"/>
+        <see selector="{{AdminGiftCodeAccountSection.GiftCardCode}}" userInput="{{giftCode}}" stepKey="seeGiftCardAccount"/>
+    </actionGroup>
+
+    <!--check gift code account in order history tab. Use after code account is opened-->
+    <actionGroup name="AdminFindOrderInOrderHistoryActionGroup">
+        <arguments>
+            <argument name="orderNumber" type="string"/>
+            <argument name="qtyRecordsFound" defaultValue="qtyRecordFound.1_record"/>
+        </arguments>
+        <click selector="{{AdminGiftCodeAccountSection.OrderHistoryTab}}" stepKey="openOrderHistoryTab"/>
+        <waitForPageLoad stepKey="waitForOrderHistoryTabLoad"/>
+        <conditionalClick selector="{{AdminGiftCodeAccountSection.ClearAllFilters}}"
+                          dependentSelector="{{AdminGiftCodeAccountSection.ActiveFilters}}"
+                          visible="true" stepKey="clearAllFilters"/>
+        <waitForPageLoad stepKey="waitForCLearFilterDataLoad"/>
+        <conditionalClick selector="{{AdminGiftCodeAccountSection.FiltersButton}}"
+                          dependentSelector="{{AdminGiftCodeAccountGridSection.ApplyFilter}}"
+                          visible="false" stepKey="openFilter"/>
+        <fillField selector="{{AdminGiftCodeAccountSection.OrderNumber}}" userInput="{{orderNumber}}" stepKey="fillOrderNumber"/>
+        <click selector="{{AdminGiftCodeAccountSection.ApplyFilter}}" stepKey="applyFilter"/>
+        <waitForPageLoad stepKey="waitForFilteredDataLoad"/>
+        <seeElement selector="{{AdminGiftCodeAccountSection.RecordsFoundMessage(qtyRecordsFound)}}" stepKey="seeCorrectQtyRecordsFound"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCheckOrderNumberInOrderHistoryActionGroup" extends="AdminFindOrderInOrderHistoryActionGroup">
+        <see selector="{{AdminGiftCodeAccountSection.CodeCell(orderHistoryGridColumns.orderNumber)}}"
+             userInput="{{orderNumber}}" stepKey="seeOrderNumberInOrderHistory"/>
+    </actionGroup>
+
+    <!--check gift code account in send gift card tab. Use after code account is opened-->
+    <actionGroup name="AdminCheckRecipientInformationInCardAccActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+        </arguments>
+        <click selector="{{AdminGiftCodeAccountSection.SendGiftCardTab}}" stepKey="openSendGiftCardTab"/>
+        <waitForPageLoad stepKey="waitForSendGiftCardTabLoad"/>
+        <seeInField selector="{{AdminGiftCodeAccountSection.RecipientName}}" userInput="{{giftCardProductData.recipientName}}" stepKey="seeRecipientName"/>
+        <seeInField selector="{{AdminGiftCodeAccountSection.RecipientEmail}}" userInput="{{giftCardProductData.recipientEmail}}" stepKey="seeRecipientEmail"/>
+    </actionGroup>
+
+    <!--operations on gift code accounts grid-->
+    <!--find gift code account on gift code accounts grid-->
+    <actionGroup name="AdminFindGiftCodeAccountOnGridActionGroup">
+        <arguments>
+            <argument name="qtyRecordsFound" defaultValue="qtyRecordFound.1_record"/>
+        </arguments>
+        <amOnPage url="{{AdminGiftCodeAccountGridPage.url}}" stepKey="openGiftCodeAccountGrid"/>
+        <waitForPageLoad stepKey="waitForGiftCodeAccountGridLoad"/>
+        <grabCookie userInput="setSelectedGiftCardCodeInCookie" stepKey="grabSelectedGiftCardCodeInCookie"/>
+        <conditionalClick selector="{{AdminGiftCodeAccountGridSection.ClearAllFilters}}"
+                          dependentSelector="{{AdminGiftCodeAccountGridSection.ActiveFilters}}"
+                          visible="true" stepKey="clearAllFilters"/>
+        <waitForPageLoad stepKey="waitForCLearFilterDataLoad"/>
+        <conditionalClick selector="{{AdminGiftCodeAccountGridSection.FiltersButton}}"
+                          dependentSelector="{{AdminGiftCodeAccountGridSection.ApplyFilter}}"
+                          visible="false" stepKey="openFilter"/>
+        <fillField selector="{{AdminGiftCodeAccountGridSection.GiftCodeFilter}}" userInput="{$grabSelectedGiftCardCodeInCookie}" stepKey="fillCodePoolName"/>
+        <click selector="{{AdminGiftCodeAccountGridSection.ApplyFilter}}" stepKey="applyFilter"/>
+        <waitForPageLoad stepKey="waitForFilteredDataLoad"/>
+        <seeElement selector="{{AdminGiftCodeAccountGridSection.RecordsFoundMessage(qtyRecordsFound)}}" stepKey="seeCorrectQtyRecordsFound"/>
+    </actionGroup>
+
+    <actionGroup name="AdminDeleteGiftCodeAccountActionGroup" extends="AdminFindGiftCodeAccountOnGridActionGroup">
+        <checkOption selector="{{AdminGiftCodeAccountGridSection.FirstRowCheckbox}}" stepKey="checkGiftCodeAccount"/>
+        <click selector="{{AdminGiftCodeAccountGridSection.MassActions}}" stepKey="clickMassActionsButton"/>
+        <click selector="{{AdminGiftCodeAccountGridSection.DeleteMassAction}}" stepKey="clickDeleteMassActionButton"/>
+        <waitForPageLoad stepKey="waitForAcceptDeleteGiftCodeAccountButton"/>
+        <click selector="{{AdminGiftCodeAccountGridSection.AcceptDeleteButton}}" stepKey="acceptDeleteGiftCodeAccountButton"/>
+        <waitForPageLoad stepKey="waitForDeleteGiftCodeAccount"/>
+        <seeElement selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountRemovedMessage(qtyRecordsFound)}}" stepKey="seeAccountRemovedMessage"/>
+    </actionGroup>
+
+    <!--use after gift code account is found. Group does not check expire date-->
+    <actionGroup name="AdminCheckGiftCodeAccountDataOnGridActionGroup">
+        <arguments>
+            <argument name="giftCode" type="string"/>
+            <argument name="giftCodeAccount" defaultValue="defaultGiftCodeAccount"/>
+        </arguments>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.giftCode)}}"
+             userInput="{{giftCode}}" stepKey="seeGiftCodeAccountCode"/>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.initialValue)}}"
+             userInput="{{giftCodeAccount.decimalBalanceGrid}}" stepKey="seeGiftCodeAccountInitialValue"/>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.currentValue)}}"
+             userInput="{{giftCodeAccount.decimalCurrentBalanceGrid}}" stepKey="seeGiftCodeAccountCurrentValue"/>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.status)}}"
+             userInput="{{giftCodeAccount.statusTitle}}" stepKey="seeGiftCodeAccountStatus"/>
+    </actionGroup>
+
+    <!--use after gift code account is found. Group checks expire date-->
+    <actionGroup name="AdminCheckUnlGiftCodeExpDateOnGridActionGroup">
+        <grabCookie userInput="setGrabExpiryDateInCookie" stepKey="grabExpiryDateInCookie"/>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.expiryDate)}}"
+             userInput="{$grabExpiryDateInCookie}" stepKey="seeGiftCodeExpireDate"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCheckGiftCodeExpDateOnGridActionGroup">
+        <arguments>
+            <argument name="giftCodeExpireDate" type="string"/>
+        </arguments>
+        <see selector="{{AdminGiftCodeAccountGridSection.GiftCodeAccountCell(giftCodeAccountGridColumns.expiryDate)}}"
+             userInput="{{giftCodeExpireDate}}" stepKey="seeGiftCodeExpireDate"/>
+    </actionGroup>
+
+    <!--use after gift code account is found-->
+    <actionGroup name="AdminOpenGiftCodeAccountFromGridActionGroup">
+        <click selector="{{AdminGiftCodeAccountGridSection.FirstRowEditLink}}" stepKey="clickEditLink"/>
+        <waitForPageLoad stepKey="waitForGiftCodeAccountPageLoad"/>
+    </actionGroup>
+
+</actionGroups>

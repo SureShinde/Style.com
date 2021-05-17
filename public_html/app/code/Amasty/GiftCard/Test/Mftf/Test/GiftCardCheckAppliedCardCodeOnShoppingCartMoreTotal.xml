@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCheckAppliedCardCodeOnShoppingCartMoreTotal" extends="GiftCardApplyCardCodeOnShoppingCartMoreTotal">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Apply Gift Card Code on Shopping Cart"/>
+            <title value="Apply Gift Card Code on Shopping Cart"/>
+            <description value="Check Applied Gift Card Code on Grid and in the Card Code Account. Card Code Current Balance Is Decreased. Card Code Status Is Used"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-21"/>
+            <group value="AmGiftCard"/>
+            <group value="AmApplyGiftCard"/>
+            <group value="AmGiftCardShoppingCart"/>
+        </annotations>
+
+        <remove keyForRemoval="checkCardCodeIsAppliedOnShoppingCart"/>
+        <!--check gift code data on admin part-->
+        <actionGroup ref="AdminFindGiftCodeAccountOnGridActionGroup" after="createOrderAndGrabOrderNumber" stepKey="findGiftCodeAccountOnGridForCheck"/>
+        <actionGroup ref="AdminCheckGiftCodeAccountDataOnGridActionGroup" after="findGiftCodeAccountOnGridForCheck" stepKey="checkGiftCodeAccountDataOnGrid">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+            <argument name="giftCodeAccount" value="usedGiftCodeAccount_100usd"/>
+        </actionGroup>
+        <actionGroup ref="AdminOpenGiftCodeAccountFromGridActionGroup" after="checkGiftCodeAccountDataOnGrid" stepKey="openGiftCodeAccountFromGrid"/>
+        <actionGroup ref="AdminCheckGiftCodeAccountActionGroup" after="openGiftCodeAccountFromGrid" stepKey="checkGiftCodeAccount">
+            <argument name="giftCodeAccount" value="usedGiftCodeAccount_100usd"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckOrderNumberInOrderHistoryActionGroup" after="checkGiftCodeAccount" stepKey="findAndCheckOrderInOrderHistory">
+            <argument name="orderNumber" value="{$grabOrderNumberCreateOrderAndGrabOrderNumber}"/>
+        </actionGroup>
+    </test>
+</tests>

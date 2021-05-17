@@ -1,0 +1,79 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$params = $block->getRequest()->getParams();
+if (!empty($params['id'])) {
+    $product = $block->getProduct($params['id']);
+} else {
+    $product['location'] = "";
+    $product['show_map_loction'] = 1;
+    $product['show_contact_button_to'] = "";
+} ?>
+<div class="field">
+    <label class="label"><?= /* @noEscape */ __('Contact Information') ?>:</label>
+    <div class="wk-border"></div>
+</div>
+
+<div class="field required">
+    <label class="label" for="wk-booking-location">
+        <span>
+            <?= /* @noEscape */ __('Location')?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text required-entry" type="text" name="product[location]"
+            id="wk-booking-location" value="<?= /* @noEscape */ $product['location']?>">
+    </div>
+</div>
+<div class="field toggle-field">
+    <label class="label" for="wk-show-map-loction">
+        <span>
+            <?= /* @noEscape */ __('Show Map With Location')?>
+        </span>
+    </label>
+    <!-- <div class="control">
+        <div class="switch" data-role="switcher">
+            <input type="checkbox" class="switch-checkbox"
+                id="wk-show-map-loction" name="product[show_map_loction]"
+                value="1" <?php //if ($product['show_map_loction']==1) { ?> checked="checked" <?php //} ?>>
+        </div>
+    </div> -->
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-show-map-loction" name="product[show_map_loction]"
+                value="1" <?php if ($product['show_map_loction']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-show-map-loction">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="field required" data-index="show_contact_button_to">
+    <label class="label" for="wk-show-contact-btn">
+        <span>
+            <?= /* @noEscape */ __('Show Contact Button to')?>
+        </span>
+    </label>
+    <div class="control">
+        <select class="select wk-select-wide required-select" name="product[show_contact_button_to]"
+                id="wk-show-contact-btn">
+            <option data-title="<?= /* @noEscape */ __('Everyone')?>"
+                    value="0" <?php if ($product['show_contact_button_to'] == 0) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Everyone')?>
+            </option>
+            <option data-title="<?= /* @noEscape */ __('Logged In Customer')?>"
+                    value="1" <?php if ($product['show_contact_button_to'] == 1) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Logged In Customer')?>
+            </option>
+        </select>
+    </div>
+</div>

@@ -1,0 +1,268 @@
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+/* Demo CSS - You do not need this css in your own slider */
+pre{
+    font-family: "Source Code Pro", monospace;
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 20px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre;
+    white-space: pre-wrap;
+    background-color: whiteSmoke;
+    border: 1px solid #CCC;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+#container{
+    max-width:620px;
+    margin:0 auto;
+    padding-bottom:80px;
+}
+.butn{
+    top: 40.875%;
+}
+.numbers{
+    background: url("../images/bullet.png") repeat scroll 397px -40px transparent;
+    display: inline-block;
+    height: 15px;
+    width: 25px;
+}
+.pointr{
+    cursor:pointer;
+    width: 100%;
+}
+.wk_imagedelete,
+.wk_imageedit{
+    cursor:pointer;
+    position: absolute;
+    display: none;
+    top: 0;
+    right: 5px;
+    color: #000;
+    font-weight: lighter;
+}
+.wk_imageedit{
+    right: 23px;
+}
+.wk_imagedelete::after {
+    color: inherit;
+    content: "\e604";
+    display: block;
+    font-family: luma-icons;
+}
+.wk_imageedit::after {
+    color: inherit;
+    content: "\e606";
+    display: block;
+    font-family: luma-icons;
+}
+.addimgs,
+.remov{
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.styl {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.image_set {
+    display: inline-block;
+    width: 100%;
+}
+.setimage {
+    display: inline-block;
+    float: left;
+    width: 100px;
+    position: relative;
+}
+.wk_mpslider_loader {
+    background-color: #d2cccc;
+    display: none;
+    height: 100%;
+    opacity: 0.8;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+}
+.wk_mpslider_loader img {
+    margin-top: 20%;
+}
+
+/* Basic jQuery Slider essential styles */
+#banner-fade,
+#banner-slide{
+    margin: 0 auto;
+    /*max-width: 100% !important;*/
+}
+#banner-fade .bjqs-wrapper,
+#banner-slide .bjqs-wrapper{
+    margin: 0 auto;
+}
+.wk-mp-seller-slider-wrapper {
+    width: 100%;
+    display: block;
+    background-color: #F89327;
+}
+.wk-mp-seller-slider-wrapper ~ .wk-mp-banner-image {
+    display: none;
+}
+ul.bjqs-controls.v-centered li a{
+    display:block;
+    padding:10px;
+    background:#fff;
+    color:#000;
+    text-decoration: none;
+}
+ul.bjqs-controls.v-centered li{
+    margin: 0;
+}
+ol.bjqs-markers li a{
+    margin: 5px;
+}
+/*ol.bjqs-markers li.active-marker a,
+ol.bjqs-markers li a:hover{
+    background: #999;
+}*/
+p.bjqs-caption{
+    background: rgba(255,255,255,0.5);
+}
+.bjqs-prev{
+    display:none;
+}
+.bjqs-next{
+    display:none;
+}
+#nxts{
+    background: url("../images/Arrows.png") repeat scroll 409px -5px transparent;
+    display: inline-block;
+    height: 39px;
+    width: 26px;
+}
+#prvs{
+    background: url("../images/Arrows.png") repeat scroll 370px -5px transparent;
+    display: inline-block;
+    height: 39px;
+    width: 26px;
+}
+#nxts:hover{
+    background: url("../images/Arrows.png") repeat scroll 409px 46px transparent;
+    display: inline-block;
+    height: 39px;
+    width: 26px;
+}
+#prvs:hover{
+    background: url("../images/Arrows.png") repeat scroll 370px 46px transparent;
+    display: inline-block;
+    height: 39px;
+    width: 26px;
+}
+ol.bjqs-markers li.active-marker a .numbers,
+ol.bjqs-markers li a:hover .numbers{
+    background-position: 397px 57px;
+    margin-top: 0;
+}
+ul.bjqs{
+    position:relative;
+    list-style:none;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+    display:none;
+}
+li.bjqs-slide{
+    position:absolute;
+    /*display:none;*/
+}
+ul.bjqs-controls{
+    list-style:none;
+    margin:0;
+    padding:0;
+    z-index:9999;
+}
+ul.bjqs-controls.v-centered li a{
+    position:absolute;
+}
+ul.bjqs-controls.v-centered li.bjqs-next a{
+    right:0;
+}
+ul.bjqs-controls.v-centered li.bjqs-prev a{
+    left:0;
+}
+ol.bjqs-markers{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width:100%;
+    position: relative;
+    top: -30px;
+    z-index: 9;
+}
+ol.bjqs-markers.h-centered{
+    text-align: center;
+}
+ol.bjqs-markers li{
+    display:inline;
+    margin: 0;
+}
+ol.bjqs-markers li a{
+    display:inline-block;
+}
+p.bjqs-caption{
+    display:block;
+    width:96%;
+    margin:0;
+    padding:2%;
+    position:absolute;
+    bottom:0;
+}
+
+.image-wrapper {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px;
+    width: 50%;
+}
+.image-wrapper .input-text.banner.sliderimg,
+.image-wrapper .image_url{
+    display: inline-block;
+    width: 100% !important;
+}
+.image-wrapper .image_url {
+    margin-top: 10px;
+}
+#otherimages{
+    display: inline-block;
+    width: 50%;
+    margin-top: 10px;
+    max-height: 500px;
+    padding-right: 10px;
+}
+#otherimages .image-wrapper{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.edit-image-url-popup{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.edit-image-url-popup img{
+    max-height: 200px;
+    max-width: 150px;
+}

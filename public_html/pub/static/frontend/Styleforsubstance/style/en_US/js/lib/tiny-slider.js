@@ -1,0 +1,1 @@
+/var/www/style.com/public_html/app/design/frontend/Styleforsubstance/style/web/js/lib/tiny-slider.js

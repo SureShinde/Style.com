@@ -1,0 +1,92 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$product = $block->getProduct();
+?>
+<div class="admin__field _required">
+    <label class="admin__field-label" for="wk-booking-location">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Location'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry" type="text"
+               data-form-part="product_form" name="product[location]"
+               id="wk-booking-location" value="<?= $block->escapeHtml($product['location'])?>">
+    </div>
+</div>
+<div class="admin__field">
+    <label class="admin__field-label" for="wk-show-map-loction">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Show Map With Location'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                   data-form-part="product_form" id="wk-show-map-loction"
+                   name="product[show_map_loction]"
+                   value="<?= $block->escapeHtml($product['show_map_loction'])?>">
+            <label class="admin__actions-switch-label" for="wk-show-map-loction">
+                <span class="admin__actions-switch-text" data-bind="
+                    attr: {
+                        'data-text-on': toggleLabels.on,
+                        'data-text-off': toggleLabels.off
+                    }" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="admin__field _required" data-index="show_contact_button_to">
+    <label class="admin__field-label" for="wk-show-contact-btn">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Show Contact Button to'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <select class="admin__control-select wk-select-wide required-select"
+                data-form-part="product_form" name="product[show_contact_button_to]"
+                id="wk-show-contact-btn">
+            <option data-title="<?= $block->escapeHtml(__('Everyone'))?>"
+                    value="0" <?php if ($product['show_contact_button_to'] == 0) {?> selected="selected" <?php } ?>>
+                <?= $block->escapeHtml(__('Everyone'))?>
+            </option>
+            <option data-title="<?= $block->escapeHtml(__('Logged In Customer'))?>"
+                    value="1" <?php if ($product['show_contact_button_to'] == 1) {?> selected="selected" <?php } ?>>
+                <?= $block->escapeHtml(__('Logged In Customer'))?>
+            </option>
+        </select>
+    </div>
+</div>
+<?php if (empty($product['entity_id'])) { ?>
+    <input type="hidden" name="product[options][0][record_id]" value="0" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][sort_order]" value="1" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][option_id]" value="" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][title]" value="Event Tickets" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][is_require]" value="1" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][price]" value="" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][price_type]" value="fixed" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][sku]" value="" data-form-part="product_form"/>
+    <input type="hidden" name="product[options][0][type]" value="multiple" data-form-part="product_form"/>
+<?php } ?>
+<script>
+    require([
+        "jquery"
+    ], function($) {
+        <?php
+        if ($product['show_map_loction']) { ?>
+            $('#wk-show-map-loction').trigger('click');
+        <?php } ?>
+    });
+</script>
+<script>
+    jQuery('body').trigger('contentUpdated');
+</script>

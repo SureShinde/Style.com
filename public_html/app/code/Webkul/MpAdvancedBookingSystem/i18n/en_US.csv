@@ -1,0 +1,419 @@
+label,label
+"Add New Booking","Add New Booking"
+"Import Options","Import Options"
+"Questions List","Questions List"
+"Invalid Question","Invalid Question"
+"Use Default","Use Default"
+"Delete Row","Delete Row"
+"Add New Row","Add New Row"
+"Booking Product List","Booking Product List"
+"File can not be saved to the destination folder.","File can not be saved to the destination folder."
+"View Bookings","View Bookings"
+"View Bookings Products","View Bookings Products"
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"A total of %1 record(s) have been updated.","A total of %1 record(s) have been updated."
+"Something went wrong !!!","Something went wrong !!!"
+"Asked Question's Answers","Asked Question's Answers"
+"View Questions","View Questions"
+"Please correct the data sent.","Please correct the data sent."
+"Query has been %1.","Query has been %1."
+"Icon Uploaded Successfully","Icon Uploaded Successfully"
+"%1 Icon Not Uploaded","%1 Icon Not Uploaded"
+"Disallowed file type.","Disallowed file type."
+"Invalid Image.","Invalid Image."
+"Something went wrong while updating the product(s) status.","Something went wrong while updating the product(s) status."
+Admin,Admin
+Guest,Guest
+"No slot available","No slot available"
+"Marketplace Hotel Booking Asked Question's Answers","Marketplace Hotel Booking Asked Question's Answers"
+"Please select answers first.","Please select answers first."
+"Selected Answer(s) are successfully deleted from your account.","Selected Answer(s) are successfully deleted from your account."
+"Marketplace Hotel Booking Asked Questions","Marketplace Hotel Booking Asked Questions"
+"Please enter your nick name","Please enter your nick name"
+"Please enter your answer","Please enter your answer"
+"Your answer has been submitted successfully","Your answer has been submitted successfully"
+"Something Went Wrong, Please try again later.","Something Went Wrong, Please try again later."
+"Please enter your question","Please enter your question"
+"Your query has been submitted successfully","Your query has been submitted successfully"
+"On booking of %1","On booking of %1"
+"%1 Records are succesfully deleted from your account.","%1 Records are succesfully deleted from your account."
+"%1 Records are succesfully updated.","%1 Records are succesfully updated."
+"Please select questions first.","Please select questions first."
+"Hotel Booking Questions are successfully deleted from your account.","Hotel Booking Questions are successfully deleted from your account."
+"Hotel Booking Questions status are successfully updated in your account.","Hotel Booking Questions status are successfully updated in your account."
+"Product Type Or Attribute Set Invalid or Not Allowed","Product Type Or Attribute Set Invalid or Not Allowed"
+"Add Booking Product","Add Booking Product"
+"Marketplace Booking Product List","Marketplace Booking Product List"
+"Add New Booking Product","Add New Booking Product"
+"Please select booking product type.","Please select booking product type."
+"Booking Products are successfully deleted from your account.","Booking Products are successfully deleted from your account."
+"Booking Time Expired","Booking Time Expired"
+"Booking is not available for %1 for dates %2.","Booking is not available for %1 for dates %2."
+"Only %1 quantity is available for %2 for dates %3 to %4.","Only %1 quantity is available for %2 for dates %3 to %4."
+"%1 is not available for dates %2 to %3.","%1 is not available for dates %2 to %3."
+"Only %1 quantity is available for %2 for slot %3.","Only %1 quantity is available for %2 for slot %3."
+"%1 is not available for slot %2.","%1 is not available for slot %2."
+"Invalid booking dates.","Invalid booking dates."
+"Slot %1 is not available.","Slot %1 is not available."
+"%1 quantity is not available for slot %2.","%1 quantity is not available for slot %2."
+"something went wrong !!!","something went wrong !!!"
+"Room(s) are not available during %1 to %2.","Room(s) are not available during %1 to %2."
+"Only %1 Room(s) are available during %2 to %3.","Only %1 Room(s) are available during %2 to %3."
+"Invalid Tickets.","Invalid Tickets."
+"Tickets is not available.","Tickets is not available."
+"Ticket for ""%1"" is out of stock.","Ticket for ""%1"" is out of stock."
+"Only %1 quantity is available for %2 ticket ""%3"".","Only %1 quantity is available for %2 ticket ""%3""."
+"Rent from %1 to %2 is not available.","Rent from %1 to %2 is not available."
+"%1 is not available from %2 to %3.","%1 is not available from %2 to %3."
+msg,msg
+"There was some error while processing your request","There was some error while processing your request"
+Enabled,Enabled
+Pending,Pending
+Disabled,Disabled
+"Only %1 Tables are left at %2 slot.","Only %1 Tables are left at %2 slot."
+"All Tables are reserved at %1.","All Tables are reserved at %1."
+"Only %1 quantity is available for %2 for slot %3 %4.","Only %1 quantity is available for %2 for slot %3 %4."
+Fixed,Fixed
+"Default Booking","Default Booking"
+"Hotel Booking","Hotel Booking"
+"Appointment Booking","Appointment Booking"
+"Event Booking","Event Booking"
+"Rental Booking","Rental Booking"
+"Table Booking","Table Booking"
+"Requested option doesn't exist: %1","Requested option doesn't exist: %1"
+"Cannot delete variations from product: %1","Cannot delete variations from product: %1"
+"Cannot delete option with id: %1","Cannot delete option with id: %1"
+"Requested option doesn't exist","Requested option doesn't exist"
+"Option with id ""%1"" not found","Option with id ""%1"" not found"
+"Something went wrong while saving option.","Something went wrong while saving option."
+"Only implemented for hotelbooking product: %1","Only implemented for hotelbooking product: %1"
+"Option attribute ID is not specified.","Option attribute ID is not specified."
+"Option label is not specified.","Option label is not specified."
+"Option values are not specified.","Option values are not specified."
+"Value index is not specified for an option.","Value index is not specified for an option."
+"You can't add the item to shopping cart.","You can't add the item to shopping cart."
+Ticket,Ticket
+Night,Night
+Table,Table
+"Hourly Basis","Hourly Basis"
+"Daily Basis","Daily Basis"
+"Both(Hourly + Daily Basis)","Both(Hourly + Daily Basis)"
+Everyone,Everyone
+"Login Customer","Login Customer"
+"Make sure the Event To Date is later than or the same as the Event From Date.","Make sure the Event To Date is later than or the same as the Event From Date."
+"Room(s) are not available during %1 to %2 for %3","Room(s) are not available during %1 to %2 for %3"
+"Only %1 Room(s) are available during %2 to %3 for %4","Only %1 Room(s) are available during %2 to %3 for %4"
+" with"," with"
+" %1 : %2, "," %1 : %2, "
+"Maximum %1 guests are allowed","Maximum %1 guests are allowed"
+"Can not configure booking.","Can not configure booking."
+"Booking Type","Booking Type"
+"View Product","View Product"
+"View Answers","View Answers"
+Product,Product
+Enable,Enable
+"Are you sure you want to Enable this query?","Are you sure you want to Enable this query?"
+Disable,Disable
+"Are you sure you want to Disable this query?","Are you sure you want to Disable this query?"
+Customer,Customer
+View,View
+"Hotel Location","Hotel Location"
+"Ask a Question","Ask a Question"
+Configurations,Configurations
+"Select Associated Product","Select Associated Product"
+Done,Done
+"Choose a new product to delete and replace the current product configuration.","Choose a new product to delete and replace the current product configuration."
+"For better results, add attributes and attribute values to your products.","For better results, add attributes and attribute values to your products."
+"Choose Affected Attribute Set","Choose Affected Attribute Set"
+"Add configurable attributes to the current Attribute Set","Add configurable attributes to the current Attribute Set"
+"Add configurable attributes to the new Attribute Set based on current","Add configurable attributes to the new Attribute Set based on current"
+"Add configurable attributes to the existing Attribute Set","Add configurable attributes to the existing Attribute Set"
+"Contact Information","Contact Information"
+"Booking Information","Booking Information"
+"Renting Information","Renting Information"
+"Venue Details","Venue Details"
+"Current Variations","Current Variations"
+Image,Image
+Name,Name
+SKU,SKU
+Price,Price
+Quantity,Quantity
+Status,Status
+Attributes,Attributes
+Actions,Actions
+"Configurable products allow customers to choose options (Ex: shirt color). You need to create a virtual product for each configuration (Ex: a product for each color).","Configurable products allow customers to choose options (Ex: shirt color). You need to create a virtual product for each configuration (Ex: a product for each color)."
+"Configurations cannot be created for a standard product with downloadable files. To create configurations, first remove all downloadable files.","Configurations cannot be created for a standard product with downloadable files. To create configurations, first remove all downloadable files."
+"Add Products Manually","Add Products Manually"
+"Create Configurations","Create Configurations"
+"Booking Info","Booking Info"
+Amenities,Amenities
+"Ticket and Quantity","Ticket and Quantity"
+"Event Date","Event Date"
+"Show Nearby Map","Show Nearby Map"
+"Price Charged Per","Price Charged Per"
+"Event Map/Chart Available","Event Map/Chart Available"
+"Upload an Image in JPG, JPEG, GIF, PNG Format.","Upload an Image in JPG, JPEG, GIF, PNG Format."
+"Enable Ask a Question","Enable Ask a Question"
+"Multiple Tickets","Multiple Tickets"
+"Add Ticket","Add Ticket"
+"New Ticket","New Ticket"
+"Add Ticket Type","Add Ticket Type"
+"New Ticket Type","New Ticket Type"
+Stock,Stock
+"In Stock","In Stock"
+"Out of Stock","Out of Stock"
+Description,Description
+"Price Type","Price Type"
+"New Attribute Set Name","New Attribute Set Name"
+"Choose existing Attribute Set","Choose existing Attribute Set"
+Confirm,Confirm
+"Slot Duration","Slot Duration"
+Mins,Mins
+"Break Time b/w Slots","Break Time b/w Slots"
+"Prevent Scheduling(Mins)","Prevent Scheduling(Mins)"
+"Available Every Week","Available Every Week"
+"Available From","Available From"
+To,To
+"Same Slot for All Days","Same Slot for All Days"
+"Slot has Quantity","Slot has Quantity"
+"Slot Information","Slot Information"
+"Add Slot","Add Slot"
+Monday,Monday
+Tuesday,Tuesday
+Wednesday,Wednesday
+Thursday,Thursday
+Friday,Friday
+Saturday,Saturday
+Sunday,Sunday
+"Slot Span","Slot Span"
+Qty,Qty
+Remove,Remove
+Location,Location
+"Show Map With Location","Show Map With Location"
+"Show Contact Button to","Show Contact Button to"
+"Logged In Customer","Logged In Customer"
+"Many booking in one day","Many booking in one day"
+"One booking for many days","One booking for many days"
+"Start Date of Booking","Start Date of Booking"
+"End Date of Booking","End Date of Booking"
+"Add Bookings","Add Bookings"
+"Time Slot (In Minutes)","Time Slot (In Minutes)"
+"Break Between Bookings","Break Between Bookings"
+Day,Day
+"Start Time","Start Time"
+"End Time","End Time"
+Open,Open
+Close,Close
+"Upload Icon","Upload Icon"
+"Check In","Check In"
+"Check Out","Check Out"
+Address,Address
+Country,Country
+State,State
+"Available Qty to Rent","Available Qty to Rent"
+"Renting Type","Renting Type"
+"Available Always","Available Always"
+"Daily Price","Daily Price"
+"Hourly Price","Hourly Price"
+"Hourly Renting Information","Hourly Renting Information"
+"Same Hours for All Days","Same Hours for All Days"
+"Hours has Quantity","Hours has Quantity"
+"Hourly Booking Information","Hourly Booking Information"
+"Add More","Add More"
+"Can Book From","Can Book From"
+"Charged Per","Charged Per"
+"Number Of Guests per Table","Number Of Guests per Table"
+"Maximum Guests Capacity","Maximum Guests Capacity"
+"Prevent Scheduling Before","Prevent Scheduling Before"
+"Book Now","Book Now"
+"More Information","More Information"
+"View on Map","View on Map"
+"Contact Info","Contact Info"
+"Contact Us","Contact Us"
+Availablity,Availablity
+Today,Today
+Closed,Closed
+"+%1 More","+%1 More"
+"Show Less","Show Less"
+"Show for all days","Show for all days"
+"Time Duration","Time Duration"
+"%1 Mins","%1 Mins"
+"Book an Appointment","Book an Appointment"
+"Select Date","Select Date"
+"Select Time","Select Time"
+Email,Email
+Subject,Subject
+Query,Query
+Reset,Reset
+Submit,Submit
+"Select Slot To Book","Select Slot To Book"
+Notation,Notation
+"Available Slots","Available Slots"
+"Unavailable Slots","Unavailable Slots"
+"Booked Slots","Booked Slots"
+Summary,Summary
+Venue,Venue
+"Event On","Event On"
+"%1 to %2","%1 to %2"
+"Event Map","Event Map"
+Available,Available
+"Show Event Map","Show Event Map"
+"%1 Per Ticket","%1 Per Ticket"
+"Number of Tickets","Number of Tickets"
+"Select Tickets","Select Tickets"
+"Total Tickets","Total Tickets"
+"Base Price","Base Price"
+"This will be apply to each type of ticket for each quantity.","This will be apply to each type of ticket for each quantity."
+"Total Price","Total Price"
+"Buy Tickets","Buy Tickets"
+"Charged Per Ticket","Charged Per Ticket"
+"Event has been Expired","Event has been Expired"
+"Rent an Item","Rent an Item"
+"Choose Rent Option","Choose Rent Option"
+"Charged Per Hour","Charged Per Hour"
+"Charged Per Day","Charged Per Day"
+"Rent Now","Rent Now"
+From,From
+"Select Time Slot","Select Time Slot"
+"Select Slot","Select Slot"
+"Select Rent Time","Select Rent Time"
+"Number of Guests","Number of Guests"
+"Number of Table","Number of Table"
+Everyday,Everyday
+"Book a Table","Book a Table"
+"we would prefer window table first.","we would prefer window table first."
+"Charged Per %1","Charged Per %1"
+"Search for question","Search for question"
+"Question : ","Question : "
+"Answer(s) : ","Answer(s) : "
+"answered on","answered on"
+"%1 More answer(s)","%1 More answer(s)"
+"%1 answer(s)","%1 answer(s)"
+"Nick Name","Nick Name"
+"Your Answer","Your Answer"
+"Write an Answer","Write an Answer"
+"Ask Community a Question","Ask Community a Question"
+Nickname,Nickname
+Question,Question
+"Book a Room","Book a Room"
+"Check-In Date","Check-In Date"
+"Check-Out Date","Check-Out Date"
+Rooms,Rooms
+"Please select %1's %2","Please select %1's %2"
+"Search Nearby","Search Nearby"
+"Google Map Icon","Google Map Icon"
+"Search nearby locations","Search nearby locations"
+"* Required Fields","* Required Fields"
+Date,Date
+"From: ","From: "
+"To: ","To: "
+"Delete Products","Delete Products"
+Delete,Delete
+Type,Type
+"Customer Name","Customer Name"
+Answer,Answer
+"Submitted At","Submitted At"
+"No Answers yet","No Answers yet"
+Back,Back
+"Product Name","Product Name"
+"Search by product name","Search by product name"
+All,All
+"Select Action","Select Action"
+"Change Status","Change Status"
+Update,Update
+Replies,Replies
+Action,Action
+"View Replies","View Replies"
+"No Question","No Question"
+"Advanced Booking System","Advanced Booking System"
+"Booking Products List","Booking Products List"
+Upload,Upload
+"Delete image","Delete image"
+Hidden,Hidden
+"Option Title","Option Title"
+"Input Type","Input Type"
+Required,Required
+"Delete Ticket Type","Delete Ticket Type"
+"Sort Custom Option","Sort Custom Option"
+"Can Book","Can Book"
+Approved,Approved
+"Product Status","Product Status"
+"Qty. Confirmed","Qty. Confirmed"
+"Qty. Pending","Qty. Pending"
+"Qty. Sold","Qty. Sold"
+"Earned Amount","Earned Amount"
+Edit,Edit
+"No Booking Product Available","No Booking Product Available"
+Continue,Continue
+"Booking Product Type","Booking Product Type"
+"Required Fields","Required Fields"
+"Configurable products allow customers to choose options (Ex: shirt color). You need to create a simple product for each configuration (Ex: a product for each color).","Configurable products allow customers to choose options (Ex: shirt color). You need to create a simple product for each configuration (Ex: a product for each color)."
+"Edit Configurations","Edit Configurations"
+"Booking Products","Booking Products"
+Menu,Menu
+"%customer_name,","%customer_name,"
+"I would like to ask a question regarding the product.","I would like to ask a question regarding the product."
+"I would like to ask a question regarding the hotel booking.","I would like to ask a question regarding the hotel booking."
+"Product Sku","Product Sku"
+"Please enter today's date or future date.","Please enter today's date or future date."
+Add,Add
+"Mail has been sent.","Mail has been sent."
+"We could not detect a size.","We could not detect a size."
+"We don't recognize or support this file extension type.","We don't recognize or support this file extension type."
+"Please enter a value greater than 0","Please enter a value greater than 0"
+"Please enter a numeric value and is greater than 0","Please enter a numeric value and is greater than 0"
+"Quantity not available for this slot","Quantity not available for this slot"
+Selected,Selected
+"your need","your need"
+"Are you Sure you Want To remove this slot","Are you Sure you Want To remove this slot"
+Expired,Expired
+Slot,Slot
+"Your Need","Your Need"
+"Available :","Available :"
+Adding...,Adding...
+Added,Added
+"Add to Cart","Add to Cart"
+"Something went wrong.","Something went wrong."
+"Select type of option.","Select type of option."
+"Please add rows to option.","Please add rows to option."
+"Select Product","Select Product"
+Import,Import
+"Please select items.","Please select items."
+" No Checkbox is checked "," No Checkbox is checked "
+" Are you sure you want to delete selected answer(s) ? "," Are you sure you want to delete selected answer(s) ? "
+" Are you sure you want to delete selected question(s) ? "," Are you sure you want to delete selected question(s) ? "
+" Are you sure you want to update status of selected question(s) ? "," Are you sure you want to update status of selected question(s) ? "
+Webkul,Webkul
+"Marketplace Advanced Booking System","Marketplace Advanced Booking System"
+Settings,Settings
+"Google API Key","Google API Key"
+"google map api key","google map api key"
+"Admin/Seller approval required for questions","Admin/Seller approval required for questions"
+"Transactional Emails","Transactional Emails"
+"Contact to Seller Regarding Booking Product Template","Contact to Seller Regarding Booking Product Template"
+"Customer asked a Question Regarding Hotel Booking Product Template","Customer asked a Question Regarding Hotel Booking Product Template"
+"Booking Configuration","Booking Configuration"
+"Enable Booking System for Sellers","Enable Booking System for Sellers"
+"Allowed Booking types for seller","Allowed Booking types for seller"
+"All Store Views","All Store Views"
+"Store View","Store View"
+"Delete selected items?","Delete selected items?"
+"Delete items","Delete items"
+"Change status","Change status"
+ID,ID
+Thumbnail,Thumbnail
+Visibility,Visibility
+Websites,Websites
+"Delete questions","Delete questions"
+"Booking Id","Booking Id"
+"Order Ref.","Order Ref."
+"Booking From","Booking From"
+"Booking Till","Booking Till"
+"Customer Email","Customer Email"
+"Marketplace Add New Booking Product","Marketplace Add New Booking Product"
+"Are you sure you want to delete selected answers?","Are you sure you want to delete selected answers?"
+"Are you sure you want to delete selected questions?","Are you sure you want to delete selected questions?"
+"Are you sure you want to delete selected products?","Are you sure you want to delete selected products?"
+"Qty Sold","Qty Sold"
+"Qty Confirmed","Qty Confirmed"
+"Qty Pending","Qty Pending"

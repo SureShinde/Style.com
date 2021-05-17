@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCheckCardCodeAndPoolAfterOrderDefGiftCardProd">
+        <annotations>
+            <features value="Gift Card Product"/>
+            <stories value="Order Gift Card Product"/>
+            <title value="Order Gift Card Product"/>
+            <description value="Order Gift Card Product. Check Card Account And Code Pool After Order Gift Card Product"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-32"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardProduct"/>
+        </annotations>
+
+        <before>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateGiftCardProductActionGroup" stepKey="createGiftCardProductActionGroup">
+                <argument name="categoryName" value="$$simpleCategory.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="AdminDeleteGiftCodeAccountActionGroup" stepKey="deleteGiftCodeAccount"/>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGiftCardProduct">
+                <argument name="product" value="defaultGiftCardProduct"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+        </after>
+
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="{{defaultGiftCardProduct.name}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddGiftCardProductToCartActionGroup" stepKey="addGiftCardProductToCart"/>
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutPaymentPage" stepKey="createOrderAndGrabOrderNumber"/>
+        <actionGroup ref="AdminOpenOrderOnId" stepKey="openOrderOnId">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAndGrabOrderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
+        <actionGroup ref="AdminGrabCardAccountOnOrderPageActionGroup" stepKey="grabCardAccountOnOrderPage"/>
+        <!--check gift code account information-->
+        <actionGroup ref="AdminFindGiftCodeAccountOnGridActionGroup" stepKey="findGiftCodeAccountOnGrid"/>
+        <actionGroup ref="AdminCheckGiftCodeAccountDataOnGridActionGroup" stepKey="checkGiftCodeAccountDataOnGrid">
+            <argument name="giftCode" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+        </actionGroup>
+        <actionGroup ref="AdminOpenGiftCodeAccountFromGridActionGroup" stepKey="openGiftCodeAccount"/>
+        <actionGroup ref="AdminCheckGiftCodeAccAfterOrderGiftProdActionGroup" stepKey="checkGiftCodeAccAfterOrderGiftProd">
+            <argument name="giftCode" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRecipientInformationInCardAccActionGroup" stepKey="checkRecipientInformation"/>
+        <!--check code pool information-->
+        <actionGroup ref="AdminFindCodePoolOnGridActionGroup" stepKey="findCodePool"/>
+        <actionGroup ref="AdminCheckCodePoolOnGridAfterOrderGiftProdActionGroup" stepKey="checkCodePoolDataAndUnusedCodeQty"/>
+        <actionGroup ref="AdminOpenCodePoolFromGridActionGroup" stepKey="openCodePoolFromGrid"/>
+        <actionGroup ref="AdminFindCodeOnCodePoolPageActionGroup" stepKey="findCodeOnCodePoolPage">
+            <argument name="code" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCodeOnCodePoolPageActionGroup" stepKey="checkCodeOnCodePoolPage">
+            <argument name="code" value="{$grabCardAccountGrabCardAccountOnOrderPage}"/>
+        </actionGroup>
+    </test>
+</tests>

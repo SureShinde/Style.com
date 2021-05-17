@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCheckActivatedCodeOnCustomerAccountAfterOrder" extends="GiftCardActivateCardCodeOnCustomerAccount">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Activated Gift Card Code on Customer Account After Place Order"/>
+            <title value="Activated Gift Card Code on Customer Account After Place Order"/>
+            <description value="Activated Gift Card Code on Customer Account Is Changed After Place Order"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-26"/>
+            <group value="AmGiftCard"/>
+            <group value="AmApplyGiftCard"/>
+            <group value="AmGiftCardCustomerAccount"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleSubCategory" after="customer" stepKey="simpleCategory"/>
+            <createData entity="SimpleProductByFusionBackpack" after="simpleCategory" stepKey="simpleProduct">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <actionGroup ref="AdminCreateGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+        <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+        </after>
+
+        <remove keyForRemoval="checkCardCode"/>
+        <remove keyForRemoval="grabCardCodeExpDate"/>
+        <remove keyForRemoval="findGiftCodeAccountOnGrid"/>
+        <remove keyForRemoval="checkGiftCodeExpireDateOnGrid"/>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="addCreatedSimpleProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="selectShippingMethod">
+            <argument name="shippingMethodsOnCheckout" value="BestWayMethod"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontApplyCardCodeOnCheckoutActionGroup" stepKey="applyCardCodeOnCheckout">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="createOrderAndGrabOrderNumber">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckActivatedGiftCardCodeActionGroup" stepKey="checkCardCodeAfterPlaceOrder">
+            <argument name="giftCardCode" value="$grabSelectedGiftCardCodeGrabGiftCode"/>
+            <argument name="giftCodeAccount" value="usedDefGiftCodeAccount"/>
+        </actionGroup>
+    </test>
+</tests>

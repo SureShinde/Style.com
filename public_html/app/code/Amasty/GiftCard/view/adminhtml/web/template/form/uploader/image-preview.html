@@ -1,0 +1,33 @@
+<div class="admin__field">
+    <div class="admin__field-label amgcard_preview_label">
+        <label for="amgcard_img">
+        <span translate="'Please, Specify Code Position'" />
+    </label>
+    </div>
+    <div class="admin__field-control">
+        <div class="file-uploader-summary">
+            <div class="file-uploader-preview" id="amgcard_general">
+                <img
+                        id="amgcard_img"
+                        tabindex="0"
+                        event="load: $parent.onPreviewLoad.bind($parent)"
+                        attr="
+                        src: $parent.getFilePreview($file),
+                        alt: $file.name">
+                <div id="code_block" class="ui-draggable">
+                    <span translate="'Drag me'" />
+                </div>
+                <div class="actions">
+                    <button
+                            type="button"
+                            class="action-remove"
+                            data-role="delete-button"
+                            attr="title: $t('Delete image')"
+                            click="$parent.removeFile.bind($parent, $file)">
+                        <span translate="'Delete image'"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

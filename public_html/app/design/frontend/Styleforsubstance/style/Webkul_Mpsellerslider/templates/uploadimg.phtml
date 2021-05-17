@@ -1,0 +1,233 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$isPartner= $block->checkIsPartner();
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+if ((int)$isPartner) {
+    $userid = $block->getSellerId();
+    $collection = $block->getSellerData();
+
+    $secure = $block->getIsSecure();
+    $mediaUrl = $block->getMediaUrl();
+    $jsonHelper = $block->getJsonHelper();
+    if ($collection!==false
+        && isset($collection['images'])
+        && count($collection['images']) > 0
+    ) {
+        $uploadedImages = $collection['images'];
+    }
+    if ($collection!==false
+        && isset($collection['settings'])
+        && count($collection['settings'])>0
+    ) {
+        $imageAttributes = $collection['settings'];
+    }
+
+    ?>
+<form action="<?= /* @noEscape */ $block->getUrl('mpsellerslider/mpslider/savesliderimg', ["_secure" => $secure]) ?>"
+    enctype="multipart/form-data"
+    method="post"
+    id="form-slider-validate"
+    data-role="mpsellerslider_addimages">
+
+    <div class="wk_mpslider_loader">
+        <img src="<?= /* @noEscape */ $block->getViewFileUrl('Webkul_Marketplace/images/ajax-loader-big.gif'); ?>">
+    </div>
+    <div class="wk-mp-page-title page-title">
+        <button class="button wk-mp-btn"
+                title="Save Gallery"
+                type="submit"
+                id="save_butn">
+            <span><span><?= /* @noEscape */ __('Save Gallery') ?></span></span>
+        </button>
+    </div>
+    <?= /* @noEscape */  $block->getBlockHtml('formkey')?>
+    <?= /* @noEscape */  $block->getBlockHtml('seller.formkey')?>
+    <div class="wk-mp-design">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend"><span><?= /* @noEscape */  __('Images') ?></span></legend>
+            <div class="field profile">
+                <div class='styl'>
+                    <div class="image_set">
+                        <?php
+                        if (isset($uploadedImages)
+                            && count($uploadedImages)>0
+                        ) {
+                            foreach ($uploadedImages as $_image) {
+                                if (is_array($_image) && isset($_image['image'])) {
+                                    $tempImage = $_image['image'];
+                                    $tempUrl = $_image['url'];
+                                } else {
+                                    $tempImage = $_image;
+                                    $tempUrl = '#';
+                                }
+                                if ($helper->validateImage($userid, $tempImage)) { ?>
+                                    <div class="setimage">
+                                        <a href="<?= /* @noEscape */  $tempUrl; ?>">
+                                            <img class='pointr'
+                                                id="<?= /* @noEscape */  $tempImage; ?>"
+                                                pid="<?= /* @noEscape */  $tempImage; ?>"
+                                                src="<?= /* @noEscape */  $mediaUrl
+                                                        .'avatar/'
+                                                        .$userid
+                                                        .'/'
+                                                        .$tempImage; ?>"
+                                                width="50"
+                                                height="50"
+                                                title="<?= /* @noEscape */  $tempImage; ?>" />
+
+                                            <span class="wk_imagedelete"
+                                            title="<?= /* @noEscape */  __('Delete Image') ?>">
+                                            </span>
+                                            <span class="wk_imageedit"
+                                            title="<?= /* @noEscape */ __('Edit Url') ?>"></span>
+                                            <br>
+                                        </a>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                        } ?>
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="image-wrapper">
+                        <input type="file"  id="slidimg" alt="no image" name="sliderimg_0"
+                        accept="image/*" title="logopic" class="input-text banner sliderimg" size="26"
+                         data-counter="0"/>
+                        <span class="separator"></span>
+                        <input type="text" class="image_url" name="sliderimgurl_0"
+                        id="image_url" value="" placeholder="<?= /* @noEscape */   __('Add Text') ?>"/>
+                        <input type="hidden" id='filecount' value="" name="wk_file_count"/>
+                        <input type="hidden" id='cnt' value="1" name="cnt"/>
+                    </div>
+                    <br>
+                    <!-- <a class="addimgs"><?= /* @noEscape */  __('Add other image') ?></a> -->
+                    <br />
+                    <div id="otherimages">
+                        <script id="addimages-template"
+                                type="text/x-magento-template">
+                        <div class="image-wrapper">
+                            <input type='file' required
+                                    name='sliderimg_<%- data.i %>'
+                                    title='logopic'
+                                    accept='image/*'
+                                    class='input-text banner sliderimg'
+                                    size='26'
+                                    data-counter='<%- data.i %>'/>
+                            <span class="separator"></span>
+                            <input type="text" class="image_url"
+                            name="sliderimgurl_<%- data.i %>" id="image_url"
+                            placeholder="<?= /* @noEscape */   __('Add Text') ?>"/>
+                        </div>
+                        <a class='remov' id='<%- data.i %>' >
+                            <?= /* @noEscape */  __(' Remove ') ?>
+                        </a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <br/><br/>
+    <div class="wk-mp-design" style="display:none;">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend"><span><?= /* @noEscape */ __('Settings') ?></span></legend>
+            <div class="field required">
+                <label class="label">
+                <?= /* @noEscape */  __('Image Width (in \'px\') ') ?>:
+                </label>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text validate-number"
+                    name="img[width]" id="width"
+                    value="362"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label">
+                <?= /* @noEscape */  __('Image Height (in \'px\') ') ?>:
+                </label>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text validate-number"
+                        name="img[height]" id="height"
+                        value="465" />
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label">
+                <?= /* @noEscape */   __('Slider Speed (in \'milliseconds\') ') ?>:
+                </label>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text validate-number"
+                        name="img[speed]"
+                        id="slidspeed"
+                        value="8000" />
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label">
+                <?= /* @noEscape */   __('Slider Duration (in \'milliseconds\') ') ?>:
+                </label>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text validate-number"
+                        name="img[duration]" id="slidduration"
+                        value="1000" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">
+                <?= /* @noEscape */   __('Backgroud Color for Slider Banner ') ?>:
+                </label>
+                <div class="control">
+                    <input type="text" id="sliderbgcolor" name="img[bgcolor]" value="<?php
+                    if (isset($imageAttributes[4])) { ?>
+                        <?= /* @noEscape */  trim($imageAttributes[4]);
+                    } ?>" class="input-text" />
+                         <span class="color-pick" data-role="color-pick"
+                         data-mage-init='{"mpColorPickerFunction":{"spanBackgroundColor" : "<?php
+                            if (isset($imageAttributes[4])) { ?>
+                                <?= /* @noEscape */  trim($imageAttributes[4]);
+                            } ?>", "getActiveColorPickerStatus" : "1", "backgroundWidthSelector" : "#sliderbgcolor"}}'>
+                            </span>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<br/><br/>
+<p class="back-link">
+    <a href="javascript:;"
+        onclick="javascript: window.history.back();"
+        class="left">&laquo; <?= /* @noEscape */   __('Back') ?></a>
+</p>
+<?php } ?>
+<?php
+$formData = [
+    'ajaxSaveUrl' => $block->getUrl(
+        "mpsellerslider/mpslider/deleteimage",
+        ["_secure" => $secure]
+    ),
+    'ajaxUpdateUrl' => $block->getUrl(
+        "mpsellerslider/mpslider/updateimage",
+        ["_secure" => $secure]
+    ),
+];
+$serializedFormData = $jsonHelper->jsonEncode($formData);
+?>
+
+<script type="text/x-magento-init">
+    {
+        "#form-slider-validate": {
+            "validation": {},
+            "mpSellerSlider": <?= /* @noEscape */   $serializedFormData; ?>
+        }
+    }
+</script>

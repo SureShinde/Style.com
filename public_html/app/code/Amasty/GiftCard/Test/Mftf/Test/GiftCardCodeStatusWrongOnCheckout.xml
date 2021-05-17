@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCodeStatusWrongOnCheckout">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Wrong Gift Card Code Status on Checkout"/>
+            <title value="Wrong Gift Card Code Status on Checkout"/>
+            <description value="Check Wrong Gift Card Code Status on Checkout. Check the Card Code Status Block Is Not Appeared"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-7"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardCheckout"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <createData entity="SimpleProductByFusionBackpack" stepKey="simpleProduct">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+        </before>
+        <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+        </after>
+
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="addCreatedSimpleProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="selectShippingMethod">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckWrongCardCodeStatusOnCheckoutActionGroup" stepKey="checkWrongCardCodeStatus"/>
+    </test>
+</tests>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardDefaultCodePoolUseCsv">
+        <annotations>
+            <features value="Code Pool"/>
+            <stories value="Create Default Code Pool Using CSV File"/>
+            <title value="Create Default Code Pool Using CSV File"/>
+            <description value="Check Code Pool Qty After Creation"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-2"/>
+            <group value="AmGiftCard"/>
+            <group value="AmCodePool"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolUsingCsvActionGroup" stepKey="createAndGenerateCodePoolUsingCsv"/>
+        </before>
+        <after>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <actionGroup ref="AdminFindCodePoolOnGridActionGroup" stepKey="findCodePoolOnGrid"/>
+        <actionGroup ref="AdminCheckCodePoolDataOnGridActionGroup" stepKey="checkCodePoolDataOnGrid"/>
+    </test>
+</tests>

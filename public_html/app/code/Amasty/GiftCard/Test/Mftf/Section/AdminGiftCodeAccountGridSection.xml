@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminGiftCodeAccountGridSection">
+        <element name="AddNewGiftCodeAccount" type="button" selector="//button[@id='new']"/>
+        <element name="FiltersButton" type="button" selector="//button[@data-action='grid-filter-expand']"/>
+        <element name="ApplyFilter" type="button" selector="//button[@data-action='grid-filter-apply']"/>
+        <element name="ClearAllFilters" type="button" selector="//button[@data-action='grid-filter-reset']"/>
+        <element name="ActiveFilters" type="text" selector="//*[@class='admin__data-grid-header']//div[@class='admin__data-grid-filters-current _show']"/>
+        <element name="GiftCodeFilter" type="input" selector="//input[@name='code']"/>
+        <element name="RecordsFoundMessage" type="text" selector="//*[@class='admin__control-support-text'][contains(string(), '{{qty}} records found')]" parameterized="true"/>
+        <element name="FirstRowCheckbox" type="checkbox" selector="//tr[contains(@data-repeat-index, '0')]//input[contains(@data-action, 'select-row')]"/>
+        <element name="MassActions" type="button" selector="//*[@class='admin__data-grid-header-row row row-gutter']//*[@class='action-select-wrap']"/>
+        <element name="DeleteMassAction" type="button" selector="//*[@class='admin__data-grid-header-row row row-gutter']//*[@class='action-menu-items'][contains(string(), 'Delete')]"/>
+        <element name="AcceptDeleteButton" type="button" selector="//*[@class='action-primary action-accept']"/>
+        <element name="GiftCodeAccountRemovedMessage" type="text" selector="//*[@id='messages'][contains(string(), '{{qty}} Account(s) has been successfully deleted')]" parameterized="true"/>
+        <element name="GiftCodeAccountCell" type="text" selector="//tr[1]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., '{{column}}')]/preceding-sibling::th) +1 ]" parameterized="true"/>
+        <element name="FirstRowEditLink" type="text" selector="tr[data-repeat-index='0'] .action-menu-item"/>
+    </section>
+</sections>

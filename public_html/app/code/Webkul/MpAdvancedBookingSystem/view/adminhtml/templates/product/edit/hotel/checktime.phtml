@@ -1,0 +1,45 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$product = $block->getProduct();
+?>
+<div class="admin__field field-check-in wk-booking-slot-block">
+    <label class="admin__field-label" for="wk-booking-check_in_time">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Check In')) ?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text wk-booking-slot-picker" type="text"
+               data-form-part="product_form" name="product[check_in_time]"
+               id="wk-booking-check_in_time"
+               value="<?= /* @noEscape */ $product['check_in_time'] ?>" readonly>
+    </div>
+</div>
+<div class="admin__field field-check-out wk-booking-slot-block">
+    <label class="admin__field-label" for="wk-booking-check_out_time">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Check Out')) ?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text wk-booking-slot-picker" type="text"
+               data-form-part="product_form" name="product[check_out_time]"
+               id="wk-booking-check_out_time"
+               value="<?= /* @noEscape */ $product['check_out_time'] ?>" readonly>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "hotelchecktime": ""
+        }
+    }
+</script>

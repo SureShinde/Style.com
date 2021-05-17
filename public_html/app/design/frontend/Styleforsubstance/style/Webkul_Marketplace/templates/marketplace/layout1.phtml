@@ -1,0 +1,512 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$banner_image       =   $helper->getBannerImage();
+/*order collection*/
+$stylists = $block->getSellersCollection();
+// $sellerCountArr = $bestSellersData['2'];
+$sellerAccountUrl = $block->getUrl(
+    'marketplace/account/becomeseller',
+    ["_secure" => $this->getRequest()->isSecure()]
+);
+if (!$helper->isCustomerLoggedIn()) {
+    $sellerAccountUrl = $helper->getSellerRegistrationUrl();
+}
+$expgeneral = explode(',', $this->getRequest()->getParam('expgeneral'));
+$expwork = explode(',', $this->getRequest()->getParam('expwork'));
+$expsocial = explode(',', $this->getRequest()->getParam('expsocial'));
+$zipcode = $this->getRequest()->getParam('zipcode');
+$yearsFrom = $this->getRequest()->getParam('yf');
+$yearsTo = $this->getRequest()->getParam('yt');
+$sort = $this->getRequest()->getParam('sort');
+?>
+<?php
+    $spec_general = [
+        '-' => 0,
+        'Menswear' => 1,
+        'Womenswear' => 2,
+        'Mature Style' => 3,
+        'Specialty Sizes (Petite/Plus/Tall)' => 4,
+        'Color Advice' => 5,
+        'Wardrobe Review' => 6,
+        'Shape Analysis' => 7,
+        'Life Transitions' => 8,
+        'Maternity/Nursing' => 9,
+        'Bespoke/Couture' => 10,
+        'Tailoring' => 11,
+        'Secondhand/Thrift Shopping' => 12,
+        'Personal Shopping' => 13,
+        'Accessories' => 14,
+        'Hair' => 15,
+        'Skincare/Makeup' => 16,
+        'Religious Modesty' => 17,
+        'Non-binary' => 18,
+        'Physical Changes Due to Surgery' => 19,
+        'Children/Teen Style' => 20
+    ];
+?>
+<?php
+    $spec_work = [
+        '-' => 0,
+        'Job Interview' => 1,
+        'Corporate/Business Wear' => 2,
+        'On Camera/Video Conferences' => 3,
+        'Public Speaking (Including Voice & Media Training)' => 4,
+        'Business Trip (Domestic)' => 5,
+        'Business Trip (Foreign, Including Protocol)' => 6,
+        'Headshots/Photoshoots' => 7,
+        'Business Casual/Work from Home' => 8,
+        'Personal Branding' => 9,
+        'Executive Presence' => 10
+    ];
+?>
+<?php
+    $spec_social = [
+        '-' => 0,
+        'Social Media Profile' => 1,
+        'Dating Profile' => 2,
+        'Bridal' => 3,
+        'Holiday Party' => 4,
+        'Dating' => 5,
+        'Travel Packing' => 6,
+        'Travel Etiquette' => 7,
+        'Formalwear' => 8,
+        'Semi-formal Events' => 9
+    ];
+?>
+<div class="wk-mp-design-stylist-date-filter">
+    <h3>Have a specific date in mind?</h3>
+    <div class="select-date">
+        <input id="date_picker" type="text"  placeholder="Select your event date">
+    </div>
+    <div class="actions">
+        <button type="submit" id="find_date" class="action">Let's Go</button>
+    </div>
+</div>
+<style>
+    #find{
+        border-color: #546223;
+        font-size: 16px;
+        font-family: 'MetropolisRegular';
+        height: auto;
+        padding: 8px 15px;
+        background-size: 47px 9px;
+        min-width: 85px;
+    }
+</style>
+<div class="wk-mp-design wk-mp-landingpage wk-mp-landingpage-layout1 wk-mp-design-stylists-holder-columns">
+    <div class="wk-mp-design-stylists-sidebar">
+        <div class="title-stylists-sidebar">
+            <h3>Filters</h3>
+            <a href="/stylist">Clear All</a>
+            <button class="close-stylists-sidebar">Close Sidebar</button>
+        </div>
+        <div class="stylists-sidebar-filter-block">
+            <div class="subtitle-stylist-sidebar">
+                <h4>Looking for some special expertise?</h4>
+                <a href="#">Clear</a>
+                <button id="find">Find</button>
+            </div>
+            <div class="filter-options-holder">
+                <ul class="filter-options-list" id="section-1">
+                    <?php foreach ($spec_general as $key => $value): ?>
+                        <li class="field choice">
+                            <input type="checkbox" class="expertise-general" id="expertise-general-<?php echo $value?>" name="<?= $key; ?>" value="<?= $value?>" <?= (in_array($value, $expgeneral)) ? 'checked' : '' ?> >
+                            <label for="expertise-general-<?php echo $value?>"><?php echo $key;?></label>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <ul class="filter-options-list" id="section-2">
+                    <?php foreach ($spec_work as $key => $value): ?>
+                        <li class="field choice">
+                            <input type="checkbox" class="expertise-work" id="expertise_work-<?php echo $value?>" name="<?= $key; ?>" value="<?php echo $value?>" <?= (in_array($value, $expwork)) ? 'checked' : '' ?> >
+                            <label for="expertise_work-<?php echo $value?>"><?php echo $key;?></label>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <ul class="filter-options-list" id="section-3">
+                    <?php foreach ($spec_social as $key => $value): ?>
+                        <li class="field choice">
+                            <input type="checkbox" class="expertise-social" id="expertise-social-<?php echo $value?>" name="<?php echo $key;?>" value="<?php echo $value?>" <?= (in_array($value, $expsocial)) ? 'checked' : '' ?> >
+                            <label for="expertise-social-<?php echo $value?>"><?php echo $key;?></label>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <a href="#" class="show-filters-button">See All</a>
+        </div>
+        <div class="stylists-sidebar-filter-block">
+            <div class="subtitle-stylist-sidebar">
+                <h4>Prefer a certain amount of experience?</h4>
+                <a href="#">Clear</a>
+            </div>
+            <div class="filter-range">
+                <div class="rangeValues"></div>
+                <div class="multi-range-slider">
+                    <input type="range" id="input-left" min="0" max="20" value="<?= ($yearsFrom) ? $yearsFrom : 0; ?>" class="input-range">
+                    <input type="range" id="input-right" min="0" max="20" value="<?= ($yearsTo) ? $yearsTo : 15; ?>" class="input-range">
+
+                    <div class="slider">
+                        <div class="track"></div>
+                        <div class="range"></div>
+                        <div class="thumb left"></div>
+                        <div class="thumb right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wk-mp-design-stylists-main">
+        <div class="toobar-stylists">
+            <div class="title-toolbar-stylists">
+                <h3>Sort By:</h3>
+                <div class="close-stylists-toolbar">Close Toolbar</div>
+            </div>
+
+            <div class="filter-zip-code" id="zip-code-area">
+                <label for="zipcode">Near Me:</label>
+                <input type="number" maxlength = "5" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" id="zipcode" placeholder="Enter Zip Code" name="zipcode" value="<?= $zipcode; ?>" title="<?= /* @noEscape */ __('Zip Code')?>" class="input-text" />
+                <script>
+                    require([
+                        "jquery",
+                        "mage/mage",
+                    ], function($){
+
+                        let url = window.location.href;
+
+                        function updateURLParameter(url, param, paramVal){
+                            let newAdditionalURL = "";
+                            let tempArray = url.split("?");
+                            const baseURL = tempArray[0];
+                            const additionalURL = tempArray[1];
+                            let temp = "";
+                            if (additionalURL) {
+                                tempArray = additionalURL.split("&");
+                                for (i=0; i<tempArray.length; i++){
+                                    if(tempArray[i].split('=')[0] != param){
+                                        newAdditionalURL += temp + tempArray[i];
+                                        temp = "&";
+                                    }
+                                }
+                            }
+
+                            let rows_txt = temp + "" + param + "=" + paramVal;
+                            return baseURL + "?" + newAdditionalURL + rows_txt;
+                        }
+
+                        $('#find_date').click('on', function(){
+                            if ($('#date_picker').val()) {
+                                url = updateURLParameter(url, 'date', $('#date_picker').val());
+                            }
+                            // if ($('#sorter-aria').val()) {
+                            //     url = updateURLParameter(url, 'sort', $('#sorter-aria').val());
+                            // }
+                            window.location.href = url;
+                        });
+                        $('#find').click('on', function(){
+                            let str = $('.expertise-general:checked').map(function () {
+                                return this.value;
+                            }).get().join();
+                            if (str != 0) {
+                                url = updateURLParameter(window.location.href, 'expgeneral', str);
+                            }
+                            let strWork = $('.expertise-work:checked').map(function () {
+                                return this.value;
+                            }).get().join();
+
+                            if (strWork != 0) {
+                                url = updateURLParameter(url, 'expwork', strWork);
+                            }
+                            let strSocial = $('.expertise-social:checked').map(function () {
+                                return this.value;
+                            }).get().join();
+
+                            if (strSocial != 0) {
+                                url = updateURLParameter(url, 'expsocial', strSocial);
+                            }
+                            let yearsFrom = $('#input-left').val();
+                            url = updateURLParameter(url, 'yf', yearsFrom);
+                            let yearsTo = $('#input-right').val();
+                            url = updateURLParameter(url, 'yt', yearsTo);
+                            if ($('#sorter-aria').val()) {
+                                url = updateURLParameter(url, 'sort', $('#sorter-aria').val());
+                            }
+
+                            window.location.href = url;
+                        });
+
+                        $('.select-options li').click(function(){
+                            $('#find').click();
+                        })
+
+                        let container = $("#zip-code-area");
+                        container.find("input[name='zipcode']").on("keyup change", function() {
+                            let zipcode = $(this).val().substring(0, 5);
+                            if (zipcode.length == 5 && /^[0-9]+$/.test(zipcode)){
+                                $(document).on('keypress',function(e) {
+                                    if(e.which == 13) {
+                                        url = window.location.href;
+                                        url = updateURLParameter(window.location.href, 'zipcode', zipcode);
+                                        window.location.href = url;
+                                    }
+                                });
+                            }
+                        });
+
+                    });
+                </script>
+            </div>
+            <div class="sorter">
+                <select id="sorter-aria" class="custom-select">
+                    <option value="hide">Cost</option>
+                    <option value="high-low" <?= ($sort == 'high-low') ? 'selected' : ''; ?>>Cost: High to Low</option>
+                    <option value="low-high" <?= ($sort == 'low-high') ? 'selected' : ''; ?>>Cost: Low to High</option>
+                </select>
+            </div>
+        </div>
+        <div class="mobile-sorter-block">
+            <div class="show-filter">Filter</div>
+            <div class="show-sorter">Sort</div>
+        </div>
+        <p class="stylists-number"><?= count($stylists); ?> matching stylists</p>
+        <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+            <div class="wk-mp-landing-sellers-container">
+                <?php
+                $i = 0;
+                $count = count($stylists);
+                foreach ($stylists as $stylist) {
+                    $i++;
+                    if ($i <= 10) {
+                        $profileurl = $stylist->getShopUrl();
+                        $shoptitle = $stylist->getShopTitle();
+                        $logo = $stylist->getLogoPic()??"noimage.png";
+                        $description =  $stylist->getCompanyDescription();
+                        $company_locality = $stylist->getCompanyLocality();
+                        $experience = $stylist->getExperience();
+                        $timezone = $stylist->getTimeZone();
+                        $email = $stylist->getEmail();
+                        $telephone = $stylist->getTelephone();
+                        $title_stylist = $stylist->getTitleStylist();
+                        $specialties_general = $stylist->getSpecialtiesGeneral();
+                        $specialties_work = $stylist->getSpecialtiesWork();
+                        $specialties_social = $stylist->getSpecialtiesSocial();
+                        if (!$shoptitle) {
+                            $shoptitle = $profileurl;
+                        }
+                        $logo = $helper->getMediaUrl() . 'avatar/' . $logo; ?>
+                        <div class="wk-mp-landing-sellers-wraper <?php if ($count == $i) {
+                            echo "wk_last_seller";
+                        } ?>">
+                            <div class="wk-mp-landing-sellers">
+                                <div class="wk-mp-landing-sellers-logo">
+                                    <a href="<?= $escaper->escapeUrl($helper->getRewriteUrl('stylist/profile/' . $profileurl)); ?>" title="<?= /* @noEscape */  __("View Seller's Shop") ?>"><img src="<?= $escaper->escapeUrl($logo) ?>"></a>
+                                </div>
+                                <div class="wk-mp-landing-sellers-details">
+                                    <div class="wk-mp-landing-sellers-title">
+                                        <a href="<?= $escaper->escapeUrl($helper->getRewriteUrl('stylist/profile/' . $profileurl)); ?>" title="<?= /* @noEscape */ __("View Seller's Shop") ?>">
+                                            <?= $escaper->escapeHtml($shoptitle) ?>
+                                        </a>
+                                    </div>
+                                    <div class="wk-mp-landing-sellers-short-info-holder">
+                                        <div class="wk-mp-landing-sellers-stylist">
+                                                <?php if ($title_stylist == 0):?>
+                                                    Image Consultant
+                                                <?php else:?>
+                                                    Personal Stylist
+                                                <?php endif; ?>
+                                        </div>
+                                        <?php if ($company_locality):?>
+                                            <div class="wk-mp-landing-sellers-company-locality">
+                                                <a title="<?= $escaper->escapeHtml(__('Search')) ?>" href="<?= /* @noEscape */ $helper->getRewriteUrl('stylist/seller/location/' . $profileurl) . "?loc=" . $company_locality?>" target="_blank">
+                                                    <span class="wk-mp-collection-location wk-mp-collection-header-bottom-txt">
+                                                        <?= /* @noEscape */ __($company_locality); ?>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        <?php endif; ?>
+
+                                    </div>
+
+                                    <div class="wk-mp-landing-sellers-description"">
+                                    <?php echo $telephone; ?>
+                                    </div>
+
+                                    <div class="wk-mp-landing-sellers-description"">
+                                    <?php echo $email; ?>
+                                    </div>
+
+                                    <div class="wk-mp-landing-sellers-description"">
+                                        <?php echo $timezone; ?>
+                                    </div>
+
+                                    <div class="wk-mp-landing-sellers-description">
+                                            <?php echo $description; ?>
+                                    </div>
+                                    <div class="wk-mp-landing-sellers-short-info-holder">
+                                        <div class="wk-mp-landing-sellers-experiencen">
+                                            <span>Experience:</span><strong><?php echo $experience; ?> yrs</strong>
+                                        </div>
+                                        <div class="wk-mp-landing-sellers-rate">
+                                            <span>Hourly Rate:</span><strong><?php echo (int)$stylist->getPrice(); ?> USD</strong>
+                                        </div>
+
+                                    </div>
+                                    <div class="wk-mp-landing-sellers-categories">
+                                        <span>Expertise:</span>
+                                        <ul>
+                                            <?php foreach ($spec_general as $spec_general_option => $key):?>
+                                                <?php if ($specialties_general):?>
+                                                    <?php if (in_array($key, unserialize($specialties_general))):?>
+                                                        <li><?php echo $spec_general_option; ?></li>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            <?php foreach ($spec_work as $spec_work_option => $key):?>
+                                                <?php if ($specialties_work):?>
+                                                    <?php if (in_array($key, unserialize($specialties_work))):?>
+                                                        <li><?php echo $spec_work_option; ?></li>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            <?php foreach ($spec_social as $specialties_social_option => $key):?>
+                                                <?php if ($specialties_social):?>
+                                                    <?php if (in_array($key, unserialize($specialties_social))):?>
+                                                        <li><?php echo $specialties_social_option; ?></li>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                    <div class="actions">
+                                        <a class="action" href="<?= $escaper->escapeUrl($helper->getRewriteUrl('stylist/profile/' . $profileurl)); ?>" title="<?= /* @noEscape */ __("View Seller's Shop") ?>">
+                                            <?= /* @noEscape */  __('View Details'); ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } ?>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+<script>
+    require([
+        "jquery",
+        "mage/mage",
+        "mage/calendar"
+    ], function($){
+        var dateToday = new Date();
+        $('#date_picker').datepicker({
+            monthNames: [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+            monthNamesShort: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+            ],
+            dayNames: [
+                'Sunday ',
+                'Monday',
+                'Tuesday ',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+            ],
+            dayNamesShort: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            showMonthAfterYear: false,
+            minDate: dateToday,
+            dateFormat: 'd MM  yy',
+        });
+        $('.page-title-wrapper').hide();
+        $('.wk-mp-banner').css('background-image','url("<?= $escaper->escapeUrl($banner_image) ?>")');
+    });
+</script>
+
+<script>
+    var inputLeft = document.getElementById("input-left");
+    var inputRight = document.getElementById("input-right");
+
+    var thumbLeft = document.querySelector(".slider > .thumb.left");
+    var thumbRight = document.querySelector(".slider > .thumb.right");
+    var range = document.querySelector(".slider > .range");
+
+    var valueHolder = document.querySelector(".rangeValues");
+
+    var value1 = inputLeft.value;
+    var value2 = inputRight.value;
+
+    valueHolder.innerHTML = value1 + "yrs - " + value2 + "yrs";
+
+    function setLeftValue() {
+        var _this = inputLeft,
+            min = parseInt(_this.min),
+            max = parseInt(_this.max);
+
+        _this.value = Math.min(parseInt(_this.value), parseInt(inputRight.value) - 1);
+
+        value1 =  _this.value;
+        valueHolder.innerHTML = value1 + "yrs - " + value2 + "yrs";
+
+        var percent = ((_this.value - min) / (max - min)) * 100;
+
+        thumbLeft.style.left = percent + "%";
+        range.style.left = percent + "%";
+
+    }
+    setLeftValue();
+
+    function setRightValue() {
+        var _this = inputRight,
+            min = parseInt(_this.min),
+            max = parseInt(_this.max);
+
+        _this.value = Math.max(parseInt(_this.value), parseInt(inputLeft.value) + 1);
+
+        value2 =  _this.value;
+        valueHolder.innerHTML = value1 + "yrs - " + value2 + "yrs";
+
+        var percent = ((_this.value - min) / (max - min)) * 100;
+
+        thumbRight.style.right = (100 - percent) + "%";
+        range.style.right = (100 - percent) + "%";
+    }
+    setRightValue();
+
+    inputLeft.addEventListener("input", setLeftValue);
+    inputRight.addEventListener("input", setRightValue);
+</script>
+

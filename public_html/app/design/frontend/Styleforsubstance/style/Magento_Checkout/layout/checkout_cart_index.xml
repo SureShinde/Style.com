@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="checkout_cart_item_renderers"/>
+    <body>
+
+        <referenceBlock name="breadcrumbs">
+            <action method="addCrumb">
+                <argument name="crumbName" xsi:type="string">Home</argument>
+                <argument name="crumbInfo" xsi:type="array">
+                    <item name="title" xsi:type="string">Home</item>
+                    <item name="label" xsi:type="string">Home</item>
+                    <item name="link" xsi:type="string">/</item>
+                </argument>
+            </action>
+            <action method="addCrumb">
+                <argument name="crumbName" xsi:type="string">Review Bookings</argument>
+                <argument name="crumbInfo" xsi:type="array">
+                    <item name="title" xsi:type="string">Review Bookings</item>
+                    <item name="label" xsi:type="string">Review Bookings</item>
+                </argument>
+            </action>
+        </referenceBlock>
+        <container name="breadcrumbs.holder" htmlClass="navigation-breadcrumbs-holder" htmlTag="div">
+            <block class="Magento\Theme\Block\Html\Topmenu" name="back.to.result" template="Magento_Theme::back-to-result.phtml" after="-"/>
+        </container>
+        <container name="cart.items.holder" htmlClass="form-cart-holder" htmlTag="div"/>
+
+        <referenceBlock name="checkout.cart.shipping">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="block-summary" xsi:type="array">
+
+                            <!-- My custom part: -->
+                            <item name="config" xsi:type="array">
+                                <item name="componentDisabled" xsi:type="boolean">true</item>
+                            </item>
+
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+        <move element="breadcrumbs.holder" destination="main.content" before="-"/>
+        <move element="breadcrumbs" destination="breadcrumbs.holder" before="-"/>
+        <move element="cart.items.holder" destination="checkout.cart.container" before="-"/>
+        <move element="checkout.cart.form" destination="cart.items.holder" after="-"/>
+        <move element="checkout.cart.coupon" destination="cart.summary" before="checkout.cart.totals.container" />
+        <move element="checkout.cart.order.actions.gift_options" destination="cart.summary" after="checkout.cart.coupon" />
+        <move element="checkout.cart.amgiftcard" destination="cart.summary" after="checkout.cart.coupon" />
+
+        <referenceBlock name="page.main.title" remove="true"/>
+    </body>
+</page>

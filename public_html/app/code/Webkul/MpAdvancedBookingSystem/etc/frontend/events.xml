@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="mp_product_save_after">
+        <observer name="mpadvancedbookingsystem_AfterProductSave" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterMarketplaceProductSave" />
+    </event>
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="mpadvancedbookingsystem_afterplaceorder" instance="Webkul\MpAdvancedBookingSystem\Observer\AfterPlaceOrder" />
+    </event>
+    <!-- For updating/removing cart items if dates are not valid -->
+    <event name="controller_action_predispatch_checkout_cart_index">
+        <observer name="mpadvancedbookingsystem_beforeviewcart" instance="Webkul\MpAdvancedBookingSystem\Observer\BeforeViewCart" />
+    </event>
+    <event name="controller_action_predispatch_checkout_index_index">
+        <observer name="mpadvancedbookingsystem_beforeviewcart" instance="Webkul\MpAdvancedBookingSystem\Observer\BeforeViewCart" />
+    </event>
+    <!-- For adding cart items record in wk_bs_quote_item table -->
+    <event name="sales_quote_item_set_product">
+        <observer name="mpadvancedbookingsystem_sales_quote_item_set_product" instance="Webkul\MpAdvancedBookingSystem\Observer\SalesQuoteItemProduct" />
+    </event>
+    <!-- For validating cart item for valid booking dates -->
+    <event name="checkout_cart_save_before">
+        <observer name="webkul_mpadvancedbookingsystem_checkout_cart_save_before_observer" instance="Webkul\MpAdvancedBookingSystem\Observer\CheckoutCartSaveBeforeObserver" />
+    </event>
+    <!-- For validating cart item for valid booking dates -->
+    <event name="checkout_cart_product_add_after">
+        <observer name="webkul_mpadvancedbookingsystem_checkout_cart_product_add_after_observer" instance="Webkul\MpAdvancedBookingSystem\Observer\CheckoutCartProductAddAfterObserver" />
+    </event>
+    <!-- For adding cart items record in wk_bs_quote_item table for hotel booking -->
+    <event name="sales_quote_add_item">
+        <observer name="mpadvancedbookingsystem_sales_quote_add_item" instance="Webkul\MpAdvancedBookingSystem\Observer\SalesQuoteAddItem" />
+    </event>
+    <!-- For checking updated cart items record in wk_bs_quote_item table for hotel booking -->
+    <event name="checkout_cart_update_items_before">
+        <observer name="mpadvancedbookingsystem_checkout_cart_update_items_before" instance="Webkul\MpAdvancedBookingSystem\Observer\CartUpdateItemBefore" />
+    </event>
+    <!-- For checking available quantity while updating mini cart for all booking except hotel booking -->
+    <event name="checkout_cart_update_items_after">
+        <observer name="mpadvancedbookingsystem_checkout_cart_update_items_after" instance="Webkul\MpAdvancedBookingSystem\Observer\CartUpdateItemAfter" />
+    </event>
+    <event name="checkout_cart_save_after">
+        <observer name="webkul_mpadvancedbookingsystem_checkout_cart_save_after_observer" instance="Webkul\MpAdvancedBookingSystem\Observer\CheckoutCartSaveAfterObserver" />
+    </event>
+</config>

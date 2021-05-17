@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardApplyCardCodeOnCheckoutLessTotal">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Apply Gift Card Code on Checkout"/>
+            <title value="Apply Gift Card Code on Checkout"/>
+            <description value="Apply Gift Card Code on Checkout. Card Code Is Less Than Order Total. Order Total on Checkout Is Decreased"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-8"/>
+            <group value="AmGiftCard"/>
+            <group value="AmApplyGiftCard"/>
+            <group value="AmGiftCardCheckout"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <createData entity="SimpleProductByFusionBackpack" stepKey="simpleProduct">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+        <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminDeleteGiftCodeAccountActionGroup" stepKey="deleteGiftCodeAccount"/>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <actionGroup ref="AdminGrabGiftCardCodeActionGroup" stepKey="grabGiftCode"/>
+        <!--open checkout page before apply card code-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="addCreatedSimpleProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="selectShippingMethod">
+            <argument name="shippingMethodsOnCheckout" value="BestWayMethod"/>
+        </actionGroup>
+        <!--apply card code, check code is applied and place order-->
+        <actionGroup ref="StorefrontApplyCardCodeOnCheckoutActionGroup" stepKey="applyCardCodeOnCheckout">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckCardCodeIsAppliedOnCheckoutActionGroup" stepKey="checkCardCodeIsAppliedOnCheckout">
+            <argument name="productPrice" value="SimpleProductByFusionBackpack.price"/>
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+            <argument name="cardCodeDiscount" value="fusionCardCodeDiscount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="createOrderAndGrabOrderNumber">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+    </test>
+</tests>

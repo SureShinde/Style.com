@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_MpsellersliderTwo
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="seller-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_Marketplace::css/layout.css"/>
+        <css src="Webkul_MpsellersliderTwo::css/demo.css"/>
+    </head>
+	<body>
+		<referenceBlock name="seller.page.main.title">
+			<action method="setPageTitle">
+				<argument translate="true" name="title" xsi:type="string">Add Images For Slider1111</argument>
+			</action>
+		</referenceBlock>
+		<referenceContainer name="seller.content">
+			<block class="Webkul\MpsellersliderTwo\Block\Profile" ifconfig="marketplace/general_settings/mpsellerslidertwo_enable" name="mpsellerslidertwo_addimages_layout2_two" template="Webkul_MpsellersliderTwo::uploadimg.phtml" cacheable="false">
+			<arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\MpsellersliderTwo\ViewModel\Common</argument>
+                </arguments>
+            </block>
+		</referenceContainer>
+	</body>
+</page>

@@ -1,0 +1,83 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$magentoCurrentUrl = $block->getCurrentUrl();
+$helper = $block->getMpHelper();
+$isPartner= $helper->isSeller();
+$isSellerGroup = $helper->isSellerGroupModuleInstalled();
+
+/*Check if current customer is a seller or not*/
+if ($isPartner):
+    $status = false;
+    if (strpos($magentoCurrentUrl, 'mpadvancebooking/product/create') !== false ||
+    strpos($magentoCurrentUrl, 'mpadvancebooking/product/bookinglist') !== false ||
+    strpos($magentoCurrentUrl, 'mpadvancebooking/hotelbooking/questions') !== false
+    ) {
+        $status = true;
+    }
+    if (($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/product/create')) ||
+        ($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/product/bookinglist')) ||
+        ($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/hotelbooking/questions')) ||
+        !$isSellerGroup
+    ) {?>
+        <li class="mpadvancebooking nav item <?= /* @noEscape */ $status ? "current":"";?>">
+            <?php
+            if (strpos($magentoCurrentUrl, 'mpadvancebooking/product') !== false
+                || strpos($magentoCurrentUrl, 'mpadvancebooking/hotelbooking') !== false) { ?>
+                <strong><?= /* @noEscape */ __('Advanced Booking System') ?></strong>
+            <?php } else { ?>
+                <a href="#">
+                    <?= /* @noEscape */ __('Advanced Booking System') ?>
+                </a>
+            <?php } ?>
+            <ul class="nav items">
+                <?php if (($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/product/create'))
+                    || !$isSellerGroup) { ?>
+                <li class="nav item <?= /* @noEscape */
+                        (strpos($magentoCurrentUrl, 'mpadvancebooking/product/create') !== false) ? "current":"";?>">
+                    <?php if ((strpos($magentoCurrentUrl, 'mpadvancebooking/product/create') !== false)) { ?>
+                        <strong><?= /* @noEscape */ __('Add Booking Product') ?></strong>
+                    <?php } else { ?>
+                        <a href="<?= /* @noEscape */ $block->getUrl('mpadvancebooking/product/create'); ?>">
+                                <?= /* @noEscape */ __('Add Booking Product') ?>
+                        </a>
+                    <?php } ?>
+                </li>
+                <?php } ?>
+                <?php if (($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/product/bookinglist'))
+                        || !$isSellerGroup) { ?>
+                    <li class="nav item <?= /* @noEscape */
+                    (strpos($magentoCurrentUrl, 'mpadvancebooking/product/bookinglist') !== false) ? "current":"";?>">
+                    <?php if ((strpos($magentoCurrentUrl, 'mpadvancebooking/product/bookinglist') !== false)) { ?>
+                        <strong><?= /* @noEscape */ __('Booking Products List') ?></strong>
+                    <?php } else { ?>
+                        <a href="<?= /* @noEscape */ $block->getUrl('mpadvancebooking/product/bookinglist'); ?>">
+                            <?= /* @noEscape */ __('Booking Products List') ?>
+                        </a>
+                    <?php } ?>
+                    </li>
+                <?php } ?>
+                <?php if (($isSellerGroup && $helper->isAllowedAction('mpadvancebooking/hotelbooking/questions'))
+                    || !$isSellerGroup) { ?>
+                    <li class="nav item <?= /* @noEscape */
+                    (strpos($magentoCurrentUrl, 'mpadvancebooking/hotelbooking/questions') !== false) ?"current":"";?>">
+                        <?php if ((strpos($magentoCurrentUrl, 'mpadvancebooking/hotelbooking/questions') !== false)) {?>
+                            <strong><?= /* @noEscape */ __('View Questions') ?></strong>
+                        <?php } else { ?>
+                            <a href="<?= /* @noEscape */ $block->getUrl('mpadvancebooking/hotelbooking/questions'); ?>">
+                                <?= /* @noEscape */ __('View Questions') ?>
+                            </a>
+                        <?php } ?>
+                    </li>
+                <?php } ?>
+            </ul>
+        </li>
+    <?php } ?>
+<?php endif; ?>

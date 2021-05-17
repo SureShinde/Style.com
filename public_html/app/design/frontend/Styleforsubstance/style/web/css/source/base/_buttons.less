@@ -1,0 +1,82 @@
+button,
+.actions-toolbar .action.primary,
+.actions .action,
+.wk_mp_design .wk-mp-collection-view-btn a,
+.wk-mp-design button,
+.wk-profile-links .btn-primary,
+.amcard-preview-container > .amcard-button,
+.cart-summary .checkout-methods-items .action.primary.checkout,
+.action.primary,
+.product-item-info-button,
+.downloadable-form .action-add,
+input[type='reset'],
+input[type='submit'] {
+  display: inline-block;
+  color: @color-white1;
+  background: @color-green1;
+  border: 1px solid @color-green1;
+  min-width: 270px;
+  font-size: 18px;
+  line-height: 1;
+  padding: 14px 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-family: @MetropolisRegular;
+  text-decoration: none;
+  border-radius: 0;
+  font-weight: normal;
+  box-shadow: none;
+  text-shadow: none;
+  cursor: pointer;
+  @media @tablet-devices {
+    font-size: 16px;
+    min-width: 240px;
+    padding: 13px 20px;
+  }
+  &:focus {
+    background: @color-green1;
+    border-color: @color-green1;
+  }
+  &:visited {
+    color: @color-white;
+  }
+  &:hover {
+    text-decoration: none;
+    background: transparent;
+    color: @color-green1;
+    border-color: @color-green1;
+  }
+}
+.downloadable-form .action-add,
+.wk-mp-design button,
+button,
+.actions .action.white-button,
+.product-item-info-button,
+input[type='reset'],
+input[type='submit'] {
+  background: transparent;
+  color: @color-green1;
+  &:visited {
+    color: @color-green1;
+  }
+  &:hover {
+    color: @color-white1;
+    background: @color-green1;
+  }
+}
+.downloadable-form .action-add {
+  border-color: @color-green1!important;
+}
+.wk-mp-design button:focus,
+.downloadable-form .action-add:hover,
+.wk-mp-design button:hover {
+  color: @color-white1!important;
+  background: @color-green1!important;
+}
+.wk-profile-links .btn-primary {
+  text-transform: none;
+  text-shadow: none;
+  &:hover {
+    color: @color-green1!important;
+  }
+}

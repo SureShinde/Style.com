@@ -1,0 +1,48 @@
+<?php
+
+$sellerData = $block->getStripeSellerInformation();
+
+if ($sellerData) {
+    if (!empty($sellerData['capabilities'])) {
+        ?>
+        <div class="wk-mp-design" id="wk-bodymain">
+            <p><?= /*@noEscape*/ __('Seller have the following active capabilities'); ?></p>
+            <ul>
+                <li>
+                <?= /*@noEscape*/ __('Card Payments') ?> - <?= $block->escapeHtml(strtoupper(
+                    $sellerData['capabilities']['card_payments']
+                )) ?>
+                </li>
+                <li>
+                <?= /*@noEscape*/ __('Transfers') ?> - <?= $block->escapeHtml(strtoupper(
+                    $sellerData['capabilities']['transfers']
+                )) ?>
+                </li>
+            </ul>
+            
+        </div>
+        <?php
+    }
+    ?>
+    <?php
+    if (!empty($sellerData['requirements']['currently_due'])) {
+        ?>
+        <div class="wk-mp-design" id="wk-bodymain">
+            <p><?= /*@noEscape*/ __('Pending Details') ?></p>
+            <ul>
+            <?php
+            foreach ($sellerData['requirements']['currently_due'] as $pendingData) {
+                ?>
+                <li>
+                    <?= $block->escapeHtml($pendingData); ?>
+                </li>
+                <?php
+            }
+            ?>
+            </ul>
+        </div>
+        <?php
+    }
+    
+}
+?>

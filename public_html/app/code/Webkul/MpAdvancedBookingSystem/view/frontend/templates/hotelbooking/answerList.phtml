@@ -1,0 +1,229 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block \Webkul\MpAdvancedBookingSystem\Block\Hotelbooking\Questions */
+
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$mpHelper = $viewModel->getMpHelper();
+$paramData = $block->getRequest()->getParams();
+$filter = '';
+$filterStatus = '';
+$filterDateFrom = '';
+$filterDateTo = '';
+$questionId = '';
+if (isset($paramData['s'])) {
+    $filter = $paramData['s'] != '' ? $paramData['s'] : '';
+}
+if (isset($paramData['status'])) {
+    $filterStatus = $paramData['status'] != '' ? (int)$paramData['status'] : '';
+}
+if (isset($paramData['from_date'])) {
+    $filterDateFrom = $paramData['from_date'] != '' ? $paramData['from_date'] : '';
+}
+if (isset($paramData['to_date'])) {
+    $filterDateTo = $paramData['to_date'] != '' ? $paramData['to_date'] : '';
+}
+if (isset($paramData['question_id'])) {
+    $questionId = $paramData['question_id'] != '' ? $paramData['question_id'] : '';
+}
+$questionsColl = $block->getAllAnswers();
+$questionStatus = $helper->getQuestionStatuses();
+?>
+<div class="wk-mp-design">
+    <fieldset class="fieldset info wk-mp-fieldset">
+        <legend class="legend">
+            <span><?= $block->escapeHtml(__('Questions List')) ?></span>
+        </legend>
+        <div class="grid">
+            <div class="hor-scroll">
+                <form
+                    action="<?= /* @noEscape */ $block->getUrl(
+                        'mpadvancebooking/hotelbooking_question/answers',
+                        ['_secure' => $block->getRequest()->isSecure(), 'question_id'=>$questionId]
+                    )?>"
+                    method="get" id="form-answerlist-filter"
+                    name="formAnswerlistFilter"
+                    data-mage-init='{"validation":{}}'>
+                    <table cellspacing="0" class="border wk-mp-list-table">
+                        <thead>
+                            <tr id="wk-mp-tr-heading">
+                                <th><span><?= $block->escapeHtml(__('Date')) ?></span></th>
+                                <th><span>&nbsp;</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="wk-mp-body" id="colender-check">
+                            <tr>
+                                <td>
+                                    <span class="wk-mp-td-span">
+                                        <?= $block->escapeHtml(__('From: ')) ?>
+                                        <input name="from_date" id="special-from-date" class="input-text"
+                                               value="<?= /* @noEscape */ $filterDateFrom?>" />
+                                    </span>
+                                    <span class="wk-mp-td-span">
+                                        <?= $block->escapeHtml(__('To: ')) ?>
+                                        <input name="to_date" id="special-to-date" class="input-text"
+                                               value="<?= /* @noEscape */ $filterDateTo?>" />
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="button" title="Save" type="submit">
+                                        <span><span><span><?= $block->escapeHtml(__('Submit')) ?></span></span></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <div data-bind="scope: 'product-list-component'">
+                <?php if ($questionsColl && count($questionsColl)): ?>
+                    <form
+                        action="<?= /* @noEscape */
+                                $block->getUrl(
+                                    'mpadvancebooking/hotelbooking_question/deleteAnswer',
+                                    ['_secure' => $block->getRequest()->isSecure()]
+                                ) ?>"
+                        method="post" id="form-answerlist-massupdate"
+                        name="formAnswerlistMassupdate"
+                        data-mage-init='{"validation":{}}'>
+                        <?= $block->getBlockHtml('formkey')?>
+                        <button class="button" title="<?= $block->escapeHtml(__('Delete Products')) ?>"
+                                type="submit" style="float: left;"  id="mass-delete-button">
+                            <span><span><?= $block->escapeHtml(__('Delete')) ?></span></span>
+                        </button>
+                        <!-- ko template: getTemplate() --><!-- /ko -->
+                        <input type="hidden" name="actual_question_id" value="<?= /* @noEscape */ $questionId ?>" />
+                        <table cellspacing="0" class="border wk-mp-list-table wk-mp-list-container-table">
+                            <thead>
+                                <tr class="wk-content">
+                                    <th class="wk-check-first-td">
+                                        <span>
+                                            <input type="checkbox" name="mpselecctall" value="all" id="mpselecctall"/>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label pro-status">
+                                            <?= $block->escapeHtml(__('Type'))?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label pro-status">
+                                            <?= $block->escapeHtml(__('Customer Name'))?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display">
+                                        <span class="label qty">
+                                            <?= $block->escapeHtml(__('Answer'))?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display1">
+                                        <span class="label">
+                                            <?= $block->escapeHtml(__('Submitted At'))?>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $i = 0;
+                                foreach ($block->getAllAnswers() as $question) {
+                                    $i++; ?>
+                                    <tr class="wk-row-view <?= /* @noEscape */
+                                            $class = ($i == count($block->getAllAnswers())) ? 'wk-last_tr':''?>">
+                                        <td class="wk-check-first-td">
+                                            <span>
+                                                <input type="checkbox" name="product_mass_delete[]" class="mpcheckbox"
+                                                       value="<?= /* @noEscape */ $question->getId(); ?>"/>
+                                            </span>
+                                        </td>
+                                        <td class="wk-first_td">
+                                            <span class="label pro-status">
+                                                <?php if ($question->getCustomerId() > 0): ?>
+                                                    <?= $block->escapeHtml(__('Customer')) ?>
+                                                <?php else: ?>
+                                                    <?= $block->escapeHtml(__('Guest')) ?>
+                                                <?php endif; ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label pro-status">
+                                                <?= $block->escapeHtml($question->getNickName()); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label pro-status">
+                                                <?= $block->escapeHtml($question->getAnswer()); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label pro-status">
+                                                <?= /* @noEscape */ $question->getCreatedAt(); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }?>
+                            </tbody>
+                        </table>
+                    </form>
+                    </div>
+                <?php else: ?>
+                    <div class="wk-emptymsg">
+                        <?= $block->escapeHtml(__('No Answers yet')) ?>
+                    </div>
+                <?php endif ?>
+            </div>
+        </div>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml(); ?></div>
+        <?php endif ?>
+    </fieldset>
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="javascript:;" onclick="javascript: window.history.back();"
+               class="left">&laquo; <?= /* @noEscape */ __('Back') ?></a>
+        </p>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Webkul_Marketplace/js/product/product-date-range": {}
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "mphotelanswers": {}
+        }
+    }
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "product-list-component": {
+                        "component": "sellerProductList",
+                        "template" : "Webkul_Marketplace/product-list"
+                    }
+                }
+            }
+        }
+    }
+</script>

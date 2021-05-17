@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardDefaultGiftCodeAccount">
+        <annotations>
+            <features value="Gift Code Account"/>
+            <stories value="Gift Code Account"/>
+            <title value="Create Gift Code Account"/>
+            <description value="Check Gift Code Account Data After Creation"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-3"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCodeAccount"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateFullInformationGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+        <after>
+            <actionGroup ref="AdminDeleteGiftCodeAccountActionGroup" stepKey="deleteGiftCodeAccount"/>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <actionGroup ref="AdminCheckFullInformationGiftCodeAccountActionGroup" stepKey="checkGiftCodeAccount"/>
+        <actionGroup ref="AdminGrabGiftCardCodeActionGroup" stepKey="grabGiftCode"/>
+        <actionGroup ref="AdminFindGiftCodeAccountOnGridActionGroup" stepKey="findGiftCodeAccountOnGrid"/>
+        <actionGroup ref="AdminCheckGiftCodeAccountDataOnGridActionGroup" stepKey="checkGiftCodeAccountDataOnGrid">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+    </test>
+</tests>

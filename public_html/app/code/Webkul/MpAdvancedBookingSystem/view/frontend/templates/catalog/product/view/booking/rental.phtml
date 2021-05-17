@@ -1,0 +1,502 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$customerHelper = $viewModel->getCustomerHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+
+$validBookingDates = $helper->getValidBookingDates($product);
+if (is_array($validBookingDates)) {
+    $rentOptions = $helper->getRentOptions($product);
+    if (!empty($rentOptions['choose_rent_type']['option_id'])) {
+        $bookingAvailableFrom = $validBookingDates['booking_available_from'];
+        $bookingAvailableTo = $validBookingDates['booking_available_to'];
+        $bookingInfo = $helper->getBookingInfo($productId);
+        $bookingSlotData = $helper->getJsonDecodedString($bookingInfo['info']);
+        
+        $fromDay = date("l", strtotime($bookingAvailableFrom));
+        $fromDayIndex = $helper->getDayIndexId($fromDay);
+
+        if (empty($bookingSlotData[1])) {
+            $bookingSlotData[1] = [];
+        }
+        if (empty($bookingSlotData[2])) {
+            $bookingSlotData[2] = [];
+        }
+        if (empty($bookingSlotData[3])) {
+            $bookingSlotData[3] = [];
+        }
+        if (empty($bookingSlotData[4])) {
+            $bookingSlotData[4] = [];
+        }
+        if (empty($bookingSlotData[5])) {
+            $bookingSlotData[5] = [];
+        }
+        if (empty($bookingSlotData[6])) {
+            $bookingSlotData[6] = [];
+        }
+        if (empty($bookingSlotData[7])) {
+            $bookingSlotData[7] = [];
+        }
+        $hourlyUnavailableDates = $helper->getUnvailableDates(
+            $bookingSlotData,
+            $bookingAvailableFrom,
+            $bookingAvailableTo
+        );
+        ?>
+        <style>
+        .wk-bk-addr-right {
+            position: relative;
+        }
+        </style>
+        <div class="wk-bk-design">
+            <div class="wk-bk-detail-container">
+                <div class="wk-bk-block">
+                    <div class="wk-bk-addr-title">
+                        <?= /* @noEscape */ __('Location') ?>:
+                    </div>
+                    <div class="wk-bk-addr-right">
+                        <div>
+                            <?= /* @noEscape */ $product['location'] ?>
+                        </div>
+                        <?php if ($product['show_map_loction']) { ?>
+                            <div>
+                                <a href="//maps.google.com/maps?q=<?= /* @noEscape */ $product['location']?>" 
+                                    class="wk-bk-location-link" target="blank">
+                                    <?= /* @noEscape */ __('View on Map')?>
+                                </a>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php if (!$product['show_contact_button_to'] || $customerHelper->isCustomerLoggedIn()) { ?>
+                    <div class="wk-bk-block wk-bk-padding-block">
+                        <div class="wk-bk-contact-title">
+                            <?= /* @noEscape */ __('Contact Info') ?>:
+                        </div>
+                        <div class="wk-bk-addr-right">
+                            <a id="wk-bk-contact-us"><?= /* @noEscape */ __('Contact Us') ?></a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="wk-bk-dates-container">
+                <h3>
+                    <?= /* @noEscape */ __('Rent an Item')?>
+                </h3>
+                <?php
+                $optionId = $rentOptions['choose_rent_type']['option_id'];
+                $optionValues = $rentOptions['choose_rent_type']['option_values'];
+                if ($optionId && !empty($optionValues)) {
+                    $optionConfig = $helper->getOptionValueJsonConfig();
+                    //$optionValConfig = [];
+                    $priceChargedPer = '';
+                    $priceChargedPerTxt = '';
+                    $lastPriceIndex = count($optionValues);
+                    $isProductInStock = 0;
+                    $optionValFieldId = '';
+                    $priceChargedPerTxtArr = [];
+                    $rentTypeArr = [];
+                    ?>
+                    <div class="wk-bk-rental-options" id="wk-bk-option<?= /* @noEscape */ $optionId?>">
+                        <label class="label" for="select_<?= /* @noEscape */ $optionId?>">
+                            <span><?= /* @noEscape */ __('Choose Rent Option')?></span>
+                        </label>
+                        <div class="control">
+                            <div class="options-list nested" id="options-<?= /* @noEscape */ $optionId?>-list">
+                                <?php foreach ($optionValues as $key => $value) {
+                                    $optValId = $value['option_type_id'];
+                                    $customOptionPrice = $product->getPriceInfo()->getPrice('custom_option_price');
+                                    $priceFormated = $block->getLayout()->getBlock(
+                                        'product.price.render.default'
+                                    )->renderAmount(
+                                        $helper->getOptionPriceAmount(
+                                            $customOptionPrice,
+                                            $value['price']
+                                        ),
+                                        $customOptionPrice,
+                                        $product
+                                    );
+                                    $priceByStore = $helper->currencyByStore(
+                                        $value['price'],
+                                        $product->getStore(),
+                                        false
+                                    );
+                                    $priceChargedPer = $priceByStore;
+                                    if ($value['title'] == 'Hourly Basis') {
+                                        $priceChargedPerTxt = __('Charged Per Hour');
+                                        $rentTypeArr['h'] = $optValId;
+                                    }
+                                    if ($value['title'] == 'Daily Basis') {
+                                        $priceChargedPerTxt = __('Charged Per Day');
+                                        $rentTypeArr['d'] = $optValId;
+                                    }
+                                    $priceChargedPerTxtArr[$optValId] = $priceChargedPerTxt;
+                                    $optionValFieldId = 'options_'.$optionId.'_'.$key;
+                                    ?>
+                                    <div class="field choice admin__field admin__field-option required">
+                                        <input type="radio" name="options[<?= /* @noEscape */ $optionId?>]" 
+                                            class="radio admin__control-radio 
+                                                required product-custom-option wk-bk-rent-type-option" 
+                                            id="<?= /* @noEscape */ $optionValFieldId?>" 
+                                            value="<?= /* @noEscape */ $optValId?>" 
+                                            data-selector="options[<?= /* @noEscape */ $optionId?>]" 
+                                            price="<?= /* @noEscape */ $priceByStore?>" aria-required="true">
+                                        <label class="label admin__field-label" 
+                                            for="<?= /* @noEscape */ $optionValFieldId?>">
+                                            <span><?= /* @noEscape */ $value['title']?></span>
+                                        </label>
+                                    </div>
+                                    <?php
+                                } ?>
+                            </div>
+                            <span id="options-<?= /* @noEscape */ $optionId?>-container"></span>
+                        </div>
+                    </div>
+                    <div id="wk-bk-select-date" class="fieldset">
+                    </div>
+                    <div id="wk-bk-select-slot" class="fieldset">
+                    </div>
+                    <div id="wk-bk-select-time" class="fieldset">
+                    </div>
+                    <script type="text/x-magento-init">
+                        {
+                            "#product_addtocart_form": {
+                                "rentalBookingPriceOptions": {
+                                    "optionValFieldId": "<?= /* @noEscape */ $optionValFieldId?>",
+                                    "optionId": <?= /* @noEscape */ $optionId?>,
+                                    "optionConfig": <?= /* @noEscape */ $helper->getJsonEcodedString($optionConfig)?>,
+                                    "controlContainer": ".field",
+                                    "productId": "<?= /* @noEscape */ $productId?>",
+                                    "priceChargedPer": "<?= /* @noEscape */ $priceChargedPer?>",
+                                    "priceChargedPerTxt": "<?= /* @noEscape */ $priceChargedPerTxt?>",
+                                    "priceChargedPerTxtArr": 
+                                        <?= /* @noEscape */ $helper->getJsonEcodedString($priceChargedPerTxtArr)?>,
+                                    "priceHolderSelector": 
+                                        "[data-product-id='<?= /* @noEscape */ $productId?>'][data-role=priceBox]"
+                                }
+                            }
+                        }
+                    </script>
+                    <?php if ($product->isSaleable() && $optionValFieldId != ''): ?>
+                        <div class="box-tocart">
+                            <div class="fieldset">
+                                <div class="field qty">
+                                    <label class="label" for="qty">
+                                        <span><?= /* @noEscape */ __('Qty') ?></span>
+                                    </label>
+                                    <div class="control">
+                                        <input type="number"
+                                            name="qty"
+                                            id="qty"
+                                            value="<?= /* @noEscape */ $block->getProductDefaultQty() * 1 ?>"
+                                            title="<?= /* @noEscape */ __('Qty') ?>"
+                                            class="input-text qty"
+                                            data-validate="<?= /* @noEscape */
+                                                $viewModel->getJsonEncoded($block->getQuantityValidators()) ?>"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <button id="wk-book-now"
+                                        type="submit"
+                                        title="<?= /* @noEscape */ __('Rent Now'); ?>"
+                                        class="wk-book-now action primary tocart">
+                                        <span><?= /* @noEscape */ __('Rent Now'); ?></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-social-links" style="display:block;">
+                            <div class="product-addto-links">
+                            <?= /** @noEscape */ $block->getChildHtml('view.addto.wishlist.rental', true) ?>
+                            <?= /** @noEscape */ $block->getChildHtml('view.addto.compare.rental', true) ?>
+                            <?= /** @noEscape */ $block->getChildHtml('product.info.mailto.rental', true) ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
+        <script id="wk-bk-select-date-template-daily" type="text/x-magento-template">
+            <div class="wk-bk-dates-wrapper wk-bk-dates-left-container field required">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('From')?></span>
+                </label>
+                <label for="wk-bk-select-from-date" class="wk-bk-select-date-label">
+                    <?= /* @noEscape */ __('Select Date'); ?>
+                </label>
+                <?php if (!empty($rentOptions['rent_from']['option_id'])) {
+                    $dateFromOptionId = $rentOptions['rent_from']['option_id']; ?>
+                    <input type="hidden" name="options[<?= /* @noEscape */ $dateFromOptionId?>]" 
+                        id="wk-bk-from-date-option" class="wk-bk-date-option" value=""/>
+                    <?php
+                } ?>
+                <input type="text" name="booking_date_from" 
+                    class="required-entry input-text wk-bk-datetype" 
+                    id="wk-bk-select-from-date" value="" 
+                    placeholder="<?= /* @noEscape */ __('Select Date'); ?>" readonly/>
+            </div>
+            <div class="wk-bk-dates-wrapper wk-bk-dates-left-container field required">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('To')?></span>
+                </label>
+                <label for="wk-bk-select-to-date" class="wk-bk-select-date-label">
+                    <?= /* @noEscape */ __('Select Date'); ?>
+                </label>
+                <?php if (!empty($rentOptions['rent_to']['option_id'])) {
+                    $dateToOptionId = $rentOptions['rent_to']['option_id']; ?>
+                    <input type="hidden" name="options[<?= /* @noEscape */ $dateToOptionId?>]" 
+                        id="wk-bk-to-date-option" class="wk-bk-date-option" value=""/>
+                <?php } ?>
+                <input type="text" name="booking_date_to" 
+                    class="required-entry input-text wk-bk-datetype" 
+                    id="wk-bk-select-to-date" value="" 
+                    placeholder="<?= /* @noEscape */ __('Select Date'); ?>" readonly/>
+            </div>
+        </script>
+        <script id="wk-bk-select-date-template-hourly" type="text/x-magento-template">
+            <div class="wk-bk-dates-wrapper field required">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('Select Date')?></span>
+                </label>
+                <label for="wk-bk-select-from-date" class="wk-bk-select-date-label">
+                    <?= /* @noEscape */ __('Select Date'); ?>
+                </label>
+                <?php if (!empty($rentOptions['rent_from']['option_id'])) {
+                    $dateFromOptionId = $rentOptions['rent_from']['option_id']; ?>
+                    <input type="hidden" name="options[<?= /* @noEscape */ $dateFromOptionId?>]" 
+                        id="wk-bk-from-date-option" class="wk-bk-date-option" value=""/>
+                    <?php
+                } ?>
+                <input type="text" name="booking_date_from" 
+                    class="required-entry input-text wk-bk-datetype" 
+                    id="wk-bk-select-from-date" value="" 
+                    placeholder="<?= /* @noEscape */ __('Select Date'); ?>" readonly/>
+                <?php if (!empty($rentOptions['rent_to']['option_id'])) {
+                    $dateToOptionId = $rentOptions['rent_to']['option_id']; ?>
+                    <input type="hidden" name="options[<?= /* @noEscape */ $dateToOptionId?>]" 
+                        id="wk-bk-to-date-option" class="wk-bk-date-option" value=""/>
+                <?php } ?>
+            </div>
+        </script>
+        <?php
+        $currentLocalTime = $helper->getCurrentTime();
+        $preventDuration = (float)$product['prevent_scheduling_before'];
+        $currentTime = strtotime('+'.$preventDuration.' minutes', $currentLocalTime);
+        ?>
+        <script id="wk-bk-select-slot-template-today" type="text/x-magento-template">
+            <div class="wk-bk-dates-left-container field required">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('Select Time Slot')?></span>
+                </label>
+            </div>
+            <div>
+                <input type="hidden" name="slot_day_index" 
+                    id="wk-bk-slot-day-index" 
+                    value="<?= /* @noEscape */ $fromDayIndex?>">
+                <input type="hidden" name="slot_id" id="wk-bk-slot-id" value="">
+                <select name="parent_slot_id" id="wk-bk-parent-slot-id" class="validate-select required-entry">
+                    <?php if (!empty($bookingSlotData[$fromDayIndex])) { ?>
+                        <option value=""><?= /* @noEscape */ __('Select Slot') ?></option>
+                        <?php
+                        $isSlotAvail = 0;
+                        $toDaySlots = $bookingSlotData[$fromDayIndex];
+                        foreach ($toDaySlots as $key => $slots) {
+                            if ($currentTime <= strtotime($slots['from'])) {
+                                $isSlotAvail = 1; ?>
+                                <option value="<?= /* @noEscape */ $key?>">
+                                    <?= /* @noEscape */ __('%1 to %2', $slots['from'], $slots['to'])?>
+                                </option>
+                                <?php
+                            }
+                        }
+                        if (!$isSlotAvail) { ?>
+                            <option value=""><?= /* @noEscape */ __('Closed') ?></option>
+                            <?php
+                        }
+                    } else { ?>
+                        <option value=""><?= /* @noEscape */ __('Closed') ?></option>
+                        <?php
+                    } ?>
+                </select>
+            </div>
+        </script>
+        <script id="wk-bk-select-time-template" type="text/x-magento-template">
+            <div class="field required">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('Select Rent Time')?></span>
+                </label>
+            </div>
+            <div class="wk-bk-dates-left-container">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('From')?></span>
+                </label>
+                <select name="booking_from_time" id="wk-bk-from-time" 
+                    class="wk-bk-date-time validate-select required-entry">
+                </select>
+            </div>
+            <div class="wk-bk-dates-right-container">
+                <label class="label wk-bk-dates-title-container">
+                    <span><?= /* @noEscape */ __('To')?></span>
+                </label>
+                <select name="booking_to_time" id="wk-bk-to-time" 
+                    class="wk-bk-date-time validate-select required-entry">
+                </select>
+            </div>
+        </script>
+        <?php for ($i=1; $i<=7; $i++) {?>
+            <script id="wk-bk-select-slot-template-<?= /* @noEscape */ $i?>" type="text/x-magento-template">
+                <div class="wk-bk-dates-left-container field required">
+                    <label class="label wk-bk-dates-title-container">
+                        <span><?= /* @noEscape */ __('Select Time Slot')?></span>
+                    </label>
+                </div>
+                <div>
+                <input type="hidden" name="slot_day_index" id="wk-bk-slot-day-index" value="<?= /* @noEscape */ $i?>">
+                <input type="hidden" name="slot_id" id="wk-bk-slot-id" value="">
+                <select name="parent_slot_id" id="wk-bk-parent-slot-id" class="validate-select required-entry">
+                    <?php if (!empty($bookingSlotData[$i])) { ?>
+                        <option value=""><?= /* @noEscape */ __('Select Slot') ?></option>
+                        <?php
+                        $toDaySlots = $bookingSlotData[$i];
+                        foreach ($toDaySlots as $key => $slots) { ?>
+                            <option value="<?= /* @noEscape */ $key?>">
+                                <?= /* @noEscape */ __('%1 to %2', $slots['from'], $slots['to'])?>
+                            </option>
+                            <?php
+                        }
+                    } else { ?>
+                        <option value=""><?= /* @noEscape */ __('Closed') ?></option>
+                        <?php
+                    } ?>
+                </select>
+            </div>
+            </script>
+            <?php
+            if (!empty($bookingSlotData[$i])) {
+                foreach ($bookingSlotData[$i] as $key => $slots) {
+                    $fromTodayOptionHtml = '<option value="">'.__('Select Time').'</option>';
+                    $toTodayOptionHtml = '<option value="">'.__('Select Time').'</option>';
+                    $fromOptionHtml = '<option value="">'.__('Select Time').'</option>';
+                    $toOptionHtml = '<option value="">'.__('Select Time').'</option>';
+                    $firstIndex = 0;
+                    $firstTodayIndex = 0;
+                    $totalSlots = count($slots['slots_info']);
+                    ?>
+                    <?php foreach ($slots['slots_info'] as $slotKey => $slotValue) {
+                        if ($firstIndex) {
+                            $toOptionHtml .= '<option value="'.$slotKey.'">'.$slotValue['time'].'</option>';
+                        }
+                        $firstIndex++;
+                        $firstTodayIndex++;
+                        if ($firstIndex != $totalSlots) {
+                            $fromOptionHtml .= '<option value="'.$slotKey.'">'.$slotValue['time'].'</option>';
+                        }
+                        if ($fromDayIndex == $i) {
+                            if ($currentTime <= strtotime($slotValue['time'])) {
+                                if ($firstTodayIndex) {
+                                    $toTodayOptionHtml .= '<option value="'.$slotKey.'">'.
+                                        $slotValue['time'].'</option>';
+                                }
+                                if ($firstTodayIndex != $totalSlots) {
+                                    $fromTodayOptionHtml .= '<option value="'.$slotKey.'">'.
+                                        $slotValue['time'].'</option>';
+                                }
+                            }
+                        }
+                    } ?>
+                    <?php if ($fromDayIndex == $i) { ?>
+                        <script id="wk-bk-select-from-time-opt-template-today<?= /* @noEscape */ $i.$key?>" 
+                            type="text/x-magento-template">
+                            <?= /* @noEscape */ $fromTodayOptionHtml?>
+                        </script>
+                        <script id="wk-bk-select-to-time-opt-template-today<?= /* @noEscape */ $i.$key?>" 
+                            type="text/x-magento-template">
+                            <?= /* @noEscape */ $toTodayOptionHtml?>
+                        </script>
+                    <?php } ?>
+                    <script id="wk-bk-select-from-time-opt-template<?= /* @noEscape */ $i.$key?>" 
+                        type="text/x-magento-template">
+                        <?= /* @noEscape */ $fromOptionHtml?>
+                    </script>
+                    <script id="wk-bk-select-to-time-opt-template<?= /* @noEscape */ $i.$key?>" 
+                        type="text/x-magento-template">
+                        <?= /* @noEscape */ $toOptionHtml?>
+                    </script>
+            <?php }
+            }
+        } ?>
+        <?php
+        $monthArr = [
+            '01'=>"Jan",
+            '02'=>"Feb",
+            '03'=>"Mar",
+            '04'=>"Apr",
+            '05'=>"May",
+            '06'=>"Jun",
+            '07'=>"Jul",
+            '08'=>"Aug",
+            '09'=>"Sep",
+            '10'=>"Oct",
+            '11'=>"Nov",
+            '12'=>"Dec"
+        ];
+        $jsData = [
+            'monthArr' => $monthArr,
+            'bookingAvailableFrom' => $bookingAvailableFrom,
+            'bookingAvailableTo' => $bookingAvailableTo,
+            'closeOption' => "<option value='0'>".__('Closed')."</option>",
+            'selectText' => __('Select Date'),
+            "rentTypeArr" => $rentTypeArr,
+            'hourlyUnavailableDates' => $hourlyUnavailableDates
+        ];
+        $catalogProduct = [
+            "product_type"=> "rentalbooking"
+        ];
+        $encodedJsData = $viewModel->getJsonEncoded($jsData);
+        $encodedCatalogJsData = $viewModel->getJsonEncoded($catalogProduct);
+        ?>
+        <script type="text/x-magento-init">
+            {
+                "body": {
+                    "rentalbooking": <?= /* @noEscape */ $encodedJsData; ?>
+                }
+            }
+        </script>
+        <script>
+            require([
+                "jquery"
+            ], function($) {
+                $('body').trigger('contentUpdated');
+            });    
+        </script>
+        <script type="text/x-magento-init">
+            {
+                "#product_addtocart_form": {
+                    "Webkul_MpAdvancedBookingSystem/js/validate-product": <?= /* @noEscape */ $encodedCatalogJsData; ?>
+                }
+            }
+        </script>
+        <?php
+    }
+} ?>

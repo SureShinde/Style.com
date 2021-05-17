@@ -1,0 +1,30 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $required = '';
+if ($block->hasRequiredOptions()) {
+    $required = ' data-hasrequired="' . __('* Required Fields') . '"';
+}
+    $_product = $block->getProduct();
+    $productType = $_product->getTypeId();
+?>
+<div class="product-options-wrapper" id="product-options-wrapper"<?= /* @noEscape */ $required; ?>>
+    <div class="fieldset" tabindex="0">
+    </div>
+    <?php if ($productType == "hotelbooking"): ?>
+        <?= /* @noEscape */ $block->getLayout()->createBlock(
+            \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable::class
+        )->setTemplate(
+            "Magento_ConfigurableProduct::product/view/type/options/configurable.phtml"
+        )->toHtml(); ?>
+    <?php endif; ?>
+</div>

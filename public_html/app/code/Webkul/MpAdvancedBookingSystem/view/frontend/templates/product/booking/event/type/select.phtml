@@ -1,0 +1,239 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php /** @var $block \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Options\Type\Select */ ?>
+<script id="custom-option-select-type-template" type="text/x-magento-template">
+    <div id="product_option_<%- data.option_id %>_type_<%- data.group %>" class="fieldset new-ticket-type-wrapper">
+        <div class="fieldset-wrapper-title">
+            <strong>
+                <span><?= /* @noEscape */ __('New Ticket Type') ?></span>
+            </strong>
+            <div class="actions">
+                <button type="button" title="<?= /* @noEscape */ __('Delete Ticket Type') ?>"
+                        class="delete delete-select-row icon-btn action-default scalable add action-delete"
+                        id="product_option_<%- data.id %>_select_<%- data.select_id %>_delete"
+                        data-ui-id="admin-product-options-add-button">
+                    <span><?= /* @noEscape */ __('Delete Ticket Type') ?></span>
+                </button>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <!-- <th class="col-draggable">&nbsp;</th> -->
+                    <th class="col-sku required">
+                        <?= /* @noEscape */ __('SKU') ?>
+                        <span class="required ticketattr">*</span>
+                    </th>
+                    <th class="col-name required">
+                        <?= /* @noEscape */ __('Name') ?>
+                        <span class="required ticketattr">*</span>
+                    </th>
+                    <?php if ($block->getCanReadPrice() !== false): ?>
+                    <th class="col-price">
+                        <?= /* @noEscape */ __('Price') ?>
+                    </th>
+                    <!-- <th class="col-price-type"><?php /* @noEscape */ //echo __('Price Type') ?></th> -->
+                    <th class="col-qty required">
+                        <?= /* @noEscape */ __('Quantity') ?>
+                        <span class="required ticketattr">*</span>
+                    </th>
+                    <th class="col-stock">
+                        <?= /* @noEscape */ __('Stock') ?>
+                        <span class="required ticketattr">*</span>
+                    </th>
+                    <th class="col-description required">
+                        <?= /* @noEscape */ __('Description') ?>
+                        <span class="required ticketattr">*</span>
+                    </th>
+                    <?php endif; ?>
+                    
+                    <!-- <th class="col-actions">&nbsp;</th> -->
+                </tr>
+            </thead>
+            <tbody id="select_option_type_row_<%- data.option_id %>">
+                <tr id="product_option_<%- data.id %>_select_<%- data.select_id %>">
+                    <!-- <td class="col-draggable" style="width: 79px;">
+                        <div data-role="draggable-handle" class="draggable-handle"
+                             title="<?= /* @noEscape */ __('Sort Custom Option') ?>"></div>
+                        <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][sort_order]"
+                            type="hidden" value="<%- data.sort_order %>">
+                        <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][option_id]"
+                            type="hidden" value="<%- data.option_id %>">
+                    </td> -->
+                    <td class="col-sku">
+                        <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][sku]"
+                            class="input-text required" type="text" value="<%- data.sku %>">
+                    </td>
+                    <td class="col-name select-opt-title">
+                        <% if (data.option_type_id) { %>
+                        <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][option_type_id]"
+                            type="hidden" value="<%- data.option_type_id %>">
+                        <% } %>
+                        <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_is_delete"
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][is_delete]"
+                            type="hidden" value="" />
+                        <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_title" 
+                            <% if (typeof data.scopeTitleDisabled != 'undefined'
+                                && data.scopeTitleDisabled != null) { %> disabled="disabled" <% } %>
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][title]"
+                            class="required-entry input-text select-type-title 
+                            <% if (typeof data.scopeTitleDisabled != 'undefined'
+                                && data.scopeTitleDisabled != null) { %> disabled <% } %>"
+                            type="text" value="<%- data.title %>"
+                            data-store-label="<%- data.title %>"><%- data.checkboxScopeTitle %>
+                    </td>
+                    <?php if ($block->getCanReadPrice() !== false): ?>
+                    <td class="col-price select-opt-price">
+                        <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price"
+                            <% if (typeof data.scopePriceDisabled != 'undefined'
+                                && data.scopePriceDisabled != null) { %> disabled="disabled" <% } %>
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][price]"
+                            class="input-text validate-number product-option-price"
+                            type="text" value="<%- data.price %>" data-store-label="<%- data.price %>"
+                            <?php if ($block->getCanEditPrice() === false): ?>
+                            disabled="disabled"
+                            <?php endif; ?>>
+                    </td>
+                    <!-- <td class="col-price-type select-opt-price-type">
+                        <?= /* @noEscape */ $block->getPriceTypeSelectHtml(
+                            'data-attr="price-type" <% if (typeof data.scopePriceDisabled != "undefined"
+                             && data.scopePriceDisabled != null) { %>
+                              disabled="disabled" <% } %>'
+                        ) ?><%- data.checkboxScopePrice %>
+                    </td> -->
+                    <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price_type"
+                        name="product[options][<%- data.id %>][values][<%- data.select_id %>][price_type]"
+                        type="hidden" value="fixed">
+                    <?php else: ?>
+                    <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price"
+                        name="product[options][<%- data.id %>][values][<%- data.select_id %>][price]"
+                        type="hidden">
+                    <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price_type"
+                        name="product[options][<%- data.id %>][values][<%- data.select_id %>][price_type]"
+                        type="hidden">
+                    <?php endif; ?>
+                    <td class="col-qty">
+                        <input class="input-text required" type="text"
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][qty]"
+                            value="<%- data.qty %>">
+                    </td>
+                    <td class="col-stock">
+                        <select class="select required-entry"
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][is_in_stock]">
+                            <option data-title="<?= /* @noEscape */ __('In Stock') ?>" value="1"
+                                    <% if (data.is_in_stock==1) { %>selected="selected"<% } %>>
+                                <?= /* @noEscape */ __("In Stock") ?>
+                            </option>
+                            <option data-title="<?= /* @noEscape */ __('Out of Stock') ?>" value="0"
+                                    <% if (data.is_in_stock==0) { %>selected="selected"<% } %>>
+                                <?= /* @noEscape */ __("Out of Stock") ?>
+                            </option>
+                        </select>
+                    </td>
+                    <td class="col-description">
+                        <textarea class="textarea required"
+                            name="product[options][<%- data.id %>][values][<%- data.select_id %>][description]"
+                            cols="40" rows="2"><%- data.description %></textarea>
+                    </td>
+                    <!-- <td class="col-actions col-delete">
+                        <button id="product_option_<%- data.id %>_select_<%- data.select_id %>_delete"
+                            class="delete delete-select-row icon-btn" title="Delete Row" type="button"
+                            class="action-default scalable add" data-ui-id="admin-product-options-add-button">
+                            <span><?= /* @noEscape */ __('Delete Row') ?></span>
+                        </button>
+                        <?php //echo $block->getDeleteButtonHtml() ?>
+                    </td> -->
+                </tr>
+            </tbody>
+            <!-- <tfoot>
+                <tr>
+                    <td colspan="6"><?php //echo $block->getAddButtonHtml() ?>
+                        <button id="product_option_<%- data.id %>_add_select_row"
+                            title="<?= /* @noEscape */ __('Add New Row') ?>" type="button"
+                            class="action-default scalable add add-select-row"
+                            data-ui-id="admin-product-options-options-box-select-option-type-add-select-row-button">
+                            <span><?= /* @noEscape */ __('Add New Row') ?></span>
+                        </button>
+                        <input name="validation_<%- data.id %>_result"
+                            class="required-option-select-type-rows" type="hidden" value="">
+                    </td>
+                </tr>
+            </tfoot> -->
+        </table>
+    </div>
+</script>
+<script id="custom-option-select-type-row-template" type="text/x-magento-template">
+    <tr id="product_option_<%- data.id %>_select_<%- data.select_id %>">
+        <td class="col-draggable" style="width: 79px;">
+            <div data-role="draggable-handle" class="draggable-handle"
+                 title="<?= /* @noEscape */ __('Sort Custom Option'); ?>"></div>
+            <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][sort_order]"
+                type="hidden" value="<%- data.sort_order %>">
+            <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][option_id]"
+                type="hidden" value="<%- data.option_id %>">
+        </td>
+        <td class="col-name select-opt-title">
+            <% if (data.option_type_id) { %>
+            <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][option_type_id]"
+                type="hidden" value="<%- data.option_type_id %>">
+            <% } %>
+            <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_is_delete"
+                name="product[options][<%- data.id %>][values][<%- data.select_id %>][is_delete]"
+                type="hidden" value="">
+            <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_title"
+                <% if (typeof data.scopeTitleDisabled != 'undefined' && data.scopeTitleDisabled != null) { %>
+                 disabled="disabled" <% } %>
+                name="product[options][<%- data.id %>][values][<%- data.select_id %>][title]"
+                class="required-entry input-text select-type-title
+                <% if (typeof data.scopeTitleDisabled != 'undefined' && data.scopeTitleDisabled != null) { %>
+                 disabled <% } %>"
+                type="text" value="<%- data.title %>"
+                data-store-label="<%- data.title %>"><%- data.checkboxScopeTitle %>
+        </td>
+        <?php if ($block->getCanReadPrice() !== false): ?>
+        <td class="col-price select-opt-price">
+            <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price"
+                   <% if (typeof data.scopePriceDisabled != 'undefined' && data.scopePriceDisabled != null) { %>
+                    disabled="disabled" <% } %>
+                   name="product[options][<%- data.id %>][values][<%- data.select_id %>][price]"
+                   class="input-text validate-number product-option-price"
+                   type="text" value="<%- data.price %>" data-store-label="<%- data.price %>"
+                <?php if ($block->getCanEditPrice() === false): ?>
+                   disabled="disabled"
+                <?php endif; ?>>
+        </td>
+        <td class="col-price-type select-opt-price-type">
+            <?= /* @noEscape */ $block->getPriceTypeSelectHtml(
+                'data-attr="price-type" <% if (typeof data.scopePriceDisabled != "undefined"
+                 && data.scopePriceDisabled != null) { %>
+                 disabled="disabled" <% } %>'
+            ) ?><%- data.checkboxScopePrice %>
+        </td>
+        <?php else: ?>
+        <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price"
+            name="product[options][<%- data.id %>][values][<%- data.select_id %>][price]" type="hidden">
+        <input id="product_option_<%- data.id %>_select_<%- data.select_id %>_price_type"
+            name="product[options][<%- data.id %>][values][<%- data.select_id %>][price_type]" type="hidden">
+        <?php endif; ?>
+        <td class="col-sku">
+            <input name="product[options][<%- data.id %>][values][<%- data.select_id %>][sku]"
+                class="input-text" type="text" value="<%- data.sku %>">
+        </td>
+        <td class="col-actions col-delete">
+            <button id="product_option_<%- data.id %>_select_<%- data.select_id %>_delete"
+                class="delete delete-select-row icon-btn" title="Delete Row" type="button"
+                class="action-default scalable add" data-ui-id="admin-product-options-add-button">
+                <span><?= /* @noEscape */ __('Delete Row') ?></span>
+            </button>
+            <?php //echo $block->getDeleteButtonHtml() ?></td>
+    </tr>
+</script>

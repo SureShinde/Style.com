@@ -1,0 +1,1 @@
+/var/www/style.com/public_html/app/code/Webkul/MpAdvancedBookingSystem/view/frontend/web/js/view/messages.js

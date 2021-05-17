@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="layout2_seller_account_navigation">
+            <block class="Webkul\Marketplace\Block\Account\Navigation" ifconfig="mpadvancedbookingsystem/mp_settings/enable_booking" name="mpadvancebooking_account_navigation_layout2" template="Webkul_MpAdvancedBookingSystem::seller/navigation.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="sidebar.additional">
+            <block class="Magento\Wishlist\Block\Customer\Sidebar" name="mpadvancedbooking.wishlist.sidebar" template="Webkul_MpAdvancedBookingSystem::item/list.phtml">
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

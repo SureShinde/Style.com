@@ -1,0 +1,98 @@
+.faq-content {
+  max-width: @width-narrow;
+  margin: 0 auto;
+}
+.mageprince-faq-loader {
+  text-align: center;
+}
+.mageprince-faq-collection {
+  .ui-accordion {
+    .ui-accordion-header {
+      padding: 27px 70px 27px 29px;
+      background: @color-green4;
+      line-height: 1;
+      color: @color-black1;
+      font-size: 24px;
+      border: none;
+      transition: all 0.3s ease;
+      margin: 17px 0 0 0;
+      font-weight: normal;
+      line-height: 1.5;
+      @media @desktop-devices {
+        font-size: 22px;
+      }
+      @media @mobile-devices {
+        font-size: 20px;
+        min-height: 114px;
+        display: flex;
+        align-items: center;
+        padding: 27px 70px 27px 23px;
+        margin: 20px 0 0;
+      }
+      &.ui-state-hover,
+      &:hover,
+      &.ui-state-active {
+        background: @color-green5;
+        color: @color-black1;
+      }
+    }
+    .ui-accordion-header-active,
+    .ui-state-default {
+      &:after {
+        content: '';
+        width: 24px;
+        height: 14px;
+        background-size: cover;
+        position: absolute;
+        right: 43px;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        @media @desktop-devices {
+          width: 23px;
+          height: 13px;
+        }
+        @media @mobile-devices {
+          width: 21px;
+          height: 12px;
+          right: 38px;
+        }
+      }
+    }
+    .ui-state-default {
+      &:after {
+        background-image: url('@{icon-data},@{icon-arrow-down}');
+      }
+    }
+    .ui-accordion-header-active {
+      &:after {
+        background-image: url('@{icon-data},@{icon-arrow-up}');
+      }
+    }
+  }
+  .faq-accordion {
+    .ui-widget-content {
+      border: none;
+      color: @color-gray2;
+      padding: 35px 29px;
+      p {
+        margin: 0 0 30px;
+      }
+      a {
+        font-family: @MetropolisBold;
+        text-decoration: underline;
+        color: @color-green1;
+        &:after {
+          content: '';
+          width: 17px;
+          height: 10px;
+          background-size: cover;
+          background-image: url('@{icon-data},@{green-arrow-down}');
+          transform: rotate(-90deg);
+          display: inline-block;
+          margin: 0 0 2px 2px;
+        }
+      }
+    }
+  }
+}

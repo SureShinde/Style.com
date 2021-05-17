@@ -1,0 +1,346 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$product = $block->getProduct();
+$helper = $this->helper(\Webkul\MpAdvancedBookingSystem\Helper\Data::class);
+$productSetId = '';
+$bookingSlotData = $helper->getJsonEcodedString([]);
+if (!empty($product) && !empty($product['entity_id'])) {
+    $bookingInfo = $helper->getBookingInfo($product->getId());
+    if (!empty($bookingInfo['info'])) {
+        $bookingSlotData = $bookingInfo['info'];
+    }
+    $productSetId = $product->getAttributeSetId();
+    $tableType = $helper->getProductAttributeSetIdByLabel('Table Booking');
+    if ($productSetId != $tableType) {
+        $bookingSlotData = [];
+        $bookingSlotData = $helper->getJsonEcodedString($bookingSlotData);
+    }
+}
+?>
+<div class="admin__field _required">
+    <label class="admin__field-label" for="wk-booking-price_charged_per_table">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Charged Per'))?>
+        </span>
+    </label>
+    <?php $charges = $helper->getTableChargedPer(); ?>
+    <div class="admin__field-control">
+        <select class="admin__control-select wk-select-wide required-select price_charged_per_table"
+                data-form-part="product_form" name="product[price_charged_per_table]"
+                id="wk-booking-price_charged_per_table">
+            <?php if ($charges): ?>
+                <?php foreach ($charges as $key => $charge): ?>
+                    <option data-title="<?= /* @noEscape */ $charge ?>"
+                            value="<?= /* @noEscape */ $key ?>"
+                             <?php if ($product['price_charged_per_table'] == $key) {?> selected="selected" <?php } ?>>
+                        <?= /* @noEscape */ $charge?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+    </div>
+</div>
+<div class="admin__field" id="wk-guests_per_table">
+    <label class="admin__field-label" for="wk-no_of_guests">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Number Of Guests per Table'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text validate-digits validate-greater-than-zero" type="number"
+            data-form-part="product_form" name="product[no_of_guests]"
+            value="<?= $block->escapeHtml($product['no_of_guests'])?>" id="wk-no_of_guests"
+            max="<?= $block->escapeHtml($product['max_capacity'])?>" min="1">
+    </div>
+</div>
+<div class="admin__field _required">
+    <label class="admin__field-label" for="wk-max_capacity">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Maximum Guests Capacity'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry validate-digits validate-greater-than-zero" type="text"
+            data-form-part="product_form" name="product[max_capacity]"
+            value="<?= $block->escapeHtml($product['max_capacity'])?>" id="wk-max_capacity">
+    </div>
+</div>
+<div class="admin__field _required">
+    <label class="admin__field-label" for="wk-slot-duration">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Slot Duration'))?> (<?= $block->escapeHtml(__('Mins'))?>)
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry validate-digits" type="text"
+            data-form-part="product_form" name="product[slot_duration]"
+            value="<?= $block->escapeHtml($product['slot_duration'])?>" id="wk-slot-duration">
+    </div>
+</div>
+<div class="admin__field _required">
+    <label class="admin__field-label" for="wk-break-time-bw-slot">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Break Time b/w Slots'))?> (<?= $block->escapeHtml(__('Mins'))?>)
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry validate-digits" type="text"
+            data-form-part="product_form" name="product[break_time_bw_slot]"
+            value="<?= $block->escapeHtml($product['break_time_bw_slot'])?>" id="wk-break-time-bw-slot">
+    </div>
+</div>
+<div class="admin__field _required" data-index="show_contact_btn">
+    <label class="admin__field-label" for="wk-prevent-scheduling-before">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Prevent Scheduling Before'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry validate-digits" type="text"
+            data-form-part="product_form" name="product[prevent_scheduling_before]"
+            id="wk-prevent-scheduling-before"
+            value="<?= $block->escapeHtml($product['prevent_scheduling_before'])?>">
+    </div>
+</div>
+<div class="admin__field" id="wk-slot-for-all-days-wrapper">
+    <label class="admin__field-label" for="wk-slot-all-days">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Same Slot for All Days'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                data-form-part="product_form" id="wk-slot-all-days" name="product[slot_for_all_days]"
+                value="<?= $block->escapeHtml($product['slot_for_all_days'])?>">
+            <label class="admin__actions-switch-label" for="wk-slot-all-days">
+                <span class="admin__actions-switch-text" data-bind="
+                    attr: {
+                        'data-text-on': toggleLabels.on,
+                        'data-text-off': toggleLabels.off
+                    }" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<script id="wk-booking-same-slot-container-template" type="text/x-magento-template">
+    <div class="admin__field wk-booking-slot-row _show">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Slot Information'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container wk-bk-hide" id="wk-bk-label-slot-box-container1">
+        </div>
+        <div class="admin__collapsible-content _show">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container1">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="1">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-slot-container-template" type="text/x-magento-template">
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Monday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container1">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container1">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="1">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Tuesday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container2">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container2">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="2">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Wednesday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container3">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container3">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="3">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Thursday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container4">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container4">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="4">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Friday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container5">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container5">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="5">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Saturday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container6">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container6">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="6">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Sunday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container7">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container7">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn" type="button"
+                        data-role="action" data-day-type="7">
+                    <span><?= $block->escapeHtml(__('Add Slot'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-slot-template" type="text/x-magento-template">
+    <div class="admin__field _required wk-booking-slot-block" id="wk-booking-slot-block<%- data.id %><%- data.index %>">
+        <label class="admin__field-label">
+            <span class="wk-booking-slot-label-span"><?= $block->escapeHtml(__('Slot Span'))?></span>
+        </label>
+        <div class="admin__field-control admin__control-grouped-date admin__control-grouped">
+            <div class="admin__field admin__field-date">
+                <div class="admin__field-control">
+                    <input class="admin__control-text required-entry wk-booking-slot-picker"
+                        data-form-part="product_form" type="text"
+                        name="product[slot_data][<%- data.id %>][<%- data.index %>][from]"
+                        value="<%- data.from %>" readonly>
+                </div>
+            </div>
+            <div class="admin__field admin__field-date wk-booking-row-field-date">
+                <label class="admin__field-label">
+                    <span><?= $block->escapeHtml(__('To'))?></span>
+                </label>
+                <div class="admin__field-control">
+                    <input class="admin__control-text required-entry wk-booking-slot-picker"
+                        data-form-part="product_form" type="text"
+                        name="product[slot_data][<%- data.id %>][<%- data.index %>][to]"
+                        value="<%- data.to %>" readonly>
+                </div>
+            </div>
+            <div class="wk-booking-row-btn-container">
+                <button type="button" class="action-basic wk-booking-row-remove-btn" data-index="button_related">
+                    <span><?= $block->escapeHtml(__('Remove'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-label-slot-template" type="text/x-magento-template">
+    <div class="wk-bk-label-slot-box" id="wk-bk-label-slot-box<%- data.id %><%- data.index %>">
+        <%- data.from %> - <%- data.to %>
+        <span class="wk-bk-label-slot-box-close"></span>
+    </div>
+</script>
+<?php
+$jsData = [
+    'slotDataType' => $product['slot_for_all_days'],
+    'slotData' => $bookingSlotData
+];
+$encodedJsData = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($jsData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "tablebooking": <?= /* @noEscape */ $encodedJsData; ?>
+        }
+    }
+</script>
+<script>
+    jQuery('body').trigger('contentUpdated');
+</script>

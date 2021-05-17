@@ -1,0 +1,60 @@
+// FONTS
+@fontDir: '@{baseUrl}fonts/';
+
+//  Mixin
+
+.mixin-font-face(
+    @family-name,
+    @font-path,
+    @font-weight: normal,
+    @font-style: normal
+) {
+  @font-face {
+    font-family: @family-name;
+    src: url('@{font-path}.woff2') format('woff2'),
+      url('@{font-path}.woff') format('woff');
+  }
+}
+
+// MetropolisThin
+.mixin-font-face(
+    @family-name: @MetropolisThin,
+    @font-path: '@{fontDir}Metropolis/MetropolisThin/MetropolisThin',
+    @font-weight: normal,
+    @font-style: normal
+);
+// MetropolisBold
+.mixin-font-face(
+    @family-name: @MetropolisBold,
+    @font-path: '@{fontDir}Metropolis/MetropolisBold/MetropolisBold',
+    @font-weight: normal,
+    @font-style: normal
+);
+// EyeCatchingRegular
+.mixin-font-face(
+    @family-name: @EyeCatchingRegular,
+    @font-path: '@{fontDir}EyeCatching/EyeCatchingRegular/EyeCatchingRegular',
+    @font-weight: normal,
+    @font-style: normal
+);
+// MetropolisRegular
+.mixin-font-face(
+    @family-name: @MetropolisRegular,
+    @font-path: '@{fontDir}Metropolis/MetropolisRegular/MetropolisRegular',
+    @font-weight: normal,
+    @font-style: normal
+);
+// MetropolisSemiBold
+.mixin-font-face(
+    @family-name: @MetropolisSemiBold,
+    @font-path: '@{fontDir}Metropolis/MetropolisSemiBold/MetropolisSemiBold',
+    @font-weight: normal,
+    @font-style: normal
+);
+// MetropolisMedium
+.mixin-font-face(
+    @family-name: @MetropolisMedium,
+    @font-path: '@{fontDir}Metropolis/MetropolisMedium/MetropolisMedium',
+    @font-weight: normal,
+    @font-style: normal
+);

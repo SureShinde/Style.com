@@ -1,0 +1,45 @@
+<?php
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ */
+$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt()
+?>
+<div class="logo-footer-holder">
+  <a
+    class="logo-footer"
+    href="<?= $block->escapeUrl($block->getUrl('')) ?>"
+    title="<?= $block->escapeHtmlAttr($storeName) ?>"
+    aria-label="store logo">
+    <img src="<?php echo $this->getViewFileUrl('images/logo-footer.svg'); ?>"
+        title="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+        alt="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+    />
+  </a>
+</div>
+<div class="footer-columns">
+  <div class="footer-column">
+    <?php
+      echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-menu1')
+          ->toHtml();
+    ?>
+  </div>
+  <div class="footer-column">
+    <?php
+      echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-menu2')
+          ->toHtml();
+    ?>
+  </div>
+  <div class="footer-column">
+    <h5 class="social-title"><?= $block->escapeHtml(__('Connect With Us')) ?></h5>
+    <?php
+      echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('social-block')
+          ->toHtml();
+    ?>
+  </div>
+</div>

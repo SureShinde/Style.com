@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--use after order is placed-->
+    <actionGroup name="StorefrontCheckOrderAfterCardCodeIsAppliedActionGroup">
+        <arguments>
+            <argument name="productPrice"/>
+            <argument name="cardCodeDiscount"/>
+        </arguments>
+        <click selector="{{SuccessPageSection.OrderNumberCustomerAccount}}" stepKey="openOrderInCustomerAccount"/>
+        <waitForPageLoad stepKey="waitForOrderPageLoad"/>
+        <see selector="{{StorefrontCustomerOrderViewSection.subtotal}}" userInput="{{productPrice}}" stepKey="seeCartSubtotal"/>
+        <see selector="{{StorefrontOrderViewSection.GiftCard}}" userInput="{{cardCodeDiscount.discountAmount}}" stepKey="seeGiftCardAmount"/>
+        <see selector="{{StorefrontOrderViewSection.GrandTotal}}" userInput="{{cardCodeDiscount.orderTotal}}" stepKey="seeGrandTotal"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontCheckOrderWithCardCodeProductActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+        </arguments>
+        <click selector="{{SuccessPageSection.OrderNumberCustomerAccount}}" stepKey="openOrderInCustomerAccount"/>
+        <waitForPageLoad stepKey="waitForOrderPageLoad"/>
+        <see selector="{{StorefrontOrderViewSection.ProductName}}" userInput="{{giftCardProductData.name}}" stepKey="seeGiftCardProductName"/>
+        <see selector="{{StorefrontOrderViewSection.ProductSKU}}" userInput="{{giftCardProductData.sku}}" stepKey="seeGiftCardProductSKU"/>
+        <see selector="{{StorefrontOrderViewSection.ProductPrice}}" userInput="{{giftCardProductData.priceCheckout}}" stepKey="seeGiftCardProductPrice"/>
+    </actionGroup>
+
+</actionGroups>

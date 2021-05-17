@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardCodeStatusUnLimExpDateOnShoppingCart" extends="GiftCardCodeStatusDefaultOnShoppingCart">
+        <annotations>
+            <features value="Gift Card Code"/>
+            <stories value="Gift Card Code Status and Expire Date on Shopping Cart"/>
+            <title value="Gift Card Code Status and Expire Date on Shopping Cart"/>
+            <description value="Check Gift Card Code Status on Shopping Cart. Check Unlimited Expire Date on Shopping Cart and Accounts Grid"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-15"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardShoppingCart"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateUnLimGiftCodeAccountActionGroup" stepKey="createGiftCodeAccount"/>
+        </before>
+
+        <remove keyForRemoval="grabExpireDateOnShoppingCart"/>
+        <actionGroup ref="AdminGrabGiftCardCodeActionGroup" stepKey="grabGiftCode"/>
+        <actionGroup ref="AdminCheckFullInformationGiftCodeAccountActionGroup" after="grabGiftCode" stepKey="checkGiftCodeAccount"/>
+        <!--check code status and unlimited expire date-->
+        <actionGroup ref="StorefrontCheckUnLimCardCodeOnShoppingCartActionGroup" stepKey="checkGiftCardCodeStatusOnShoppingCart">
+            <argument name="giftCode" value="{$grabSelectedGiftCardCodeGrabGiftCode}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckUnlGiftCodeExpDateOnGridActionGroup" stepKey="checkGiftCodeExpireDateOnGrid"/>
+    </test>
+</tests>

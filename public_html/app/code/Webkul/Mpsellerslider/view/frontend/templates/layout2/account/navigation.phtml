@@ -1,0 +1,30 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+// updated file to add notification for seller.
+$viewModel = $block->getViewModel();
+$_helper = $viewModel->getMpHelper();
+$isPartner = $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();?>
+
+<nav class="wk-mp-menu wk-mp-main">
+    <ul id="wk-mp-nav">
+        <?php
+        if ($isPartner) { ?>
+            <li class="nav item notification-link level-0 
+            <?= /* @noEscape */  strpos($magentoCurrentUrl, 'mpsellerslider/mpslider')? "current":"";?>">
+                <a href="<?= /* @noEscape */
+                $block->getUrl('mpsellerslider/mpslider', ['_secure' => $block->getRequest()->isSecure()]); ?>">
+                <?= /* @noEscape */  __('Manage Slider Images') ?>
+                </a>
+            </li>
+        <?php } ?>
+    </ul>
+</nav>

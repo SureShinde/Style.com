@@ -1,0 +1,335 @@
+<?php
+/** @var \Webkul\Marketplace\Block\Stylistregistration $block */
+/** @var \Magento\Customer\Block\Form\Register $blockCustomer */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$blockCustomer = $objectManager->create('\Magento\Customer\Block\Form\Register');
+
+?>
+<div class="page-title-wrapper">
+    <h1 class="page-title">
+        <span><?= /* @noEscape */ __('Register Stylist') ?></span>
+    </h1>
+</div>
+<form class="form-create-stylist" action="<?php echo $block->getFormAction() ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off" data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset">
+        <legend class="legend"><?= /* @noEscape */ __('Personal Information') ?></legend>
+        <div class="fields">
+            <div class="field field-name-firstname required">
+                <label for="firstname" class="label"><?= /* @noEscape */ __('First Name') ?></label>
+                <div class="control">
+                    <input type="text"
+                        name="firstname"
+                        value=""
+                        id="firstname"
+                        title="firstname"
+                        class="input-text"
+                        required="true"
+                    >
+                </div>
+            </div>
+            <div class="field field-name-lastname required">
+                <label for="lastname" class="label"><?= /* @noEscape */ __('Last Name') ?><span></span></label>
+                <div class="control">
+                    <input type="text"
+                        name="lastname"
+                        value=""
+                        id="lastname"
+                        title="lastname"
+                        class="input-text"
+                        required="true"
+                    >
+                </div>
+            </div>
+        </div>
+        <!-- <div class="field">
+            <label for="profileurl" class="label"><?= /* @noEscape */ __('Profile Url') ?></label>
+            <div class="control">
+                <input type="text"
+                    name="profileurl"
+                    value=""
+                    id="profileurl"
+                    title="profileurl"
+                    class="input-text"
+                >
+            </div>
+        </div> -->
+        <div class="field required">
+            <label for="email" class="label"><?= /* @noEscape */ __('Email') ?></label>
+            <div class="control">
+                <input type="email"
+                    name="email"
+                    autocomplete="email"
+                    value=""
+                    id="email"
+                    title="Email"
+                    class="input-text"
+                    data-validate="{required:true, 'validate-email':true}"
+                    aria-required="true"
+                >
+            </div>
+        </div>
+        <div class="field required">
+            <label for="address1" class="label"><?= /* @noEscape */ __('Address Line 1') ?></label>
+            <div class="control">
+                <input type="text"
+                    name="address1"
+                    value=""
+                    id="address1"
+                    title="address1"
+                    class="input-text"
+                    required="true"
+                >
+            </div>
+        </div>
+        <div class="field">
+            <label for="address2" class="label"><?= /* @noEscape */ __('Address Line 2') ?></label>
+            <div class="control">
+                <input type="text"
+                    name="address2"
+                    value=""
+                    id="address2"
+                    title="address2"
+                    class="input-text"
+                >
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field">
+                <label for="state" class="label"><?= /* @noEscape */ __('State') ?></label>
+                <div class="control">
+                    <input type="text"
+                        name="state"
+                        value=""
+                        id="state"
+                        title="state"
+                        class="input-text"
+                    >
+                </div>
+            </div>
+            <div class="field required">
+                <label for="city" class="label"><?= /* @noEscape */ __('City') ?></label>
+                <div class="control">
+                    <input type="text"
+                        name="city"
+                        value=""
+                        id="city"
+                        title="city"
+                        class="input-text"
+                        required="true"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field required">
+                <label for="zip" class="label"><?= /* @noEscape */ __('Zip') ?></label>
+                <div class="control">
+                    <input type="number"
+                        name="zip"
+                        value=""
+                        id="zip"
+                        title="zip"
+                        class="input-text"
+                        required="true"
+                    >
+                </div>
+            </div>
+            <div class="field">
+                <label for="phone" class="label"><?= /* @noEscape */ __('Phone') ?></label>
+                <div class="control">
+                    <input type="number"
+                        name="phone"
+                        autocomplete="phone"
+                        value=""
+                        id="phone"
+                        title="phone"
+                        class="input-text"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label for="title_stylist"><?= /* @noEscape */ __('Title (Image Consultant or Personal Stylist)') ?></label>
+            <div class="control">
+                <select name="title_stylist" id="title_stylist">
+                    <option value="0">Image Consultant</option>
+                    <option value="1">Personal Stylist</option>
+                </select>
+            </div>
+        </div>
+        <div class="field">
+            <label for="experience"><?= /* @noEscape */ __('Experience') ?></label>
+            <div class="control">
+                <?php $experienceYears = range(0, 25);?>
+                <select name="experience" id="experience">
+                    <option value="" selected="selected" disabled="disabled"><?= /* @noEscape */ __('Select Experience')?></option>
+                    <?php foreach ($experienceYears as $year):?>
+                        <option value="<?= $escaper->escapeHtml($year); ?>"><?= $escaper->escapeHtml($year);?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field stylist-profile-register">
+                <label for="specialties_general"><?= /* @noEscape */ __('Specialties(General)') ?></label>
+                <div class="control">
+                    <?php
+                        $specialties_general = array(
+                            '-' => 0,
+                            'Menswear' => 1,
+                            'Womenswear' => 2,
+                            'Mature Style' => 3,
+                            'Specialty Sizes (Petite/Plus/Tall)' => 4,
+                            'Color Advice' => 5,
+                            'Wardrobe Review' => 6,
+                            'Shape Analysis' => 7,
+                            'Life Transitions' => 8,
+                            'Maternity/Nursing' => 9,
+                            'Bespoke/Couture' => 10,
+                            'Tailoring' => 11,
+                            'Secondhand/Thrift Shopping' => 12,
+                            'Personal Shopping' => 13,
+                            'Accessories' => 14,
+                            'Hair' => 15,
+                            'Skincare/Makeup' => 16,
+                            'Religious Modesty' => 17,
+                            'Non-binary' => 18,
+                            'Physical Changes Due to Surgery' => 19,
+                            'Children/Teen Style' => 20
+                        );
+                    ?>
+
+                    <select name="specialties_general[]" id="specialties_general" multiple size='4'>
+                        <?php foreach ($specialties_general as $specialties_general_option => $key):?>
+                            <option value="<?= $escaper->escapeHtml($key); ?>" title="<?= $escaper->escapeHtml($specialties_general_option);?>"><?= $escaper->escapeHtml($specialties_general_option);?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field stylist-profile-register">
+                <label for="specialties_work"><?= /* @noEscape */ __('Specialties(Work)') ?></label>
+                <div class="control">
+                    <?php
+                        $specialties_work = array(
+                            '-' => 0,
+                            'Job Interview' => 1,
+                            'Corporate/Business Wear' => 2,
+                            'On Camera/Video Conferences' => 3,
+                            'Public Speaking (Including Voice & Media Training)' => 4,
+                            'Business Trip (Domestic)' => 5,
+                            'Business Trip (Foreign, Including Protocol)' => 6,
+                            'Headshots/Photoshoots' => 7,
+                            'Business Casual/Work from Home' => 8,
+                            'Personal Branding' => 9,
+                            'Executive Presence' => 10
+                        );
+                    ?>
+                    <select name="specialties_work[]" id="specialties_work" multiple size='4'>
+                        <?php foreach ($specialties_work as $specialties_work_option => $key):?>
+                            <option value="<?= $escaper->escapeHtml($key); ?>"  title="<?= $escaper->escapeHtml($specialties_work_option);?>"><?= $escaper->escapeHtml($specialties_work_option);?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="field stylist-profile-register">
+                <label for="specialties_social"><?= /* @noEscape */ __('Specialties(Social)') ?></label>
+                <div class="control">
+                    <?php
+                        $specialties_social = array(
+                            '-' => 0,
+                            'Social Media Profile' => 1,
+                            'Dating Profile' => 2,
+                            'Bridal' => 3,
+                            'Holiday Party' => 4,
+                            'Dating' => 5,
+                            'Travel Packing' => 6,
+                            'Travel Etiquette' => 7,
+                            'Formalwear' => 8,
+                            'Semi-formal Events' => 9
+                        );
+                    ?>
+                    <select name="specialties_social[]" id="specialties_social" multiple size='4'>
+                        <?php foreach ($specialties_social as $specialties_social_option => $key):?>
+                            <option value="<?= $escaper->escapeHtml($key); ?>"><?= $escaper->escapeHtml($specialties_social_option);?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field stylist-profile-register">
+                <label for="certification"><?= /* @noEscape */ __('AICI certification') ?></label>
+                <div class="control">
+                    <select name="certification[]" id="certification" multiple size='4'>
+                        <option value="0">No</option>
+                        <option value="1">CIC</option>
+                        <option value="2">CIP</option>
+                        <option value="3">CIM</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field password required">
+            <label for="password" class="label"><span><?= $escaper->escapeHtml(__('Password')) ?></span></label>
+            <div class="control">
+                <input type="password" name="password" id="password"
+                       title="<?= $escaper->escapeHtmlAttr(__('Password')) ?>"
+                       class="input-text"
+                       data-password-min-length="<?=
+                        $escaper->escapeHtmlAttr($blockCustomer->getMinimumPasswordLength()) ?>"
+                       data-password-min-character-sets="<?=
+                        $escaper->escapeHtmlAttr($blockCustomer->getRequiredCharacterClassesNumber()) ?>"
+                       data-validate="{required:true, 'validate-customer-password':true}"
+                       autocomplete="off">
+                <div id="password-strength-meter-container" data-role="password-strength-meter" aria-live="polite">
+                    <div id="password-strength-meter" class="password-strength-meter">
+                        <?= $escaper->escapeHtml(__('Password Strength')) ?>:
+                        <span id="password-strength-meter-label" data-role="password-strength-meter-label">
+                            <?= $escaper->escapeHtml(__('No Password')) ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="field confirmation required">
+            <label for="password-confirmation" class="label">
+                <span><?= $escaper->escapeHtml(__('Confirm Password')) ?></span>
+            </label>
+            <div class="control">
+                <input type="password"
+                       name="password_confirmation"
+                       title="<?= $escaper->escapeHtmlAttr(__('Confirm Password')) ?>"
+                       id="password-confirmation"
+                       class="input-text"
+                       data-validate="{required:true, equalTo:'#password'}"
+                       autocomplete="off">
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="primary">
+        <button type="submit"
+                class="action submit primary"
+                title="<?= $escaper->escapeHtmlAttr(__('Create an Account')) ?>">
+            <span><?= $escaper->escapeHtml(__('Create an Account')) ?></span>
+        </button>
+    </div>
+
+</form>
+<script type="text/x-magento-init">
+    {
+        ".field.password": {
+            "passwordStrengthIndicator": {
+                "formSelector": "form.form-create-account"
+            }
+        },
+        "*": {
+            "Magento_Customer/js/block-submit-on-send": {
+                "formId": "form-validate"
+            }
+        }
+    }
+</script>

@@ -1,0 +1,374 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$bookingAvailableFrom = '';
+$bookingAvailableTo = '';
+$productSetId = '';
+$bookingSlotData = $helper->getJsonEcodedString([]);
+$params = $block->getRequest()->getParams();
+if (!empty($params['id'])) {
+    $product = $block->getProduct($params['id']);
+    if ($product['event_date_from'] != 'Invalid date') {
+        $bookingAvailableFrom = $product['event_date_from'];
+        $bookingAvailableFrom = date('m/d/y H:m', strtotime($bookingAvailableFrom));
+    }
+    if ($product['event_date_to'] != 'Invalid date') {
+        $bookingAvailableTo = $product['event_date_to'];
+        $bookingAvailableTo = date('m/d/y H:m', strtotime($bookingAvailableTo));
+    }
+    $bookingInfo = $helper->getBookingInfo($product->getId());
+    if (!empty($bookingInfo['info'])) {
+        $bookingSlotData = $bookingInfo['info'];
+    }
+    $productSetId = $product->getAttributeSetId();
+    $appointmentType = $helper->getProductAttributeSetIdByLabel('Appointment Booking');
+    if ($productSetId != $appointmentType) {
+        $bookingSlotData = [];
+        $bookingSlotData = $helper->getJsonEcodedString($bookingSlotData);
+    }
+    $eventChartImages = $helper->getEventImagesJson($product->getEventChartImage());
+} else {
+    $product['price_charged_per'] = 1;
+    $product['is_multiple_tickets'] = 1;
+    $product['prevent_scheduling_before'] = "";
+    $product['event_chart_image'] = 1;
+    $product['slot_for_all_days'] = 1;
+    $product['event_chart_available'] = 1;
+    $product['show_map_loction'] = 1;
+    $eventChartImages = "[]";
+}
+?>
+<div class="field">
+    <label class="label"><?= /* @noEscape */ __('Ticket and Quantity') ?>:</label>
+    <div class="wk-border"></div>
+</div>
+
+<div class="field required wk-booking-date-block">
+    <label class="label" for="wk-booking-event-from">
+        <span>
+            <?= /* @noEscape */ __('Event Date')?>
+        </span>
+    </label>
+    <div class="control grouped-date grouped">
+        <div class="date">
+            <label class="label">
+                <span><?= /* @noEscape */ __('From')?></span>
+            </label>
+            <div class="control">
+                <input class="input-text required-entry" id="wk-booking-event-from"
+                    type="text" name="product[event_date_from]"
+                    value="<?= /* @noEscape */ $bookingAvailableFrom?>" readonly/>
+            </div>
+        </div>
+        <div class="date">
+            <label class="label">
+                <span><?= /* @noEscape */ __('To')?></span>
+            </label>
+            <div class="control">
+                <input class="input-text required-entry" id="wk-booking-event-to" type="text"
+                    name="product[event_date_to]"  value="<?= /* @noEscape */ $bookingAvailableTo?>" readonly/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field toggle-field">
+    <label class="label" for="wk-available-event-map">
+        <span>
+            <?= /* @noEscape */ __('Event Map/Chart Available')?>
+        </span>
+    </label>
+    <!-- <div class="control">
+        <div class="switch" data-role="switcher">
+            <input type="checkbox" class="switch-checkbox" id="wk-available-event-map"
+                name="product[event_chart_available]"
+                value="1" <?php //if ($product['event_chart_available']) { ?>checked="checked"<?php //} ?>>
+        </div>
+    </div> -->
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-available-event-map" name="product[event_chart_available]"
+                value="1" <?php if ($product['event_chart_available']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-available-event-map">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+    <div class="control event-image-upload">
+        <label for="wk-available-event-map-image" class="action primary">
+            <span><?= /* @noEscape */ __("Upload") ?></span>
+        </label>
+        <input type="file" class="input-file" id="wk-available-event-map-image" name="product[event_chart_image]"
+            value="<?= /* @noEscape */ $product['event_chart_image']?>" style="display:none"
+            data-url="<?= /* @noEscape */ $block->getUrl(
+                'mpadvancebooking/booking/eventChartUpload',
+                ['_secure' => $block->getRequest()->isSecure()]
+            ) ?>">
+
+        <div><?= /* @noEscape */ __('Upload an Image in JPG, JPEG, GIF, PNG Format.') ?></div>
+        <div id="media_event_content"
+            class='gallery'
+            data-mage-init='{"eventImage":{"template":"#media_event_content-template"}}'
+            data-images="<?= $block->escapeHtml($eventChartImages) ?>"></div>
+        <script id="media_event_content_Uploader-template" type="text/x-magento-template">
+            <div id="<%- data.id %>" class="file-row">
+                <span class="file-info"><%- data.name %> (<%- data.size %>)</span>
+                <div class="progressbar-container">
+                    <div class="progressbar upload-progress" style="width: 0%;"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </script>
+        <script id="media_event_content-template" type="text/x-magento-template">
+            <div class="image event-img-role item <% if (data.disabled == 1) { %>hidden-for-front<% } %>"
+                data-role="image">
+                <!-- <input type="hidden"
+                        name="product[event_chart_image][0][<%- data.file_id %>][file]"
+                        value="<%- data.file %>"/> -->
+                <input type="hidden"
+                        name="product[event_chart_image][0][file]"
+                        value="<%- data.file %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][type]"
+                        value="<%- data.type %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][name]"
+                        value="<%- data.name %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][path]"
+                        value="<%- data.path %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][url]"
+                        value="<%- data.url %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][size]"
+                        value="<%- data.size %>"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][previewType]"
+                        value="image"/>
+                <input type="hidden"
+                        name="product[event_chart_image][0][removed]"
+                        value="" class="is-removed"/>
+                <img class="spacer"
+                   src="<?= /* @noEscape */ $block->getViewFileUrl('images/spacer.gif')?>"/>
+                <a href="<%- data.url %>" target="_blank">
+                    <img class="product-image" src="<%- data.url %>" alt="<%- data.label %>" name="<%- data.label %>"/>
+                </a>
+                <div class="actions" >
+                    <button type="button"
+                            class="action-delete event-delete-img"
+                            data-role="event-delete-button"
+                            title="<?= /* @noEscape */ __('Delete image') ?>">
+                        <span>
+                            <?= /* @noEscape */ __('Delete image') ?>
+                        </span>
+                    </button>
+                </div >
+                <div class="image-fade"><span><?= /* @noEscape */ __('Hidden') ?></span></div>
+            </div>
+        </script>
+        <script>
+          require([
+              "jquery",
+              'mage/template',
+              'Magento_Ui/js/modal/alert',
+              "mage/translate",
+              "jquery/file-uploader"
+          ], function ($, mageTemplate, alert) {
+
+              $('#wk-available-event-map-image').fileupload({
+                  dataType: 'json',
+                  dropZone: '[data-tab-panel=image-management]',
+                  sequentialUploads: true,
+                  acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                  maxFileSize: <?= /* @noEscape */ $helper->getFileSizeService()->getMaxFileSize() ?> ,
+                  add: function (e, data) {
+                      var progressTmpl = mageTemplate('#media_event_content_Uploader-template'),
+                          fileSize,
+                          tmpl;
+                    $("body").find(".image.event-img-role.item").remove();
+                      $.each(data.files, function (index, file) {
+                          fileSize = typeof file.size == "undefined" ?
+                              $.mage.__('We could not detect a size.') :
+                              byteConvert(file.size);
+
+                          data.fileId = Math.random().toString(33).substr(2, 18);
+
+                          tmpl = progressTmpl({
+                              data: {
+                                  name: file.name,
+                                  size: fileSize,
+                                  id: data.fileId
+                              }
+                          });
+
+                          $(tmpl).appendTo('.event-image-upload');
+                          $('#wk-available-event-map-image').removeClass("required");
+                            $('#wk-available-event-map-image').addClass("required");
+                      });
+
+                      $(this).fileupload('process', data).done(function () {
+                          data.submit();
+                      });
+                  },
+                  done: function (e, data) {
+                      if (data.result && !data.result.error) {
+                        $('#media_event_content').show();
+                          $('#media_event_content').trigger('addItem', data.result);
+                          $('#wk-available-event-map-image').removeClass("required");
+                      } else {
+                        $('#wk-available-event-map-image').removeClass("required");
+                        $('#wk-available-event-map-image').addClass("required");
+                          $('#' + data.fileId)
+                              .delay(2000)
+                              .hide('highlight');
+                          alert({
+                             content: $.mage.__('We don\'t recognize or support this file extension type.')
+                          });
+                      }
+                      $('#' + data.fileId).remove();
+                  },
+                  progress: function (e, data) {
+                      var progress = parseInt(data.loaded / data.total * 100, 10);
+                      var progressSelector = '#' + data.fileId + ' .progressbar-container .progressbar';
+                      $(progressSelector).css('width', progress + '%');
+                  },
+                  fail: function (e, data) {
+                    $('#wk-available-event-map-image').removeClass("required");
+                    $('#wk-available-event-map-image').addClass("required");
+                      var progressSelector = '#' + data.fileId;
+                      $(progressSelector).removeClass('upload-progress').addClass('upload-failure')
+                          .delay(2000)
+                          .hide('highlight')
+                          .remove();
+                  }
+              });
+              $('#wk-available-event-map-image').fileupload('option', {
+                  process: [{
+                      action: 'load',
+                      fileTypes: /^image\/(gif|jpeg|png)$/
+                  }, {
+                      action: 'resize',
+                      maxWidth: <?= /* @noEscape */  \Magento\Framework\File\Uploader::MAX_IMAGE_WIDTH ?> ,
+                      maxHeight: <?= /* @noEscape */ \Magento\Framework\File\Uploader::MAX_IMAGE_HEIGHT ?>
+                  }, {
+                      action: 'save'
+                  }]
+              });
+          });
+        </script>
+    </div>
+</div>
+
+<div class="field required" data-index="price_charged_per">
+    <label class="label" for="wk-price-charged-per">
+        <span>
+            <?= /* @noEscape */ __('Price Charged Per')?>
+        </span>
+    </label>
+    <div class="control">
+        <select class="select wk-select-wide required-select" name="product[price_charged_per]"
+                id="wk-price-charged-per">
+            <option data-title="<?= /* @noEscape */ __('Ticket')?>"
+                value="1" <?php if ($product['price_charged_per'] == 1) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Ticket')?>
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="field toggle-field" data-block="booking-product-custom-options">
+    <label class="label" for="wk-multiple-tickets">
+        <span>
+            <?= /* @noEscape */ __('Multiple Tickets')?>
+        </span>
+    </label>
+    <!-- <div class="control">
+        <div class="switch" data-role="switcher">
+            <input type="checkbox" class="switch-checkbox" id="wk-multiple-tickets" name="product[is_multiple_tickets]"
+                value="1" <?php //if ($product['is_multiple_tickets']) { ?>checked="checked"<?php //} ?>>
+        </div>
+    </div> -->
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-multiple-tickets" name="product[is_multiple_tickets]"
+                value="1" <?php if ($product['is_multiple_tickets']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-multiple-tickets">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="fieldset-wrapper" id="booking-product-custom-options-wrapper" >
+        <div class="fieldset-wrapper-content" id="booking-product-custom-options-content"
+            data-role="booking-product-custom-options-content">
+            <fieldset class="fieldset">
+                <div class="actions">
+                    <button id="add_new_defined_option" title="Add New Option" type="button"
+                        class="action-default scalable add" data-ui-id="admin-product-options-add-button">
+                        <span><?= /* @noEscape */ __('Add Ticket Type'); ?></span>
+                    </button>
+                </div>
+
+                <div id="product_options_container" class="sortable-wrapper">
+                    <div id="product_options_container_top"></div>
+                    <?= /* @noEscape */ $block->getOptionsBoxHtml() ?>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+    <script>
+        require(['jquery'], function($){
+            var priceType = $('#price_type');
+            var priceWarning = $('#dynamic-price-warning');
+            if (priceType && priceType.val() == 0 && priceWarning) {
+                priceWarning.show();
+                $('#add_new_defined_option').hide();
+            }
+        });
+    </script>
+    <?php
+        $data = [
+            'productType' => ''
+        ];
+        ?>
+    <script>
+        window.customOptions = <?= /* @noEscape */ \Zend_Json::encode($data); ?>;
+    </script>
+</div>
+
+<?php
+$jsData = [
+    'showMapLocation' => $product['show_map_loction'],
+    'eventChartAvailable' => $product['event_chart_available'],
+    'isMultipleTickets' => $product['is_multiple_tickets']
+];
+$encodedJsData = $viewModel->getJsonHelper()->jsonEncode($jsData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "mpeventbooking": <?= /* @noEscape */ $encodedJsData; ?>
+        }
+    }
+</script>

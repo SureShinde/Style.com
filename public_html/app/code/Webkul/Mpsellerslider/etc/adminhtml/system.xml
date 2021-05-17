@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="marketplace" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <resource>Webkul_Marketplace::config_marketplace</resource>
+            <!-- create group for fields in section -->
+            <group id="general_settings">
+                <!-- create a field to enable/disable Mp Seller Slider module -->
+                <field id="mpsellerslider_enable" translate="label comment" sortOrder="8" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Marketplace Seller Slider</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

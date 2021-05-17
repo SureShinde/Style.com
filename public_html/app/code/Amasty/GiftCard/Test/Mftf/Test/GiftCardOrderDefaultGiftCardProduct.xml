@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GiftCardOrderDefaultGiftCardProduct">
+        <annotations>
+            <features value="Gift Card Product"/>
+            <stories value="Order Gift Card Product"/>
+            <title value="Order Gift Card Product"/>
+            <description value="Order Gift Card Product. Check Product Data in Order on Storefront and Admin Part"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="GiftCard-31"/>
+            <group value="AmGiftCard"/>
+            <group value="AmGiftCardProduct"/>
+        </annotations>
+
+        <before>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCreateAndGenerateCodePoolActionGroup" stepKey="createAndGenerateCodePool"/>
+            <actionGroup ref="AdminCreateGiftCardProductActionGroup" stepKey="createGiftCardProductActionGroup">
+                <argument name="categoryName" value="$$simpleCategory.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGiftCardProduct">
+                <argument name="product" value="defaultGiftCardProduct"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCodePoolActionGroup" stepKey="deleteCodePool"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+        </after>
+
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--check gift card product data on checkout-->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
+            <argument name="productUrl" value="{{defaultGiftCardProduct.name}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddGiftCardProductToCartActionGroup" stepKey="addGiftCardProductToCart"/>
+        <actionGroup ref="StorefrontCheckCardCodeProductOnCheckoutActionGroup" stepKey="checkCardCodeProductOnCheckout"/>
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="createOrderAndGrabOrderNumber">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+        <!--check gift card product data on order page-->
+        <actionGroup ref="StorefrontCheckOrderWithCardCodeProductActionGroup" stepKey="checkOrderWithCardCodeProduct"/>
+        <actionGroup ref="AdminOpenOrderOnId" stepKey="openOrderOnId">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAndGrabOrderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckGiftCardProductDataInOrderActionGroup" stepKey="checkGiftCardProductData"/>
+    </test>
+</tests>

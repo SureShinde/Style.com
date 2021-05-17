@@ -1,0 +1,214 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+if ($product['ask_a_ques_enable']): ?>
+    <?php $paramData = $viewModel->getHttpRequest()->getParams();
+    $counter = 1;
+    $questionText = '';
+    if (isset($paramData['search_question'])) {
+        $questionText = $paramData['search_question'] != "" ? $paramData['search_question']:"";
+    }
+    ?>
+    
+    <div class="wk-bk-hotel-askquestion-container">
+        <?php if (count($block->getAllQuestions()) > 0): ?>
+            <div class="wk-bk-qna-wrapper">
+                <div class="wk-bk-ques-search">
+                    <form action="<?= /* @noEscape */ $block->getCurrentUrl();?>" 
+                        method="get" 
+                        name="wk_search_question" 
+                        id="wk_search_question">
+                        <span class="ques-search-icon"></span>
+                        <input type="text" name="search_question" 
+                            class="input-text" 
+                            placeholder="<?= /* @noEscape */ __("Search for question") ?>" 
+                            value="<?= /* @noEscape */ $questionText ?>" 
+                            id="search_question" />
+                        <a href="<?= /* @noEscape */ $block->getCurrentUrl()."#wk-bkhotel-ask-ques-wrapper" ?>">
+                            <button type="button" class="button primary action">
+                                <span>
+                                    <span>
+                                        <?= /* @noEscape */ __("Ask a Question") ?>
+                                    </span>
+                                </span>                            
+                            </button>
+                        </a>
+                    </form>
+                </div>
+                <div class="wk-bk-qna-list">
+                    <?php foreach ($block->getAllQuestions() as $question): ?>
+                        <div class="qna-content-wrapper">
+                            <div class="question">
+                                <label class="label">
+                                    <?= /* @noEscape */ __("Question : ") ?>
+                                </label>
+                                <div>
+                                    <?= /* @noEscape */ $block->escapeHtml($question->getQuestion()) ?>
+                                </div>
+                            </div>
+                            <?php $answersCollection = $block->getAnswersList($question->getId());
+                            
+                            $i = 1;
+                            $show = $i; ?>
+                            <?php if ($answersCollection->getSize()): ?>
+                                <div class="answers <?php if ($counter > 1) { ?> no-display <?php } ?>">
+                                    <label class="label">
+                                        <?= /* @noEscape */ __("Answer(s) : ") ?>
+                                    </label>
+                                    <div class="answers-list">
+                                        <?php foreach ($answersCollection as $answer): ?>
+                                            <div <?php if ($i > 2 || $counter > 1) { ?> 
+                                                class="hidden-answer" style="display:none" 
+                                            <?php } else { $show = $i; } ?>>
+                                                <p><?= /* @noEscape */ $block->escapeHtml($answer->getAnswer()) ?></p>
+                                                <span>
+                                                    <strong>
+                                                        <?= /* @noEscape */ $block->escapeHtml(
+                                                            $answer->getNickName()
+                                                        ) ?>
+                                                    </strong>
+                                                    <?= /* @noEscape */ __("answered on") ?>
+                                                    <strong>
+                                                        <?= /* @noEscape */ $block->escapeHtml(
+                                                            $answer->getCreatedAt()
+                                                        ) ?>
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                            <?php $i++; ?>
+                                        <?php endforeach; ?>
+                                        <?php if (($answersCollection->getSize() - $show) > 0): ?>
+                                            <?php
+                                            $text = __("%1 More answer(s)", ($answersCollection->getSize() - $show));
+                                            if ($counter > 1) {
+                                                $text = __("%1 answer(s)", ($answersCollection->getSize() - $show));
+                                            } ?>
+                                        <div class="more-answers">
+                                            <span>
+                                                <?= /* @noEscape */ $text ?>
+                                            </span>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="write-answer-container">
+                                <form id="ask-answer-form<?= /* @noEscape */ $i ?>" 
+                                    action="<?= /* @noEscape */ $viewModel->getSubmitAnswerUrl() ?>" 
+                                    method="post" 
+                                    data-mage-init='{"validation":{}}' 
+                                    data-role="ask-answer-form<?= /* @noEscape */ $i ?>" >
+                                    <fieldset class="fieldset">
+                                        <div class="field answer-field required">
+                                            <label class="label" for="customer_nick_name">
+                                                <span><?= /* @noEscape */ __("Nick Name") ?></span>
+                                            </label>
+                                            <div class="control">
+                                                <input type="text" name="customer_nick_name" 
+                                                    id="customer_nick_name<?= /* @noEscape */ $i ?>" 
+                                                    class="required-entry input-box" aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="field answer-field required">
+                                            <?= /* @noEscape */ $block->getBlockHtml('formkey')?>
+                                            <input type="hidden" name="question_id" 
+                                                value="<?= /* @noEscape */ $question->getId() ?>" />
+                                            <label class="label" for="user_answer">
+                                                <span><?= /* @noEscape */ __("Your Answer") ?></span>
+                                            </label>
+                                            <div class="control">
+                                                <textarea name="user_answer" 
+                                                    id="user_answer<?= /* @noEscape */ $i ?>" 
+                                                    class="required-entry input-box" 
+                                                    aria-required="true"></textarea>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="button primary action write-answer">
+                                            <span>
+                                                <span>
+                                                    <?= /* @noEscape */ __("Write an Answer") ?>
+                                                </span>
+                                            </span>                            
+                                        </button>
+                                    </fieldset>
+                                </form>
+                                <script type="text/x-magento-init">
+                                    {
+                                        "body": {
+                                            "hotelbooking": {}
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <?php $counter++; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php if ($block->getPagerHtml()): ?>
+                <div class="order-products-toolbar toolbar bottom"><?= /* @noEscape */ $block->getPagerHtml(); ?></div>
+            <?php endif ?>
+        <?php endif; ?>
+        <div class="wk-bk-ask-ques-wrapper" id ="wk-bkhotel-ask-ques-wrapper">
+            <form id="ask-question-form" 
+                action="<?= /* @noEscape */ $viewModel->getSubmitQuestionUrl() ?>" 
+                method="post" 
+                data-mage-init='{"validation":{}}' 
+                data-role="ask-question-form" >
+                <fieldset class="fieldset">
+                    <h3>
+                        <?= /* @noEscape */ __("Ask Community a Question") ?>
+                    </h3><br>
+                    <?= /* @noEscape */ $block->getBlockHtml('formkey')?>
+                    <input type="hidden" name="product_id" value="<?= /* @noEscape */ $product->getId() ?>" />
+                    <div class="field required">
+                        <label class="label" for="customer_nickname">
+                            <span><?= /* @noEscape */ __("Nickname") ?></span>
+                        </label>
+                        <div class="control">
+                            <input type="text" name="customer_nickname" 
+                                id="customer_nickname" 
+                                class="required-entry input-box" 
+                                aria-required="true" />
+                        </div>
+                    </div>
+                    <div class="field required" for="user_question">
+                        <label class="label"><span><?= /* @noEscape */ __("Question") ?></span></label>
+                        <div class="control">
+                            <textarea name="user_question" 
+                                id="user_question" 
+                                class="required-entry input-box" 
+                                aria-required="true"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" title="Save" class="button pay wk-mp-btn">
+                        <span>
+                            <span>
+                                <?= /* @noEscape */ __("Ask a Question") ?>
+                            </span>
+                        </span>                            
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>

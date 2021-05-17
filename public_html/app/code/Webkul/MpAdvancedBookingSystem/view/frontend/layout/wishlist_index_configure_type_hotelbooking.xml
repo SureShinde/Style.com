@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance dc" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpAdvancedBookingSystem::css/style.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/wishlist_style.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/styles-fontawesome.css"/>
+    </head>
+    <referenceBlock name="product.info.options.wrapper">
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Webkul_MpAdvancedBookingSystem::catalog/product/view/options/wrapper.phtml</argument>
+        </action>        
+    </referenceBlock>
+    <referenceBlock name="product.info.addtocart.additional">
+        <block class="Magento\Catalog\Block\Product\View" name="mainBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/booking/main.phtml">
+            <arguments>
+                <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+            </arguments>
+        </block>
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Webkul_MpAdvancedBookingSystem::catalog/product/view/addtocart.phtml</argument>
+        </action>
+    </referenceBlock>
+    <!-- <move element="product.info.addtocart" destination="product.info.main" after="-"/> -->
+    <referenceBlock name="mainBooking">
+        <block class="Magento\Catalog\Block\Product\View" name="hotelTypeBooking" template="Webkul_MpAdvancedBookingSystem::catalog/product/view/hotelbooking/default.phtml">
+            <arguments>
+                <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+            </arguments>
+        </block>
+    </referenceBlock>
+</page>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <!--create and generate Code Pool-->
+    <actionGroup name="AdminCreateCodePoolActionGroup">
+        <arguments>
+            <argument name="codePool" defaultValue="defaultCodePool"/>
+        </arguments>
+        <amOnPage url="{{AdminCodePoolGridPage.url}}" stepKey="openCodePoolGrid"/>
+        <waitForPageLoad stepKey="waitForCodePoolGridLoad"/>
+        <click selector="{{AdminCodePoolGridSection.AddCardCode}}" stepKey="clickAddNewCodePool"/>
+        <waitForPageLoad stepKey="waitForNewCodePoolPageLoad"/>
+        <fillField selector="{{AdminCodePoolSection.CodePoolName}}" userInput="{{codePool.codePoolName}}" stepKey="fillCodePoolName"/>
+        <click selector="{{AdminCodePoolSection.CodesSettingsTab}}" stepKey="openCodesSettingsTab"/>
+        <waitForElement selector="{{AdminCodePoolSection.CodesTemplate}}" stepKey="waitForCodesSettingsTabLoad"/>
+        <fillField selector="{{AdminCodePoolSection.CodesTemplate}}" userInput="{{codePool.codesTemplate}}" stepKey="fillCodesTemplate"/>
+        <click selector="{{AdminCodePoolSection.SaveAndContinueEdit}}" stepKey="saveCodePoolAndContinueEdit"/>
+        <waitForPageLoad stepKey="waitForCodePoolSave"/>
+        <grabFromCurrentUrl regex="~.*/admin/amgcard/codepool/edit/pool_id/(\d+)/.*~" stepKey="grabCodePoolIdFromUrl"/>
+        <setCookie userInput="setCodePoolIdInCookie" value="{$grabCodePoolIdFromUrl}" stepKey="setCodePoolIdInCookie"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateAndGenerateCodePoolActionGroup" extends="AdminCreateCodePoolActionGroup">
+        <click selector="{{AdminCodePoolSection.CodesSettingsTab}}" stepKey="openCodesSettingsTabAfterPoolSave"/>
+        <fillField selector="{{AdminCodePoolSection.CodesQtyToGenerate}}" userInput="{{codePool.codesQtyToGenerate}}" stepKey="fillCodesQtyToGenerate"/>
+        <click selector="{{AdminCodePoolSection.GenerateCodePool}}" stepKey="generateCodePool"/>
+        <waitForPageLoad stepKey="waitForGenerateCodePool"/>
+        <seeElement selector="{{AdminCodePoolSection.QtyRecordsFound(codePool.codesQtyToGenerate)}}" stepKey="qtyRecordsFound"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCreateAndGenerateCodePoolUsingCsvActionGroup" extends="AdminCreateCodePoolActionGroup">
+        <click selector="{{AdminCodePoolSection.CodesSettingsTab}}" stepKey="openCodesSettingsTabAfterPoolSave"/>
+        <attachFile userInput="{{codePool.csvFileName}}" selector="{{AdminCodePoolSection.CsvFile}}" stepKey="chooseCsvFile"/>
+        <waitForPageLoad stepKey="waitForCsvFileLoad"/>
+        <click selector="{{AdminCodePoolSection.GenerateCodePool}}" stepKey="generateCodePool"/>
+        <waitForPageLoad stepKey="waitForGenerateCodePool"/>
+        <seeElement selector="{{AdminCodePoolSection.QtyRecordsFound(codePool.codesQtyToGenerate)}}" stepKey="qtyRecordsFound"/>
+    </actionGroup>
+
+    <!--check code poll data on code pool page-->
+    <!--use after Code Pool page is opened-->
+    <actionGroup name="AdminFindCodeOnCodePoolPageActionGroup">
+        <arguments>
+            <argument name="code" type="string"/>
+            <argument name="qtyRecordsFound" defaultValue="qtyRecordFound.1_record"/>
+        </arguments>
+        <click selector="{{AdminCodePoolSection.CodesSettingsTab}}" stepKey="openCodesSettingsTab"/>
+        <waitForElement selector="{{AdminCodePoolSection.CodesTemplate}}" stepKey="waitForCodesSettingsTabLoad"/>
+        <conditionalClick selector="{{AdminCodePoolSection.ClearAllFilters}}"
+                          dependentSelector="{{AdminCodePoolSection.ActiveFilters}}"
+                          visible="true" stepKey="clearAllFilters"/>
+        <waitForPageLoad stepKey="waitForCLearFilterDataLoad"/>
+        <conditionalClick selector="{{AdminCodePoolSection.FiltersButton}}"
+                          dependentSelector="{{AdminCodePoolSection.ApplyFilter}}"
+                          visible="false" stepKey="openFilter"/>
+        <fillField selector="{{AdminCodePoolSection.CodeName}}" userInput="{{code}}" stepKey="fillCodeName"/>
+        <click selector="{{AdminCodePoolSection.ApplyFilter}}" stepKey="applyFilter"/>
+        <waitForPageLoad stepKey="waitForFilteredDataLoad"/>
+        <seeElement selector="{{AdminCodePoolSection.RecordsFoundMessage(qtyRecordsFound)}}" stepKey="seeCorrectQtyRecordsFound"/>
+    </actionGroup>
+
+    <!--use after code is find-->
+    <actionGroup name="AdminCheckCodeOnCodePoolPageActionGroup">
+        <arguments>
+            <argument name="code" type="string"/>
+            <argument name="codeStatus" defaultValue="codeStatus.is_used"/>
+        </arguments>
+        <see selector="{{AdminCodePoolSection.CodeCell(codeGridColumns.codeTemplate)}}" userInput="{{code}}" stepKey="seeCodeTitle"/>
+        <see selector="{{AdminCodePoolSection.CodeCell(codeGridColumns.codeStatus)}}" userInput="{{codeStatus}}" stepKey="seeCodeStatus"/>
+    </actionGroup>
+
+    <!--operations on Gift Card Code Pools grid-->
+    <actionGroup name="AdminFindCodePoolOnGridActionGroup">
+        <arguments>
+            <argument name="codePool" defaultValue="defaultCodePool.codePoolName"/>
+            <argument name="qtyRecordsFound" defaultValue="qtyRecordFound.1_record"/>
+        </arguments>
+        <amOnPage url="{{AdminCodePoolGridPage.url}}" stepKey="openCodePoolGrid"/>
+        <waitForPageLoad stepKey="waitForCodePoolGridLoad"/>
+        <conditionalClick selector="{{AdminCodePoolGridSection.ClearAllFilters}}"
+                          dependentSelector="{{AdminCodePoolGridSection.ActiveFilters}}"
+                          visible="true" stepKey="clearAllFilters"/>
+        <waitForPageLoad stepKey="waitForCLearFilterDataLoad"/>
+        <conditionalClick selector="{{AdminCodePoolGridSection.FiltersButton}}"
+                          dependentSelector="{{AdminCodePoolGridSection.ApplyFilter}}"
+                          visible="false" stepKey="openFilter"/>
+        <fillField selector="{{AdminCodePoolGridSection.GiftCodePoolTitle}}" userInput="{{codePool}}" stepKey="fillCodePoolName"/>
+        <click selector="{{AdminCodePoolGridSection.ApplyFilter}}" stepKey="applyFilter"/>
+        <waitForPageLoad stepKey="waitForFilteredDataLoad"/>
+        <seeElement selector="{{AdminCodePoolGridSection.RecordsFoundMessage(qtyRecordsFound)}}" stepKey="seeCorrectQtyRecordsFound"/>
+    </actionGroup>
+
+    <!--use after code pool is found-->
+    <actionGroup name="AdminDeleteCodePoolActionGroup" extends="AdminFindCodePoolOnGridActionGroup">
+        <checkOption selector="{{AdminCodePoolGridSection.FirstRowCheckbox}}" stepKey="checkCodePool"/>
+        <click selector="{{AdminCodePoolGridSection.MassActions}}" stepKey="clickMassActionsButton"/>
+        <click selector="{{AdminCodePoolGridSection.DeleteMassAction}}" stepKey="clickDeleteMassActionButton"/>
+        <waitForPageLoad stepKey="waitForAcceptDeleteCodePoolButton"/>
+        <click selector="{{AdminCodePoolGridSection.AcceptDeleteButton}}" stepKey="acceptDeleteCodePoolButton"/>
+        <waitForPageLoad stepKey="waitForDeleteCodePool"/>
+        <seeElement selector="{{AdminCodePoolGridSection.CodePoolSuccessfullyRemovedMessage(qtyRecordsFound)}}" stepKey="seePoolSuccessfullyRemovedMessage"/>
+    </actionGroup>
+
+    <!--use after code pool is found-->
+    <actionGroup name="AdminCheckCodePoolDataOnGridActionGroup">
+        <arguments>
+            <argument name="codePool" defaultValue="defaultCodePool"/>
+        </arguments>
+        <see selector="{{AdminCodePoolGridSection.CodePoolCell(codePoolGridColumns.codePoolTitle)}}"
+             userInput="{{codePool.codePoolName}}" stepKey="seeCodePoolTitle"/>
+        <see selector="{{AdminCodePoolGridSection.CodePoolCell(codePoolGridColumns.codePoolTemplate)}}"
+             userInput="{{codePool.codesTemplate}}" stepKey="seeCodePoolTemplate"/>
+        <see selector="{{AdminCodePoolGridSection.CodePoolCell(codePoolGridColumns.codeQty)}}"
+             userInput="{{codePool.codesQtyToGenerate}}" stepKey="seeCodeQty"/>
+        <see selector="{{AdminCodePoolGridSection.CodePoolCell(codePoolGridColumns.unusedCodes)}}"
+             userInput="{{codePool.unusedGiftCodes}}" stepKey="seeUnusedCodes"/>
+    </actionGroup>
+
+    <actionGroup name="AdminCheckCodePoolOnGridAfterOrderGiftProdActionGroup" extends="AdminCheckCodePoolDataOnGridActionGroup">
+        <see selector="{{AdminCodePoolGridSection.CodePoolCell(codePoolGridColumns.unusedCodes)}}"
+             userInput="{{codePool.unusedGiftCodesGiftProd}}" stepKey="seeUnusedCodes"/>
+    </actionGroup>
+
+    <!--use after code pool is found-->
+    <actionGroup name="AdminOpenCodePoolFromGridActionGroup">
+        <click selector="{{AdminCodePoolGridSection.FirstRowEditLink}}" stepKey="clickEditLink"/>
+        <waitForPageLoad stepKey="waitForCodePoolPageLoad"/>
+    </actionGroup>
+
+</actionGroups>

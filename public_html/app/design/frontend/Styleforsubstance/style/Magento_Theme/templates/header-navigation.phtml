@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ */
+$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+?>
+<div class="navigation-holder">
+  <div class="mobile-holder mobile-menu-top-block">
+    <a
+      class="logo"
+      href="<?= $block->escapeUrl($block->getUrl('')) ?>"
+      title="<?= $block->escapeHtmlAttr($storeName) ?>"
+      aria-label="store logo">
+      <img src="<?php echo $this->getViewFileUrl('images/logo.svg'); ?>"
+          title="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+          alt="<?= $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+      />
+    </a>
+    <button class="close-mobile-menu-button">Close menu</button>
+  </div>
+  <nav class="main-navigation">
+    <?php
+      echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('main_navigation')
+          ->toHtml();
+    ?>
+  </nav>
+  <div class="mobile-holder mobile-menu-bottom-block">
+    <div class="actions" data-bind="scope: 'customer'">
+      <a class="action" href="/customer/account/"><?= $block->escapeHtmlAttr(__('My Account')) ?></a>
+    </div>
+    <?php
+      echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('social-block')
+          ->toHtml();
+    ?>
+  </div>
+</div>
+
+<ul class="header links">
+  <li>
+      <a href="/customer/account/"><?= $block->escapeHtmlAttr(__('My Account')) ?></a>
+  </li>
+</ul>

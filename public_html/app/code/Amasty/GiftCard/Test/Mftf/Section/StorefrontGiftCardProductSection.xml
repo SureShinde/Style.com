@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="StorefrontGiftCardProductSection">
+        <element name="ProductImg" type="button" parameterized="true" selector="//*[@class='amcard-image-container']//img[contains(@data-id,'{{imgId}}')]" timeout="30"/>
+        <element name="SelectedProductImg" type="button" parameterized="true" selector="//*[@class='fotorama__stage__shaft']//img[contains(@src, '{{img}}')]"/>
+        <element name="RecipientName" type="input" selector="//input[@name='am_giftcard_recipient_name']"/>
+        <element name="RecipientEmail" type="input" selector="//*[@name='am_giftcard_recipient_email']"/>
+        <element name="PreviewGiftCard" type="input" selector="//*[@class='amcard-preview-container']/input"/>
+        <element name="OpenAmountPlaceholder" type="input" selector="//input[@class='amcard-field'][@placeholder='${{min}} - ${{max}}']" parameterized="true"/>
+        <element name="OpenAmountField" type="input" selector="//input[@class='amcard-field']"/>
+        <element name="AddOpenAmountValue" type="input" selector="//input[@class='amcard-field']//following::*[@class='amcard-button'][@value='Add']"/>
+    </section>
+</sections>

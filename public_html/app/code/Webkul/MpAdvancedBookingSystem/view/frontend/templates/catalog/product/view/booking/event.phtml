@@ -1,0 +1,424 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$customerHelper = $viewModel->getCustomerHelper();
+$priceHelper = $viewModel->getPricingHelper();
+$product = $block->getProduct();
+$currentTime = $helper->getCurrentTime();
+$fromDate = date('Y-m-d', strtotime($product['event_date_from']));
+$fromTime = date('H:i', strtotime($product['event_date_from']));
+
+if ((strtotime($fromDate) > strtotime(date('Y-m-d'))) ||
+    ((strtotime($fromDate) == strtotime(date('Y-m-d'))) && ($currentTime <= strtotime($fromTime)))
+) {
+    $eventOptions = $helper->getEventOptions($product);
+    if (!empty($eventOptions['event_ticket']['option_id'])) {
+        $productId = $product->getId();
+        $bookingInfo = $helper->getBookingInfo($productId);
+        $bookingSlotData = $helper->getJsonDecodedString($bookingInfo['info']);
+        $finalPrice = $product->getFinalPrice();
+        $productBasePrice = $priceHelper->currency($product->getFinalPrice(), true, false);
+        ?>
+        <style>
+            .product-add-form {
+                width: 100%;
+            }
+            .product-options-bottom {
+                padding: 0;
+                padding-bottom: 10px;
+            }
+        </style>
+        <div class="wk-bk-design" id="wk-bk-design-others-info" style="display:none;">
+            <div class="wk-bk-detail-container">
+                <div class="wk-bk-block wk-bk-padding-block">
+                    <div class="wk-bk-addr-title">
+                        <?= /* @noEscape */ __('Venue') ?>:
+                    </div>
+                    <div class="wk-bk-addr-right">
+                        <div>
+                            <?= /* @noEscape */ $product['location'] ?>
+                        </div>
+                        <?php if ($product['show_map_loction']) { ?>
+                            <div>
+                                <a href="//maps.google.com/maps?q=<?= /* @noEscape */ $product['location']?>" 
+                                    class="wk-bk-location-link" target="blank">
+                                    <?= /* @noEscape */ __('View on Map')?>
+                                </a>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php if (!$product['show_contact_button_to'] || $customerHelper->isCustomerLoggedIn()) { ?>
+                    <div class="wk-bk-block wk-bk-padding-block">
+                        <div class="wk-bk-contact-title">
+                            <?= /* @noEscape */ __('Contact Info') ?>:
+                        </div>
+                        <div class="wk-bk-addr-right">
+                            <a id="wk-bk-contact-us"><?= /* @noEscape */ __('Contact Us') ?></a>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="wk-bk-block wk-bk-padding-block">
+                    <div class="wk-bk-availability-title">
+                        <?= /* @noEscape */ __('Event On') ?>:
+                    </div>
+                    <?php
+                    $dateFrom =  date(
+                        'd F, Y',
+                        strtotime($product['event_date_from'])
+                    );
+                    $dateTo =  date(
+                        'd F, Y',
+                        strtotime($product['event_date_to'])
+                    );
+                    if (strtotime($dateFrom) === strtotime($dateTo)) {
+                        $timeFrom =  date(
+                            'h:i a - T',
+                            strtotime($product['event_date_from'])
+                        );
+                        $timeTo =  date(
+                            'h:i a - T',
+                            strtotime($product['event_date_to'])
+                        ); ?>
+                        <div>
+                            <div>
+                                <strong>
+                                <?= /* @noEscape */ date(
+                                    'd F, Y',
+                                    strtotime($product['event_date_from'])
+                                );
+                                ?>
+                                </strong>
+                            </div>
+                            <div>
+                                <?= /* @noEscape */ __('%1 to %2', $timeFrom, $timeTo)?>
+                            </div>
+                        </div>
+                        <?php
+                    } else { ?>
+                        <div>
+                            <strong>
+                                <?php
+                                $dateFrom =  date(
+                                    'd F, Y h:i a - T',
+                                    strtotime($product['event_date_from'])
+                                );
+                                $dateTo =  date(
+                                    'd F, Y h:i a - T',
+                                    strtotime($product['event_date_to'])
+                                );
+                                ?>
+                                <?= /* @noEscape */ __('%1 to %2', $dateFrom, $dateTo)?>
+                            </strong>
+                        </div>
+                        <?php
+                    } ?>
+                </div>
+                
+                <?php
+                if ($product['event_chart_available']) { ?>
+                    <div class="wk-bk-block wk-bk-padding-block">
+                        <div class="wk-bk-eventmap-title">
+                            <?= /* @noEscape */ __('Event Map') ?>:
+                        </div>
+                        <div>
+                            <div>
+                                <strong><?= /* @noEscape */ __('Available')?></strong>
+                            </div>
+                            <div>
+                                <a href="<?= /* @noEscape */ $helper->getMediaUrl().
+                                        'mpadvancedbookingsystem/eventChartImage/'.
+                                        $product['event_chart_image']?>" 
+                                    class="wk-bk-location-link" target="blank">
+                                    <?= /* @noEscape */ __('Show Event Map')?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                } ?>
+            </div>
+        </div>
+        
+        <?php
+        $optionId = $eventOptions['event_ticket']['option_id'];
+        $optionValues = $eventOptions['event_ticket']['option_values'];
+        if ($optionId && !empty($optionValues)) { ?>
+            <div class="wk-bk-design" id="wk-bk-form-info">
+                <div class="wk-bk-options-wrapper">
+                    <?php
+                    $optionConfig = $helper->getOptionValueJsonConfig();
+                    $eventOptionConfig = [];
+                    $optionValConfig = [];
+                    $priceRangeFrom = 0;
+                    $priceRangeTo = 0;
+                    $priceIndex = 1;
+                    $isProductInStock = 0;
+                    ?>
+                    <?php foreach ($optionValues as $key => $value) {
+                        $optValId = $value['option_type_id'];
+                        $customOptionPrice = $product->getPriceInfo()->getPrice(
+                            'custom_option_price'
+                        );
+                        $priceFormated = $block->getLayout()->getBlock(
+                            'product.price.render.default'
+                        )->renderAmount(
+                            $helper->getOptionPriceAmount(
+                                $customOptionPrice,
+                                $value['price']
+                            ),
+                            $customOptionPrice,
+                            $product
+                        );
+                        $priceByStore = $helper->currencyByStore(
+                            $value['price'],
+                            $product->getStore(),
+                            false
+                        );
+                        if ($priceIndex == 1) {
+                            $priceRangeFrom = $priceByStore;
+                            $priceRangeTo = $priceByStore;
+                        }
+                        if ($priceRangeFrom > $priceByStore) {
+                            $priceRangeFrom = $priceByStore;
+                        }
+                        if ($priceRangeTo < $priceByStore) {
+                            $priceRangeTo = $priceByStore;
+                        }
+                        $priceIndex++;
+                        ?>
+                        <?php
+                        $eventOptionConfig[$optionId.'_'.$optValId]['oldPrice'] =
+                            $optionConfig[$optionId][$optValId]['prices']['oldPrice']['amount'];
+                        $eventOptionConfig[$optionId.'_'.$optValId]['basePrice'] =
+                            $optionConfig[$optionId][$optValId]['prices']['basePrice']['amount'];
+                        $eventOptionConfig[$optionId.'_'.$optValId]['finalPrice'] =
+                            $optionConfig[$optionId][$optValId]['prices']['finalPrice']['amount'];
+                        ?>
+                        <div class="wk-bk-option" id="wk-bk-option<?= /* @noEscape */ $optionId?>">
+                            <div class="wk-bk-option-row">
+                                <div class="wk-bk-option-row-desc">
+                                    <div class="wk-bk-option-title">
+                                        <?= /* @noEscape */ $value['title']?>
+                                    </div>
+                                    <div class="wk-bk-option-details">
+                                        <div class="wk-bk-option-description">
+                                            <?= /* @noEscape */ $value['description']?>
+                                        </div>
+                                        <div class="wk-bk-option-price">
+                                            <?= /* @noEscape */ __('%1 Per Ticket', $priceFormated)?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wk-bk-option-row-qty">
+                                    <div class="wk-bk-option-qty-title">
+                                        <?= /* @noEscape */ __('Number of Tickets')?>
+                                    </div>
+                                    <?php if ($value['is_in_stock'] && $value['qty']) { ?>
+                                        <?php $isProductInStock = 1;?>
+                                        <div class="wk-bk-option-select-qty">
+                        <input
+                            name="booking_options[<?= /* @noEscape */ $optionId?>][<?= /* @noEscape */ $optValId?>]" 
+                            id="wk-bk-opt-val-<?= /* @noEscape */ $optionId?><?= /* @noEscape */ $optValId?>"
+                            data-option-id="<?= /* @noEscape */ $optionId?>" 
+                            data-option-val-id="<?= /* @noEscape */ $optValId?>" 
+                            class="wk-event-custom-option admin__control-text" type="number"
+                            price="<?= /* @noEscape */ $priceByStore?>"
+                            placeholder="<?= /* @noEscape */ __('Select Tickets')?>"
+                            value="" 
+                            data-validate='{"validate-digits":true}' />
+                                        </div>
+                                        <p class="err" style="color:red;"></p>
+                                        <?php
+                                    } else { ?>
+                                        <span style="color:red;text-align: left;width: 100%;display: inline-block;">
+                                            <?= /* @noEscape */ __('Out of Stock')?>
+                                        </span>
+                                        <?php
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    } ?>
+                    <?php
+                    $dateFrom =  date(
+                        'd F, Y h:i a - T',
+                        strtotime($product['event_date_from'])
+                    );
+                    $dateTo =  date(
+                        'd F, Y h:i a - T',
+                        strtotime($product['event_date_to'])
+                    );
+                    if (!empty($eventOptions['event_from']['option_id'])) {
+                        $dateFromOptionId = $eventOptions['event_from']['option_id']; ?>
+                        <input type="hidden" name="options[<?= /* @noEscape */ $dateFromOptionId?>]" 
+                            value="<?= /* @noEscape */ $dateFrom?>"/>
+                        <?php
+                    }
+                    if (!empty($eventOptions['event_to']['option_id'])) {
+                        $dateToOptionId = $eventOptions['event_to']['option_id']; ?>
+                        <input type="hidden" name="options[<?= /* @noEscape */ $dateToOptionId?>]" 
+                            value="<?= /* @noEscape */ $dateTo?>"/>
+                    <?php } ?>
+                    <?php if ($product->isSaleable() && $isProductInStock):
+                        $finalPrice = $product->getFinalPrice();
+                        ?>
+                        <div class="wk-bk-event-tocart-container">
+                            <div class="wk-bk-event-total-container">
+                                <div class="wk-bk-event-tocart-total">
+                                    <?= /* @noEscape */ __('Total Tickets')?> - <span id="wk-bk-event-total-qty"></span>
+                                </div>
+                                <div>
+                                    <div class="wk-bk-event-tocart-total">
+                                        <span class="price-container price-final_price tax weee">
+                                            <?= /* @noEscape */ __('Base Price')?> - 
+                                            <span class="price-wrapper">
+                                                <span class="price">
+                                                    <?= /* @noEscape */ $priceHelper->currency(
+                                                        $product->getFinalPrice(),
+                                                        true,
+                                                        false
+                                                    ); ?>
+                                                </span>
+                                            </span>
+                                            <span class="wk-bk-event-tocart-base-price">
+                                                (<?= /* @noEscape */
+                                                __('This will be apply to each type of ticket for each quantity.'); ?>)
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="wk-bk-event-tocart-total" 
+                                        data-product-id="<?= /* @noEscape */ $productId?>">
+                                        <span class="price-container price-final_price tax weee">
+                                            <?= /* @noEscape */ __('Total Price')?> - 
+                                            <span id="product-total-price-<?= /* @noEscape */ $productId?>" 
+                                                data-price-type="finalPrice" class="price-wrapper ">
+                                                <span class="price">
+                                                    <?= /* @noEscape */ $priceHelper->currency(
+                                                        $product->getFinalPrice(),
+                                                        true,
+                                                        false
+                                                    );?>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-tocart">
+                                <div class="fieldset">
+                                    <div class="actions">
+                                        <button id="wk-book-now"
+                                            type="submit"
+                                            title="<?= /* @noEscape */ __('Buy Tickets'); ?>"
+                                            class="wk-book-now action primary tocart">
+                                            <span><?= /* @noEscape */ __('Buy Tickets'); ?></span>
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-social-links" style="display:block;text-align: right;">
+                            <div class="product-addto-links">
+                                <?= $block->getChildHtml('view.addto.wishlist.event', true) ?>
+                                <?= $block->getChildHtml('view.addto.compare.event', true) ?>
+                                <?= $block->getChildHtml('product.info.mailto.event', true) ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <script type="text/x-magento-init">
+                    {
+                        "#product_addtocart_form": {
+                            "eventBookingPriceOptions": {
+                                "optionId": <?= /* @noEscape */ $optionId?>,
+                                "optionConfig": <?= /* @noEscape */ $helper->getJsonEcodedString($optionConfig)?>,
+                                "eventOptionConfig": 
+                                    <?= /* @noEscape */ $helper->getJsonEcodedString($eventOptionConfig)?>,
+                                "controlContainer": ".field",
+                                "productId": "<?= /* @noEscape */ $productId?>",
+                                "productBasePrice": "<?= /* @noEscape */ $productBasePrice?>",
+                                "priceRangeFrom": "<?= /* @noEscape */ $priceRangeFrom?>",
+                                "priceRangeTo": "<?= /* @noEscape */ $priceRangeTo?>",
+                                "priceRangeText": "<?= /* @noEscape */ __('Charged Per Ticket')?>",
+                                "priceHolderSelector": 
+                                    "[data-product-id='<?= /* @noEscape */ $productId?>'][data-role=priceBox]"
+                            }
+                        }
+                    }
+                </script>
+            </div>
+            <?php
+        } ?>
+        <script>
+            require([
+                "jquery"
+            ], function($) {
+                $('body').trigger('contentUpdated');
+                $(document).ready(function() {
+                    $('#wk-bk-design-others-info').insertAfter('.product-info-price');
+                    $('#wk-bk-design-others-info').show();
+                });
+
+                var optionId  = "<?= /* @noEscape */ $optionId ?>";
+                var optionVal = "<?= /* @noEscape */ $optValId ?>";
+                
+                $("#wk-book-now").click(function(event){
+                    event.preventDefault();
+                    var ctr = 0;
+                    $('.wk-event-custom-option').each(function () {
+                            var cOptionId = $(this).attr('data-option-id');
+                            var cOptionValue = $(this).attr('data-option-val-id');
+                            var selector = '#wk-bk-opt-val-'+cOptionId+cOptionValue;
+                            if($(selector).val() && $(selector).val() >= 1) {
+                                    ctr++;   
+                            }
+                    });
+                    if(!ctr) {
+                     $('.err').show();   
+                     $('.err').text("Please enter a valid number in this field");
+                    } else{
+                     $('#product_addtocart_form').submit();
+                     $('.err').hide();
+                    }
+                }); 
+            });    
+        </script>
+        <script type="text/x-magento-init">
+            {
+                "#product_addtocart_form": {
+                    "Webkul_MpAdvancedBookingSystem/js/event/validate-product": {}
+                }
+            }
+        </script>
+        <?php
+    }
+} else { ?>
+    <div class="wk-bk-design">
+        <div class="wk-bk-addr-title event-expired">
+            <?= /* @noEscape */ __('Event has been Expired') ?>
+        </div>
+    </div>
+    <?php
+} ?>

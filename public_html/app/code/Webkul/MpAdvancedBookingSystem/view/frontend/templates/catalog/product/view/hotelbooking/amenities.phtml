@@ -1,0 +1,44 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$product = $block->getProduct();
+$productId = $product->getId();
+if ($product['amenities'] && $product['amenities']!==""):
+    $amenities = explode(",", $product['amenities']);
+    $allAmenities = $helper->getProductAttribute('amenities')->getOptions(); ?>
+    <div class="amenities-wrapper">
+    <?php foreach ($allAmenities as $option): ?>
+        <?php if (in_array($option->getValue(), $amenities)): ?>
+            <?php $imageSrc = $helper->readDirectory($productId, $option->getValue()); ?>
+            <div class="amenity-container">
+                <?php if ($imageSrc): ?>
+                    <img src="<?= /* @noEscape */ $imageSrc ?>" 
+                        height="50" width="50" 
+                        alt="<?= /* @noEscape */ $option->getLabel() ?>" 
+                        class="rand-img custom-view-img" />
+                <?php else: ?>
+                    <span class="amenity-icon"></span>
+                <?php endif; ?>
+                <span><?= /* @noEscape */ $option->getLabel() ?></span>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,77 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/*get Images Collection, seller id, seller settings of a seller on Seller Profile page for slider*/
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$partner = $block->getImagesCollection();
+$mediaUrl = $block->getMediaUrl();
+/*Set slider settings*/
+if ($partner!==false && isset($partner['images']) && count($partner['images'])>0) {
+    $userid = $partner['seller_id'];
+    if (count($partner['settings'])==0) {
+        $height = 320;
+        $width = 620;
+        $animationSpeed = 3000;
+        $animationDuration = 500;
+        $sliderBGColor = '#F89327';
+    } else {
+        $height = $partner['settings'][1];
+        $width = $partner['settings'][0];
+        $animationSpeed = $partner['settings'][2];
+        $animationDuration = $partner['settings'][3];
+        $sliderBGColor = $partner['settings'][4];
+    } ?>
+    <div class="wk-mp-seller-slider-wrapper"
+        <?php if ($sliderBGColor): ?>
+            style="background-color:<?= /* @noEscape */   $sliderBGColor ?>"
+        <?php endif; ?>>
+        <div id="banner-slide">
+            <ul class="bjqs">
+            <?php
+            foreach ($partner['images'] as $_image) {
+                if (is_array($_image) && isset($_image['image'])) {
+                    $tempImage = $_image['image'];
+                    $tempUrl = $_image['url'];
+                } else {
+                    $tempImage = $_image;
+                    $tempUrl = '#';
+                }
+                $imageCheck = $helper->validateImage($userid, $tempImage);
+                if ($imageCheck) { ?>
+                <li>
+                    <a href="<?= /* @noEscape */   $tempUrl ?>">
+                        <img src="<?= /* @noEscape */   $mediaUrl.'avatar/'.$userid.'/'.$tempImage; ?>">
+                    </a>
+                </li>
+                    <?php
+                }
+            }
+            ?>
+            </ul>
+        </div>
+    </div>
+    <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:300'
+            rel='stylesheet'
+            type='text/css'>
+    <script type="text/x-magento-init">
+    {
+        "#banner-slide": {
+            "manageSlider": {
+                "sliderHeight":<?= /* @noEscape */   $height; ?>,
+                "sliderWidth":<?= /* @noEscape */   $width; ?>,
+                "animduration":<?= /* @noEscape */   $animationDuration; ?>,
+                "animspeed":<?= /* @noEscape */  $animationSpeed; ?>
+            }
+        }
+    }
+</script>
+<?php } ?>

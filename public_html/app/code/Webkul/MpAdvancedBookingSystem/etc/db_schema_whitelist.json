@@ -1,0 +1,114 @@
+{
+    "wk_mp_booking_booked": {
+        "column": {
+            "id": true,
+            "order_id": true,
+            "order_item_id": true,
+            "item_id": true,
+            "qty": true,
+            "product_id": true,
+            "slot_id": true,
+            "parent_slot_id": true,
+            "customer_id": true,
+            "customer_email": true,
+            "booking_from": true,
+            "booking_too": true,
+            "time": true,
+            "slot_day_index": true,
+            "slot_date": true,
+            "slot_time": true,
+            "rent_type": true,
+            "child_product_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_mp_booking_info": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "start_date": true,
+            "end_date": true,
+            "info": true,
+            "qty": true,
+            "type": true,
+            "total_slots": true,
+            "attribute_set_id": true,
+            "available_qty": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_mp_booking_slot": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "type": true,
+            "info": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_mp_quote_item": {
+        "column": {
+            "id": true,
+            "item_id": true,
+            "slot_id": true,
+            "parent_slot_id": true,
+            "product_id": true,
+            "quote_id": true,
+            "slot_day_index": true,
+            "slot_date": true,
+            "slot_time": true,
+            "to_slot_date": true,
+            "to_slot_time": true,
+            "rent_type": true,
+            "qty": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "WK_MP_QUOTE_ITEM_ITEM_ID_QUOTE_ITEM_ITEM_ID": true
+        }
+    },
+    "catalog_product_option_type_value": {
+        "column": {
+            "qty": true,
+            "is_in_stock": true,
+            "description": true
+        }
+    },
+    "wk_mp_hotelbooking_question": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "product_id": true,
+            "status": true,
+            "nick_name": true,
+            "question": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "wk_mp_hotelbooking_answer": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "question_id": true,
+            "status": true,
+            "nick_name": true,
+            "answer": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

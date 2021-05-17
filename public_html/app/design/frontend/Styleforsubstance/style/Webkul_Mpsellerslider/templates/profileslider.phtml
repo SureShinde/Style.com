@@ -1,0 +1,66 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/*get Images Collection, seller id, seller settings of a seller on Seller Profile page for slider*/
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$partner = $block->getImagesCollection();
+$mediaUrl = $block->getMediaUrl();
+/*Set slider settings*/
+if ($partner!==false && isset($partner['images']) && count($partner['images'])>0) {
+    $userid = $partner['seller_id'];
+    if (count($partner['settings'])==0) {
+        $height = 320;
+        $width = 620;
+        $animationSpeed = 3000;
+        $animationDuration = 500;
+        $sliderBGColor = '#F89327';
+    } else {
+        $height = $partner['settings'][1];
+        $width = $partner['settings'][0];
+        $animationSpeed = $partner['settings'][2];
+        $animationDuration = $partner['settings'][3];
+        $sliderBGColor = $partner['settings'][4];
+    } ?>
+    <div class="wk-mp-profile-works-holder wk-mp-profile-block">
+        <div class="wk-mp-collection-container">
+            <h3 class="wk-mp-description-block-title">
+                <?= $escaper->escapeHtml(__("My Work"))?>
+            </h3>
+        </div>
+        <div class="wk-mp-profile-works-slideshow">
+            <?php
+            foreach ($partner['images'] as $_image) {
+                if (is_array($_image) && isset($_image['image'])) {
+                    $tempImage = $_image['image'];
+                    $tempUrl = $_image['url'];
+                } else {
+                    $tempImage = $_image;
+                    $tempUrl = '#';
+                }
+                $imageCheck = $helper->validateImage($userid, $tempImage);
+                if ($imageCheck) { ?>
+                <div class="wk-mp-profile-works-slide">
+                    <div class="wk-mp-profile-works-slide-image">
+                            <img src="<?= /* @noEscape */   $mediaUrl.'avatar/'.$userid.'/'.$tempImage; ?>">
+
+                    </div>
+                    <span style="text-decoration: underline;"><?= /* @noEscape */   $tempUrl ?></span>
+                </div>
+                    <?php
+                }
+            }
+            ?>
+
+        </div>
+    </div>
+
+<?php } ?>

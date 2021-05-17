@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_MpAdvancedBookingSystem::mpadvancedbookingsystem" title="Advanced Bookings System" module="Webkul_MpAdvancedBookingSystem" sortOrder="10" resource="Webkul_MpAdvancedBookingSystem::mpadvancedbookingsystem" parent="Webkul_Marketplace::marketplace"/>
+        <add id="Webkul_MpAdvancedBookingSystem::bookings" title="View Bookings Orders" module="Webkul_MpAdvancedBookingSystem" sortOrder="1" parent="Webkul_MpAdvancedBookingSystem::mpadvancedbookingsystem" action="mpadvancebooking/bookings" resource="Webkul_MpAdvancedBookingSystem::bookings"/>
+        <add id="Webkul_MpAdvancedBookingSystem::bookings_products" title="View Bookings Products" module="Webkul_MpAdvancedBookingSystem" sortOrder="2" parent="Webkul_MpAdvancedBookingSystem::mpadvancedbookingsystem" action="mpadvancebooking/bookings/products" resource="Webkul_MpAdvancedBookingSystem::bookings_products"/>
+        <add id="Webkul_MpAdvancedBookingSystem::bookings_questions" title="View Questions" module="Webkul_MpAdvancedBookingSystem" sortOrder="3" parent="Webkul_MpAdvancedBookingSystem::mpadvancedbookingsystem" action="mpadvancebooking/hotelbooking/questions" resource="Webkul_MpAdvancedBookingSystem::bookings_questions"/>
+    </menu>
+</config>

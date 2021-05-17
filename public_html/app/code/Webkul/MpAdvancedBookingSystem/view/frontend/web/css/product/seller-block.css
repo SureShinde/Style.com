@@ -1,0 +1,26 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+.wk-bk-soldby-title {
+    color: #989696;
+    font-weight: 700;
+}
+.wk-bk-soldby-title:before {
+    content: '\f0c0';
+    font-family: 'font-awesome';
+    position: absolute;
+    left: 0px;
+    margin-top: -3px;
+    font-size: 16px;
+    font-weight: 100;
+}
+.wk-bk-block.wk-bk-padding-block .wk-seller-rating {
+    top: auto;
+    margin-left: -15%;
+}

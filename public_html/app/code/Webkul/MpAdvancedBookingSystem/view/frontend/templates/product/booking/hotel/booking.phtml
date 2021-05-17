@@ -1,0 +1,123 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$params = $block->getRequest()->getParams();
+if (!empty($params['id'])) {
+    $product = $block->getProduct($params['id']);
+} else {
+    $product['show_map_loction'] = 1;
+    $product['show_nearby_map'] = 1;
+    $product['price_charged_per_hotel'] = 1;
+    $product['ask_a_ques_enable'] = 1;
+    $product['check_in_time'] = '';
+    $product['check_out_time'] = '';
+}
+?>
+<div class="field">
+    <label class="label"><?= /* @noEscape */ __('Booking Information') ?>:</label>
+    <div class="wk-border"></div>
+</div>
+<div class="field toggle-field">
+    <label class="label" for="wk-show-nearby-map">
+        <span>
+            <?= /* @noEscape */ __('Show Nearby Map')?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-show-nearby-map" name="product[show_nearby_map]"
+                value="1" <?php if ($product['show_nearby_map']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-show-nearby-map">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="field required" data-index="price_charged_per_hotel">
+    <label class="label" for="wk-price-charged-per">
+        <span>
+            <?= /* @noEscape */ __('Price Charged Per')?>
+        </span>
+    </label>
+    <div class="control">
+        <select class="select wk-select-wide required-select" name="product[price_charged_per_hotel]"
+                id="wk-price-charged-per">
+            <option data-title="<?= /* @noEscape */ __('Night')?>"
+                    value="1" <?php if ($product['price_charged_per_hotel'] == 1) {?> selected="selected" <?php } ?>>
+                <?= /* @noEscape */ __('Night')?>
+            </option>
+        </select>
+    </div>
+</div>
+<div class="field toggle-field">
+    <label class="label" for="wk-ask-ques-enable">
+        <span>
+            <?= /* @noEscape */ __('Enable Ask a Question')?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                id="wk-ask-ques-enable" name="product[ask_a_ques_enable]"
+                value="1" <?php if ($product['ask_a_ques_enable']==1) { ?> checked="checked" <?php } ?>>
+            <label class="admin__actions-switch-label" for="wk-ask-ques-enable">
+                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="field-check-in wk-booking-slot-block field">
+    <label class="label" for="wk-booking-check_in_time">
+        <span>
+            <?= /* @noEscape */ __('Check In') ?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text wk-booking-slot-picker" type="text"
+            name="product[check_in_time]" id="wk-booking-check_in_time"
+            value="<?= /* @noEscape */ $product['check_in_time'] ?>" readonly>
+    </div>
+</div>
+<div class="field-check-out wk-booking-slot-block field">
+    <label class="label" for="wk-booking-check_out_time">
+        <span>
+            <?= /* @noEscape */ __('Check Out') ?>
+        </span>
+    </label>
+    <div class="control">
+        <input class="input-text wk-booking-slot-picker" type="text"
+            name="product[check_out_time]" id="wk-booking-check_out_time"
+            value="<?= /* @noEscape */ $product['check_out_time'] ?>" readonly>
+    </div>
+</div>
+<?php
+$jsData = [
+    'showMapLocation' => $product['show_map_loction'],
+    'showNearbyMap' => $product['show_nearby_map'],
+    'askQuesEnable' => $product['ask_a_ques_enable']
+];
+$encodedJsData = $viewModel->getJsonHelper()->jsonEncode($jsData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "mphotelbooking": <?= /* @noEscape */ $encodedJsData; ?>
+        }
+    }
+</script>

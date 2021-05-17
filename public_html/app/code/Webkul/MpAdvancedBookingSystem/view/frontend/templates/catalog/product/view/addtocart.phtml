@@ -1,0 +1,79 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$_product = $block->getProduct();
+$buttonTitle = __('Book Now');
+$productType = $_product->getTypeId();
+$productSetId = $_product->getAttributeSetId();
+$helper = $viewModel->getHelper();
+$appointmentType = $helper->getProductAttributeSetIdByLabel('Appointment Booking');
+$eventType = $helper->getProductAttributeSetIdByLabel('Event Booking');
+$rentType = $helper->getProductAttributeSetIdByLabel('Rental Booking');
+$hotelType = $helper->getProductAttributeSetIdByLabel('Hotel Booking');
+$tableType = $helper->getProductAttributeSetIdByLabel('Table Booking');
+$buttonType = 'button';
+if ($productSetId == $appointmentType || $productSetId == $hotelType || $productSetId == $tableType) {
+    $buttonType = 'submit';
+}
+$shortDescChild = false;
+$blockArray = ['view.addto.wishlist.default','view.addto.compare.default','product.info.mailto.default'];
+?>
+<?php if ($productType == "booking"): ?>
+    <?php foreach ($block->getChildNames() as $childName) {
+        if (!in_array($childName, $blockArray)) { ?>
+            <?= /* @noEscape */ $block->getChildHtml($childName, true);
+        }
+    } ?>
+<?php elseif ($productType == "hotelbooking" && !empty($block->getChildNames())): ?>
+    <?php $blockArray[] = 'product.info.overview'; ?>
+    <?php foreach ($block->getChildNames() as $childName) {
+        if (!in_array($childName, $blockArray)) { ?>
+            <?= /* @noEscape */ $block->getChildHtml($childName, true); ?>
+        <?php } else {
+            $shortDescChild = true;
+        }
+    } ?>
+<?php endif; ?>
+<?php if ($_product->isSaleable() && $productSetId != $eventType && $productSetId != $rentType): ?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <div class="actions">
+            <button id="wk-book-now"
+                type="<?= /* @noEscape */ $buttonType?>"
+                title="<?= /* @noEscape */ $buttonTitle ?>"
+                class="wk-book-now action primary tocart">
+                <span><?= /* @noEscape */ $buttonTitle ?></span>
+            </button>
+            <?php if ($productType != "booking" && $productType != "hotelbooking"): ?>
+                <?= /* @noEscape */ $block->getChildHtml('', true) ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<div class="product-social-links" style="display:block;">
+    <div class="product-addto-links">
+        <?= /** @noEscape */ $block->getChildHtml('view.addto.wishlist.default', true) ?>
+        <?= /** @noEscape */ $block->getChildHtml('view.addto.compare.default', true) ?>
+        <?= /** @noEscape */ $block->getChildHtml('product.info.mailto.default', true) ?>
+    </div>
+</div>
+<?php endif; ?>
+<?php if ($productType == "hotelbooking" && $shortDescChild) {
+    echo $block->getChildHtml("product.info.overview", true);
+} ?>

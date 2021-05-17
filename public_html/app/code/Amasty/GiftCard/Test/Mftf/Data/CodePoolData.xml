@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <!--default code pool data-->
+    <entity name="defaultCodePool" type="codePool">
+        <data key="codePoolName" unique="suffix">Default Code Pool-</data>
+        <data key="codesTemplate">defaultCodePool_{L}{L}{D}{D}{D}</data>
+        <data key="codesQtyToGenerate">10</data>
+        <data key="unusedGiftCodes">10</data>
+        <data key="unusedGiftCodesGiftProd">9</data>
+        <data key="csvFileName">codePool.csv</data>
+    </entity>
+
+    <entity name="codePoolQtyUsedCode_1" type="codePool" extends="defaultCodePool">
+        <data key="unusedGiftCodes">9</data>
+    </entity>
+
+    <!--code pool grid columns-->
+    <entity name="codePoolGridColumns" type="codePoolGridColumn">
+        <data key="codePoolTitle">Gift Code Pool Title</data>
+        <data key="codePoolTemplate">Code Pool Template</data>
+        <data key="codeQty">Gift Code Qty</data>
+        <data key="unusedCodes">Unused Gift Codes</data>
+    </entity>
+
+    <!--code grid columns on code pool page-->
+    <entity name="codeGridColumns" type="codeGridColumn">
+        <data key="codeTemplate">Code</data>
+        <data key="codeStatus">Status</data>
+        <data key="codeAction">Action</data>
+    </entity>
+
+    <entity name="codeStatus" type="codeStatus">
+        <data key="is_used">Used</data>
+        <data key="is_available">Available</data>
+    </entity>
+</entities>

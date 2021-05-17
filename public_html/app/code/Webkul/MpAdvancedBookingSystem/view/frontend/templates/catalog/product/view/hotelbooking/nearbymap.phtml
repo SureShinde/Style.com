@@ -1,0 +1,85 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$product = $block->getProduct();
+$address = $helper->getHotelAddress($product);
+$googleApiKey = $helper->getConfigValue("api_key");
+$googleMapPlacesApi = "https://maps.googleapis.com/maps/api/js?key=".$googleApiKey."&libraries=places";
+$googleMapApi = "https://maps.googleapis.com/maps/api/geocode/json?address=".$address."&key=".$googleApiKey;
+$googleDistanceApi = "https://maps.googleapis.com/maps/api/distancematrix/json";
+$googleEmbededApi = "https://www.google.com/maps/embed/v1/place?key=".$googleApiKey."&q=".$address;
+$distanceController = $block->getUrl("mpadvancebooking/hotelbooking/distance");
+if ($product['show_nearby_map'] && $googleApiKey): ?>
+    <div class="wk-bk-nearbymap-container">
+        <div class="map-head">
+            <h3><?= /* @noEscape */ __("Search Nearby") ?></h3>
+        </div>
+        <div class="map-wrapper">
+            <div class="search-nearby-area">
+                <div class="gmap-icon">
+                    <span><?= /* @noEscape */ __("Google Map Icon") ?></span>
+                </div>
+                <div class="input-area">
+                    <input type="text" name="search-keyword" 
+                        class="input-text" 
+                        placeholder="<?= /* @noEscape */ __("Search nearby locations") ?>" />
+                </div>
+            </div>
+            <div class="search-nearby-result">
+            </div>
+            <div id="search-nearby-map">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  frameborder="0" style="border:0"
+                  src="<?= /* @noEscape */ $googleEmbededApi ?>" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <?php $jsData = [
+        "product_type"=> "hotelbooking",
+        "google_map_api" => $googleMapApi,
+        "google_distance_api" => $googleDistanceApi,
+        "google_api_key" => $googleApiKey,
+        'distance_url' => $distanceController
+    ];
+    $encodedJsData = $viewModel->getJsonEncoded($jsData);
+?>
+    <script src="<?= /* @noEscape */ $googleMapPlacesApi ?>" async defer></script>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "nearby": <?= /* @noEscape */ $encodedJsData; ?>
+            }
+        }
+    </script>
+    <script id="search-nearby-result-template" type="text/x-magento-template">
+        <div class="nearby-places">
+            <div class="place-name">
+                <span><%- data.name %></span>
+            </div>
+            <div class="place-detail">
+                <span><%- data.distance %></span>
+                <span class="remove">x</span>
+            </div>
+        </div>
+    </script>
+<?php endif; ?>

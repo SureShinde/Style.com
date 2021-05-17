@@ -1,0 +1,77 @@
+<div class="admin__field-complex" visible="element.addButton || (!!element.getRecordCount() && (element.pages() > 1))">
+    <div class="admin__field-complex-elements" attr="{'colspan': element.getColumnsCount()}"
+        visible="element.addButton || pages() > 1">
+        <button id="wk-bk-add-new-ticket" if="element.addButton"
+                attr="{disabled: disabled, 'data-action': 'add_new_row'}"
+                type="button"
+                click="processingAddChild.bind($data, false, false, false)" visible="btnIsVisible">
+            <span translate="addButtonLabel"/>
+        </button>
+    </div>
+</div>
+<div class="admin__field" visible="visible" disable="disabled" css="element.setClasses(element)">
+    <div class="admin__field-control" data-role="grid-wrapper" attr="'data-index': index">
+        <div class="admin__control-table-wrapper">
+            <div data-role="spinner"
+                 class="admin__data-grid-loading-mask"
+                 if="$data.showSpinner">
+                <div class="spinner">
+                    <span repeat="8"/>
+                </div>
+            </div>
+            <table class="wk-bk-dynamic-rows admin__dynamic-rows admin__control-collapsible" data-role="grid" attr="{'data-index': index}">
+               
+                <tbody>
+                    <tr class="wk-bk-data-row data-row" repeat="foreach: elems, item: '$record'">
+                        <td class="admin__collapsible-block-wrapper _show _no-header">
+                            <div class="fieldset-wrapper admin__collapsible-block-wrapper"
+                            collapsible="openClass: '_show', closeOnOuter: false, opened: true">
+                                <div class="fieldset-wrapper-title">                                
+                                    <div class="admin__collapsible-title" data-role="collapsible-title" click="elems.toggleOpened">
+                                        <span if="dndConfig.enabled"
+                                            template="name: dndConfig.template, data: dnd"/>
+                                        <span translate="addRowLabel"/>
+                                    </div>
+                                </div>
+                                <div class="admin__fieldset-wrapper-content admin__collapsible-content _show" data-role="collapsible-content">
+                                    <div class="fieldset-wrapper admin__collapsible-block-wrapper _no-header _show" data-level="0" data-index="container_option">
+                                        <div class="admin__fieldset-wrapper-content admin__collapsible-content _show">
+                                            <fieldset class="admin__fieldset">
+                                                <fieldset class="admin__field wk-bk-fieldset">
+                                                    <!-- ko foreach: { data: $record().elems(), as: 'elem'}  -->
+                                                    <render if="elem.template"
+                                                        css="$parent.setClasses(elem)"
+                                                        visible="elem.visible"
+                                                        disable="elem.disabled"
+                                                        template="elem.template"/>  
+                                                    <!-- /ko -->
+                                                </fieldset>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </td>                
+                    </tr>
+                </tbody>
+
+                <tfoot visible="element.addButton || (!!element.getRecordCount() && (element.pages() > 1))">
+                    <tr>
+                        <td attr="{'colspan': element.getColumnsCount()}"
+                            visible="element.addButton || pages() > 1">
+                            <div class="admin__control-table-pagination" visible="!!element.getRecordCount() && element.pages() > 1">
+                                <div class="admin__data-grid-pager">
+                                    <button class="action-previous" type="button" data-bind="attr: {title: $t('Previous Page')}, click: previousPage, disable: isFirst()"></button>
+                                    <input class="admin__control-text" type="number" data-bind="attr: {id: ++ko.uid}, value: currentPage">
+                                    <label class="admin__control-support-text" data-bind="attr: {for: ko.uid}, text: 'of ' + pages()"></label>
+                                    <button class="action-next" type="button" data-bind="attr: {title: $t('Next Page')}, click: nextPage, disable: isLast()"></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

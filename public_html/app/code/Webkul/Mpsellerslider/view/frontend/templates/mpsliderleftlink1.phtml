@@ -1,0 +1,36 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_Mpsellerslider
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$magentoCurrentUrl = $block->getCurrentUrl();
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getMpHelper();
+/*Get current URL*/
+$isPartner= $helper->isSeller();
+$secure = $block->getIsSecure();
+
+$isSellerGroup = $helper->isSellerGroupModuleInstalled();
+/*Check if current customer is a seller or not*/
+if ($isPartner): ?>
+    <!-- if is a seller then show left link -->
+    <?php if (($isSellerGroup && $helper->isAllowedAction('mpsellerslider/mpslider/index')) || !$isSellerGroup): ?>
+        <li class="nav item
+        <?= /* @noEscape */ strpos($magentoCurrentUrl, 'mpsellerslider') ? "current":"";?>">
+            <?php
+            if (strpos($magentoCurrentUrl, 'mpsellerslider')!==false) { ?>
+                <strong><?= /* @noEscape */ __('Manage Slider Images') ?></strong>
+    <?php   } else { ?>
+                <a href="<?= /* @noEscape */
+                $block->getUrl('mpsellerslider/mpslider/index', ['_secure' => $secure]); ?>">
+                    <?= /* @noEscape */   __('Manage Slider Images') ?>
+                </a>
+            <?php } ?>
+        </li>
+    <?php endif; ?>
+<?php endif; ?>

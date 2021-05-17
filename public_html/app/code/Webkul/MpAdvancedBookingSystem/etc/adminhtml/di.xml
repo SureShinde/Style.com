@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Catalog\Block\Adminhtml\Product" type="Webkul\MpAdvancedBookingSystem\Block\Adminhtml\Catalog\Product"/>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="custom-options" xsi:type="array">
+                    <item name="class" xsi:type="string">Webkul\MpAdvancedBookingSystem\Ui\DataProvider\Product\Form\Modifier\BookingOptions</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AttributeSet">
+        <plugin
+            name="Webkul_MpAdvancedBookingSystem::afterAttributeSetModifyMeta"
+            type="Webkul\MpAdvancedBookingSystem\Plugin\Ui\DataProvider\Product\Form\Modifier\AttributeSet"
+            sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\System">
+        <plugin
+            name="Webkul_MpAdvancedBookingSystem::afterSystemModifyData"
+            type="Webkul\MpAdvancedBookingSystem\Plugin\Ui\DataProvider\Product\Form\Modifier\System"
+            sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Builder">
+        <plugin name="hotel-configurable" type="Webkul\MpAdvancedBookingSystem\Plugin\Controller\Adminhtml\Product\Builder" sortOrder="50" />
+    </type>
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+        <plugin name="hotel-configurable" type="Webkul\MpAdvancedBookingSystem\Plugin\Controller\Adminhtml\Product\Initialization\Helper\Configurable" sortOrder="60" />
+        <plugin name="hotel-updateConfigurations" type="Webkul\MpAdvancedBookingSystem\Plugin\Controller\Adminhtml\Product\Initialization\Helper\UpdateConfigurations" sortOrder="60" />
+    </type>
+    <type name="Webkul\Marketplace\Ui\DataProvider\Product\Form\Modifier\AssignSeller">
+        <plugin name="assignseller-booking" type="Webkul\MpAdvancedBookingSystem\Plugin\Ui\DataProvider\Product\Form\Modifier\AssignSeller" sortOrder="100" />
+    </type>
+</config>

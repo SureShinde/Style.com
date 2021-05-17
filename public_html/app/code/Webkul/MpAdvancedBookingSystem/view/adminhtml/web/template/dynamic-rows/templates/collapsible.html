@@ -1,0 +1,18 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<div data-bind="foreach: elems">
+    <div class="data-row wk-bk-options-container" data-bind="foreach: {data: elems, as: 'elem'}">
+        <div if="elem.template">
+            <div template="elem.template"></div>
+        </div>
+    </div>
+</div>

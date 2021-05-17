@@ -1,0 +1,190 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$amenitiesArr = [];
+$amenitiesStr = "";
+$productId = 0;
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$helper = $viewModel->getHelper();
+$params = $block->getRequest()->getParams();
+
+if (!empty($params['id'])) {
+    $product = $block->getProduct($params['id']);
+    $amenitiesStr = $product->getAmenities();
+    $productId = $product->getId();
+}
+
+if ($amenitiesStr!=="") {
+    $amenitiesArr = explode(",", $amenitiesStr);
+}
+
+$attr = $helper->getProductAttribute('amenities');
+if (!empty($attr->getOptions())): ?>
+    <div class="field">
+        <label class="label" for="wk-booking-hotel_amenities" style="width: 100% !important;">
+            <span>
+                <?= /* @noEscape */ __('Amenities')?>
+            </span>
+        </label>
+        <div class="control amenities-table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><span></span></th>
+                        <th><span><?= /* @noEscape */ __("Name") ?></span></th>
+                        <th><span><?= /* @noEscape */ __("Upload Icon") ?></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($attr->getOptions() as $option): ?>
+                    <?php if ($option->getValue()!==""): ?>
+                        <?php $imageSrc = $helper->readDirectory($productId, $option->getValue()); ?>
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                    name="product[amenities_check][<?= /* @noEscape */ $option->getValue() ?>]"
+                                    class="amenities-checkbox"
+                                    <?php if (in_array($option->getValue(), $amenitiesArr)) {?>
+                                        checked="checked"
+                                    <?php } ?>
+                                    value="<?= /* @noEscape */ $option->getValue() ?>" />
+                            </td>
+                            <td><?= /* @noEscape */ $option->getLabel() ?></td>
+                            <td class="td-amenities-icon-wrapper">
+                                <?php if ($imageSrc): ?>
+                                    <img src="<?= /* @noEscape */ $imageSrc ?>" height="50" width="50"
+                                        class="rand-img custom-view-img" />
+                                <?php else: ?>
+                                    <span class="amenity-icon"></span>
+                                <?php endif; ?>
+                                <input type="file" name="amenities_icon[<?= /* @noEscape */ $option->getValue() ?>]"
+                                    class="amenities-file" accept="image/*"
+                                    data-amenityid="<?= /* @noEscape */ $option->getValue() ?>"/>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <select name="product[amenities][]" multiple="multiple"
+                    class="multiselect custom-amenities-select" style="display:none">
+                <?php if (!empty($amenitiesArr)): ?>
+                    <?php foreach ($amenitiesArr as $amenity): ?>
+                        <option value="<?= /* @noEscape */ $amenity ?>" selected="selected"></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </div>
+    </div>
+    <script>
+        require([
+            "jquery",
+            'Magento_Ui/js/modal/alert'
+        ], function($, alert) {
+            $(".col-weight").hide();
+            var productId = "<?= /* @noEscape */ $productId ?>";
+            var uploadImgUrl = "<?= /* @noEscape */ $block->getUrl("mpadvancebooking/hotelbooking/uploadimage"); ?>";
+            var FORM_KEY = '<?= /* @noEscape */ $helper->getFormKey() ?>';
+            $("body").on("change", 'input.amenities-checkbox', function(){
+                if ($("body").find("select.custom-amenities-select")
+                    .find("option[value='"+$(this).val()+"']").length==0){
+                    $("body").find("select.custom-amenities-select").append(
+                        $('<option>').val($(this).val())
+                    );
+                }
+                if ($(this).is(":checked")) {
+                    $("body").find("select.custom-amenities-select option[value='"+$(this).val()+"']")
+                        .attr("selected","selected");
+                }else{
+                    $("body").find("select.custom-amenities-select option[value='"+$(this).val()+"']")
+                        .removeAttr("selected");
+                }
+            });
+
+            $("body").on("change", 'input.amenities-file', function(e){
+                var formdata = new FormData();
+                var currentElement = $(this);
+                if($(this).prop('files').length > 0)
+                {
+                    var file = $(this).prop('files')[0];
+                    formdata.append("amenity_icon", file);
+                    
+                }
+                productId = parseInt(productId);
+                formdata.append("form_key", FORM_KEY);
+                formdata.append("product_id", productId);
+                formdata.append("option_id", $(this).data('amenityid'));
+
+                fileSelectnew($(this), e);
+                if (productId!==0) {
+                    $.ajax({
+                        url: uploadImgUrl,
+                        showLoader: true,
+                        type: "POST",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        dataType : 'json',
+                        success: function (result) {
+                            if (result.error){
+                                currentElement.parent().find('img').remove();
+                                alert({
+                                    content: $.mage.__(result.message)
+                                });
+                            } else {
+                                // alert(result.message);
+                            }
+                        },
+                    });
+                }
+            });
+
+            function fileSelectnew (elemet, event) {
+
+                var files = event.target.files;// FileList object
+                // Loop through the FileList and render image files as thumbnails.
+                for (var i = 0, f; f = files[i]; i++) {
+                    // Only process image files.
+                    if (!f.type.match('image.*')) {
+                        continue;
+                    }
+                    var reader = new FileReader();
+                    // Closure to capture the file information.
+                    reader.onload = (function (file) {
+                        var data = {};
+                        return function (e) {
+                            if ((e.target.result).includes('data:image/')) {
+                                $(event.currentTarget).parent().find('img').remove();
+                                $(event.currentTarget).parent().find('span.amenity-icon').remove();
+                                $(event.currentTarget).parent().prepend(
+                                    $("<img>").attr('src',e.target.result).attr("height",50).attr("width",50)
+                                        .addClass("rand-img custom-view-img")
+                                );
+                            } else {
+                                alert({
+                                    content: $.mage.__('We don\'t recognize or support this file extension type.')
+                                });
+                            }
+                        };
+                    })(f);
+                    // Read in the image file as a data URL.
+                    reader.readAsDataURL(f);
+                }
+            }
+        });
+    </script>
+<?php endif; ?>

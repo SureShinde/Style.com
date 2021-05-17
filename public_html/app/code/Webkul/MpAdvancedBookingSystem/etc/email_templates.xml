@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <!-- contact us email send to admin/seller -->
+    <template id="mpadvancedbookingsystem_email_contact_template" label="Contact to Seller Regarding Product" file="contact_template.html" type="html" module="Webkul_MpAdvancedBookingSystem" area="frontend"/>
+    <!-- ask question email on hotel booking send to admin -->
+    <template id="mpadvancedbookingsystem_email_question_template" label="Customer asked a Question Regarding Hotel Booking Product" file="question_template.html" type="html" module="Webkul_MpAdvancedBookingSystem" area="frontend"/>
+</config>

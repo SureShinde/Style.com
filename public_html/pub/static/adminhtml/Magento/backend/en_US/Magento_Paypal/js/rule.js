@@ -1,0 +1,1 @@
+/var/www/style.com/public_html/vendor/magento/module-paypal/view/adminhtml/web/js/rule.js

@@ -1,0 +1,507 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+    
+    $helper = $viewModel->getHelper();
+    $jsonHelper = $viewModel->getJsonHelper();
+    $days = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ];
+    $bookingTypes = [
+        __('Disable'),
+        __('Many booking in one day'),
+        __('One booking for many days')
+    ];
+    $allStatus = [
+        'Close',
+        'Open'
+    ];
+    $params = $block->getRequest()->getParams();
+    $productId = '';
+    $startDate = "";
+    $endDate = "";
+    $status = "";
+    $selectCounts = 0;
+    $bookingInfo['type'] = 0;
+
+    if (!empty($params['id'])) {
+        $productId = $params['id'];
+
+        $bookingInfo = $helper->getBookingInfo($productId);
+        if (!empty($bookingInfo['is_booking']) && $bookingInfo['is_booking'] && !empty($bookingInfo['info'])) {
+            $bookingInfo['info']  = $helper->getJsonDecodedString(
+                $bookingInfo['info']
+            );
+        }
+
+        if ($bookingInfo['type']==1 && empty($bookingInfo['info']['time_slot'])) {
+            $bookingInfo['info'] = [];
+            $bookingInfo['info']['time_slot'] = '';
+            $bookingInfo['info']['break_time'] = '';
+            foreach ($days as $key => $day) {
+                $count = $key++;
+                if ($key%2 == 0) {
+                    $class = "wk-even";
+                } else {
+                    $class = "wk-odd";
+                }
+                $i = strtolower($day);
+                $bookingInfo['info'][$i]['start_hour'] = '';
+                $bookingInfo['info'][$i]['start_minute'] = '';
+                $bookingInfo['info'][$i]['end_hour'] = '';
+                $bookingInfo['info'][$i]['end_minute'] = '';
+                $bookingInfo['info'][$i]['status'] = '';
+            }
+        }
+
+        if ($bookingInfo['is_booking']) {
+            $startDate = $bookingInfo['start_date'];
+            $endDate = $bookingInfo['end_date'];
+        }
+
+        if ($bookingInfo['is_booking']) {
+            $status = "disabled";
+            $info = $bookingInfo['info'];
+        }
+    }
+
+    $startSelectHtml = $helper->getDaySelectHtml('info[start][day][]', '', true);
+    $endSelectHtml = $helper->getDaySelectHtml('info[end][day][]', '', true);
+    
+    ?>
+<div class="field">
+    <label class="label"><?= /* @noEscape */ __('Booking Information') ?>:</label>
+    <div class="control">
+        <div class="wk-primary-container">
+            <div class="wk-container">
+                <div class="wk-row wk-primary-row wk-text-center">
+                    <select class="select" id="booking_type" name="booking_type">
+                        <?php foreach ($bookingTypes as $key => $bookingType): ?>
+                            <?php if ($key == $bookingInfo['type']): ?>
+                                <option value="<?= /* @noEscape */ $key;?>" selected="selected">
+                                    <?= /* @noEscape */ $bookingType;?>
+                                </option>
+                            <?php else: ?>
+                                <option value="<?= /* @noEscape */ $key;?>">
+                                    <?= /* @noEscape */ $bookingType;?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="wk-border"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wk-secondary-container">
+    <div class="wk-container">
+        <div class="wk-row wk-primary-row control grouped-date grouped">
+            <div class="wk-col-2 wk-text-center date">
+                <div class="wk-row-content">
+                    <div class="wk-row-label"><?= /* @noEscape */ __("Start Date of Booking"); ?></div>
+                    <input class="wk-bs required-entry input-text" type="text"
+                        id="start_date" name="start_date" value="<?= /* @noEscape */ $startDate; ?>"
+                        data-validate='{"validate-date":{"dateFormat":"yy-mm-dd"}}'>
+                </div>
+            </div>
+            <div class="wk-col-2 wk-text-center date">
+                <div class="wk-row-content">
+                    <div class="wk-row-label"><?= /* @noEscape */ __("End Date of Booking"); ?></div>
+                    <input class="wk-bs required-entry input-text" type="text"
+                        id="end_date" name="end_date" value="<?= /* @noEscape */ $endDate; ?>"
+                        data-validate='{"validate-date":{"dateFormat":"yy-mm-dd"}}'>
+                </div>
+            </div>
+        </div>
+        <div class="wk-border"></div>
+    </div>
+</div>
+<?php if (!empty($bookingInfo['is_booking']) && $bookingInfo['is_booking']):?>
+    <?php if ($bookingInfo['type'] == 1):?>
+        <div class="wk-secondary-container wk-one-booking-container">
+            <div class="wk-container">
+                <div class="wk-row wk-primary-row wk-text-center">
+                    <button class="wk-btn" type="button"><?= /* @noEscape */ __("Add Bookings"); ?></button>
+                </div>
+                <div class="wk-border"></div>
+                <div class="wk-one-booking-panel">
+                </div>
+            </div>
+        </div>
+        <div class="wk-secondary-container wk-many-booking-container wk-display-none">
+            <div class="wk-container">
+                <div class="wk-col-2 wk-text-center">
+                    <div class="wk-row-content">
+                        <div class="wk-row-label"><?= /* @noEscape */ __("Time Slot (In Minutes)"); ?></div>
+                        <input id="time_slot" class="wk-bs wk-is required-entry validate-number input-text"
+                            type="text" name="time_slot"
+                            value="<?= /* @noEscape */ $bookingInfo['info']['time_slot']; ?>">
+                    </div>
+                </div>
+                <div class="wk-col-2 wk-text-center">
+                    <div class="wk-row-content">
+                        <div class="wk-row-label"><?= /* @noEscape */ __("Break Between Bookings"); ?></div>
+                        <input id="break_time" class="wk-bs wk-is required-entry validate-number input-text"
+                            type="text" name="break_time"
+                            value="<?= /* @noEscape */ $bookingInfo['info']['break_time']; ?>">
+                    </div>
+                </div>
+                <div class="wk-row wk-primary-row wk-text-center">
+                    <div class="wk-many-booing-table">
+                        <div class="wk-head">
+                            <div class="wk-col wk-day"><?= /* @noEscape */ __("Day"); ?></div>
+                            <div class="wk-col wk-time"><?= /* @noEscape */ __("Start Time"); ?></div>
+                            <div class="wk-col wk-time"><?= /* @noEscape */ __("End Time"); ?></div>
+                            <div class="wk-col wk-status"><?= /* @noEscape */ __("Status"); ?></div>
+                        </div>
+                        <div class="wk-body">
+                            <?php foreach ($days as $key => $day): ?>
+                                <?php
+                                    $count = $key++;
+                                if ($key%2 == 0) {
+                                    $class = "wk-even";
+                                } else {
+                                    $class = "wk-odd";
+                                }
+                                    $index = strtolower($day);
+                                ?>
+                                <div class="wk-row <?= /* @noEscape */ $class;?>">
+                                    <div class="wk-col wk-day">
+                                        <span class="wk-label"><?= /* @noEscape */ __($day); ?></span>
+                                    </div>
+                                    <div class="wk-col wk-time">
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][start_hour]"
+                                                value="<?= /* @noEscape */
+                                                    $bookingInfo['info'][$index]['start_hour']; ?>">
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][start_minute]"
+                                                value="<?= /* @noEscape */
+                                                    $bookingInfo['info'][$index]['start_minute']; ?>">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                    <div class="wk-col wk-time">
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][end_hour]"
+                                                value="<?= /* @noEscape */
+                                                    $bookingInfo['info'][$index]['end_hour']; ?>">
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][end_minute]"
+                                                value="<?= /* @noEscape */
+                                                    $bookingInfo['info'][$index]['end_minute']; ?>">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                    <div class="wk-col wk-status">
+                                        <select class="input-select"
+                                                name="info[<?= /* @noEscape */ $index; ?>][status]">
+                                            <?php foreach ($allStatus as $key => $status): ?>
+                                                <?php if ($key == $bookingInfo['info'][$index]['status']): ?>
+                                                    <option selected value="<?= /* @noEscape */ $key; ?>">
+                                                        <?= /* @noEscape */ $status; ?>
+                                                    </option>
+                                                <?php else: ?>
+                                                    <option value="<?= /* @noEscape */ $key; ?>">
+                                                        <?= /* @noEscape */ $status; ?>
+                                                    </option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php elseif ($bookingInfo['type'] == 2): ?>
+        <div class="wk-secondary-container wk-one-booking-container">
+            <div class="wk-container">
+                <div class="wk-row wk-primary-row wk-text-center">
+                    <button class="wk-btn" type="button"><?= /* @noEscape */ __("Add Bookings"); ?></button>
+                </div>
+                <div class="wk-border"></div>
+                <div class="wk-one-booking-panel">
+                    <?php if (!empty($info['start'])) { ?>
+                        <?php foreach ($info['start']['day'] as $key => $day): ?>
+                            <?php $selectCounts = $key; ?>
+                            <div class="wk-row wk-primary-row wk-text-center">
+                                <div class="wk-one-booking-col">
+                                    <div class="wk-col-wrapper">
+                                        <div class="wk-input-col">
+                                            <?= $helper->getDaySelectHtml("info[start][day][$key]", $day, true); ?>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input class="input-text" readonly type="text"
+                                                name="info[start][hour][<?= /* @noEscape */ $key;?>]"
+                                                value="<?= /* @noEscape */ $info['start']['hour'][$key]; ?>">
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input class="input-text" readonly type="text"
+                                                name="info[start][minute][<?= /* @noEscape */ $key;?>]"
+                                                value="<?= /* @noEscape */ $info['start']['minute'][$key]; ?>">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wk-one-booking-remove-col wk-text-center">
+                                    <div class="wk-remove">x</div>
+                                </div>
+                                <div class="wk-one-booking-col">
+                                    <div class="wk-col-wrapper">
+                                        <div class="wk-input-col">
+                                            <?= $helper->getDaySelectHtml(
+                                                "info[end][day][$selectCounts]",
+                                                $info['end']['day'][$key],
+                                                true
+                                            ); ?>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input class="input-text" readonly type="text"
+                                                name="info[end][hour][<?= /* @noEscape */ $key;?>]"
+                                                value="<?= /* @noEscape */ $info['end']['hour'][$key]; ?>">
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input class="input-text" readonly type="text"
+                                                name="info[end][minute][<?= /* @noEscape */ $key;?>]"
+                                                value="<?= /* @noEscape */ $info['end']['minute'][$key]; ?>">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php
+                    } ?>
+                </div>
+            </div>
+        </div>
+        <div class="wk-secondary-container wk-many-booking-container wk-display-none">
+            <div class="wk-container">
+                <div class="wk-col-2 wk-text-center">
+                    <div class="wk-row-content">
+                        <div class="wk-row-label"><?= /* @noEscape */ __("Time Slot (In Minutes)"); ?></div>
+                        <input id="time_slot" class="wk-bs wk-is input-text required-entry"
+                            type="text" name="time_slot">
+                    </div>
+                </div>
+                <div class="wk-col-2 wk-text-center">
+                    <div class="wk-row-content">
+                        <div class="wk-row-label"><?= /* @noEscape */ __("Break Between Bookings"); ?></div>
+                        <input id="break_time" class="wk-bs wk-is input-text required-entry"
+                            type="text" name="break_time">
+                    </div>
+                </div>
+                <div class="wk-row wk-primary-row wk-text-center">
+                    <div class="wk-many-booing-table">
+                        <div class="wk-head">
+                            <div class="wk-col wk-day"><?= /* @noEscape */ __("Day"); ?></div>
+                            <div class="wk-col wk-time"><?= /* @noEscape */ __("Start Time"); ?></div>
+                            <div class="wk-col wk-time"><?= /* @noEscape */ __("End Time"); ?></div>
+                            <div class="wk-col wk-status"><?= /* @noEscape */ __("Status"); ?></div>
+                        </div>
+                        <div class="wk-body">
+                            <?php foreach ($days as $key => $day): ?>
+                                <?php
+                                    $count = $key++;
+                                if ($key%2 == 0) {
+                                    $class = "wk-even";
+                                } else {
+                                    $class = "wk-odd";
+                                }
+                                    $index = strtolower($day);
+                                ?>
+                                <div class="wk-row <?= /* @noEscape */ $class;?>">
+                                    <div class="wk-col wk-day">
+                                        <span class="wk-label"><?= /* @noEscape */ __($day); ?></span>
+                                    </div>
+                                    <div class="wk-col wk-time">
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][start_hour]" value="1" >
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][start_minute]" value="0">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                    <div class="wk-col wk-time">
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][end_hour]" value="1">
+                                            <div class="wk-dec wk-obmd-h-dec">-</div>
+                                            <div class="wk-inc wk-obmd-h-inc">+</div>
+                                        </div>
+                                        <div class="wk-input-col">
+                                            <input type="text" class="wk-mbod-time input-text"
+                                                name="info[<?= /* @noEscape */ $index; ?>][end_minute]" value="0">
+                                            <div class="wk-dec wk-obmd-m-dec">-</div>
+                                            <div class="wk-inc wk-obmd-m-inc">+</div>
+                                        </div>
+                                    </div>
+                                    <div class="wk-col wk-status">
+                                        <select class="select" name="info[<?= /* @noEscape */ $index; ?>][status]">
+                                            <option value="1"><?= /* @noEscape */ __("Open"); ?></option>
+                                            <option value="2"><?= /* @noEscape */ __("Close"); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <div class="wk-secondary-container wk-one-booking-container">
+        <div class="wk-container">
+            <div class="wk-row wk-primary-row wk-text-center">
+                <button class="wk-btn" type="button"><?= /* @noEscape */ __("Add Bookings"); ?></button>
+            </div>
+            <div class="wk-border"></div>
+            <div class="wk-one-booking-panel">
+            </div>
+        </div>
+    </div>
+    <div class="wk-secondary-container wk-many-booking-container wk-display-none">
+        <div class="wk-container">
+            <div class="wk-col-2 wk-text-center">
+                <div class="wk-row-content">
+                    <div class="wk-row-label"><?= /* @noEscape */ __("Time Slot (In Minutes)"); ?></div>
+                    <input id="time_slot" class="wk-bs wk-is input-text required-entry" type="text" name="time_slot">
+                </div>
+            </div>
+            <div class="wk-col-2 wk-text-center">
+                <div class="wk-row-content">
+                    <div class="wk-row-label"><?= /* @noEscape */ __("Break Between Bookings"); ?></div>
+                    <input id="break_time" class="wk-bs wk-is input-text required-entry" type="text" name="break_time">
+                </div>
+            </div>
+            <div class="wk-row wk-primary-row wk-text-center">
+                <div class="wk-many-booing-table">
+                    <div class="wk-head">
+                        <div class="wk-col wk-day"><?= /* @noEscape */ __("Day"); ?></div>
+                        <div class="wk-col wk-time"><?= /* @noEscape */ __("Start Time"); ?></div>
+                        <div class="wk-col wk-time"><?= /* @noEscape */ __("End Time"); ?></div>
+                        <div class="wk-col wk-status"><?= /* @noEscape */ __("Status"); ?></div>
+                    </div>
+                    <div class="wk-body">
+                        <?php foreach ($days as $key => $day): ?>
+                            <?php
+                                $count = $key++;
+                            if ($key%2 == 0) {
+                                $class = "wk-even";
+                            } else {
+                                $class = "wk-odd";
+                            }
+                                $index = strtolower($day);
+                            ?>
+                            <div class="wk-row <?= /* @noEscape */ $class;?>">
+                                <div class="wk-col wk-day">
+                                    <span class="wk-label"><?= /* @noEscape */ __($day); ?></span>
+                                </div>
+                                <div class="wk-col wk-time">
+                                    <div class="wk-input-col">
+                                        <input type="text" class="wk-mbod-time input-text"
+                                            name="info[<?= /* @noEscape */ $index; ?>][start_hour]" value="1" >
+                                        <div class="wk-dec wk-obmd-h-dec">-</div>
+                                        <div class="wk-inc wk-obmd-h-inc">+</div>
+                                    </div>
+                                    <div class="wk-input-col">
+                                        <input type="text" class="wk-mbod-time input-text"
+                                            name="info[<?= /* @noEscape */ $index; ?>][start_minute]" value="0">
+                                        <div class="wk-dec wk-obmd-m-dec">-</div>
+                                        <div class="wk-inc wk-obmd-m-inc">+</div>
+                                    </div>
+                                </div>
+                                <div class="wk-col wk-time">
+                                    <div class="wk-input-col">
+                                        <input type="text" class="wk-mbod-time input-text"
+                                            name="info[<?= /* @noEscape */ $index; ?>][end_hour]" value="1">
+                                        <div class="wk-dec wk-obmd-h-dec">-</div>
+                                        <div class="wk-inc wk-obmd-h-inc">+</div>
+                                    </div>
+                                    <div class="wk-input-col">
+                                        <input type="text" class="wk-mbod-time input-text"
+                                            name="info[<?= /* @noEscape */ $index; ?>][end_minute]" value="0">
+                                        <div class="wk-dec wk-obmd-m-dec">-</div>
+                                        <div class="wk-inc wk-obmd-m-inc">+</div>
+                                    </div>
+                                </div>
+                                <div class="wk-col wk-status">
+                                    <select class="input-select" name="info[<?= /* @noEscape */ $index; ?>][status]">
+                                        <option value="1"><?= /* @noEscape */ __("Open"); ?></option>
+                                        <option value="2"><?= /* @noEscape */ __("Close"); ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php
+    $formData = [
+        "startSelectHtml" => $startSelectHtml,
+        "endSelectHtml" => $endSelectHtml,
+        "selectCounts" => $selectCounts
+    ];
+    $serializedFormData = $jsonHelper->jsonEncode($formData);
+    ?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "mpdefaultbooking": <?= /* @noEscape */ $serializedFormData ?>
+        }
+    }
+</script>

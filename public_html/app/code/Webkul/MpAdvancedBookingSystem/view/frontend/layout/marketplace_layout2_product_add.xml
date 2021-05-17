@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="seller-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_Marketplace::css/wk_block.css"/>
+        <css src="Webkul_Marketplace::css/style.css"/>
+        <css src="Webkul_Marketplace::css/product.css"/>
+        <css src="Webkul_Marketplace::css/layout.css"/>
+        <css src="jquery/fileUploader/css/jquery.fileupload-ui.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/product/style.css"/>
+        <css src="Webkul_MpAdvancedBookingSystem::css/styles-fontawesome.css"/>
+    </head>
+    <body>
+        <referenceContainer name="marketplace_product_add">
+            <block class="Webkul\Marketplace\Block\Product\Create" ifconfig="mpadvancedbookingsystem/mp_settings/enable_booking" name="mpadvancebooking_product_add" template="Webkul_MpAdvancedBookingSystem::product/booking.phtml" cacheable="false">
+                <arguments>
+                    <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                </arguments>
+                
+                <!-- Default Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_default" as="default-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/default.phtml">
+                    <arguments>
+                        <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                    </arguments>
+                </block>
+
+                <!-- Appointment Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_appointment" as="appointment-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/appointment.phtml">
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_appointment_contact" as="appointment-contact-info" template="Webkul_MpAdvancedBookingSystem::product/booking/appointment/contact.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_appointment_booking_info" as="appointment-booking-info" template="Webkul_MpAdvancedBookingSystem::product/booking/appointment/booking.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <!-- Event Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_event" as="event-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/event.phtml">
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_event_contact" as="event-contact-info" template="Webkul_MpAdvancedBookingSystem::product/booking/event/contact.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\MpAdvancedBookingSystem\Block\BookingProduct" name="mpadvancebooking_event_booking_info" as="event-booking-info" template="Webkul_MpAdvancedBookingSystem::product/booking/event/booking.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <!-- Rental Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_rental" as="rental-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/rental.phtml">
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_rental_contact" as="rental-contact-info" template="Webkul_MpAdvancedBookingSystem::product/booking/rental/contact.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_rental_booking_info" as="rental-booking-info" template="Webkul_MpAdvancedBookingSystem::product/booking/rental/booking.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <!-- Table Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_table" as="table-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/table.phtml">
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_table_contact" as="table-contact-info" template="Webkul_MpAdvancedBookingSystem::product/booking/table/contact.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_table_booking_info" as="table-booking-info" template="Webkul_MpAdvancedBookingSystem::product/booking/table/booking.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <!-- Hotel Booking Block -->
+                <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_hotel" as="hotel-booking" template="Webkul_MpAdvancedBookingSystem::product/booking/hotel.phtml">
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_hotel_contact" as="hotel-contact-info" template="Webkul_MpAdvancedBookingSystem::product/booking/hotel/contact.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_hotel_booking_info" as="hotel-booking-info" template="Webkul_MpAdvancedBookingSystem::product/booking/hotel/booking.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                    <block class="Webkul\Marketplace\Block\Product\Create" name="mpadvancebooking_hotel_amenities_info" as="hotel-amenities-info" template="Webkul_MpAdvancedBookingSystem::product/booking/hotel/amenities.phtml">
+                        <arguments>
+                            <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="marketplace_product_add_configurable">
+            <arguments>
+                <argument name="booking_view_model" xsi:type="object">Webkul\MpAdvancedBookingSystem\ViewModel\BookingView</argument>
+            </arguments>
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Webkul_MpAdvancedBookingSystem::product/edit/super/config.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

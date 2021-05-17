@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAssertAvailableImageOnProductPageActionGroup">
+        <arguments>
+            <argument name="productImage" type="string"/>
+        </arguments>
+        <seeElement selector="{{StorefrontGiftCardProductSection.ProductImg(productImage)}}" stepKey="seeAvailableProductImage"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontAssertOpenAmountElementsOnProductPageActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defOpenAmountGiftCardProduct"/>
+        </arguments>
+        <seeElement selector="{{StorefrontGiftCardProductSection.OpenAmountPlaceholder(giftCardProductData.minValue,giftCardProductData.maxValue)}}"
+                    stepKey="seeOpenAmountPlaceholder"/>
+        <seeElement selector="{{StorefrontGiftCardProductSection.AddOpenAmountValue}}" stepKey="seeAddOpenAmountValueButton"/>
+    </actionGroup>
+
+
+    <actionGroup name="StorefrontAddGiftCardProductToCartActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+        </arguments>
+        <click selector="{{StorefrontGiftCardProductSection.ProductImg(giftCardProductData.image)}}" stepKey="selectProductImage"/>
+        <seeElement selector="{{StorefrontGiftCardProductSection.SelectedProductImg(giftCardProductData.selectedImage)}}" stepKey="seeSelectedProductImage"/>
+        <fillField selector="{{StorefrontGiftCardProductSection.RecipientName}}" userInput="{{giftCardProductData.recipientName}}" stepKey="enterRecipientName"/>
+        <fillField selector="{{StorefrontGiftCardProductSection.RecipientEmail}}" userInput="{{giftCardProductData.recipientEmail}}" stepKey="enterRecipientEmail"/>
+        <click selector="{{StorefrontProductPageSection.AddToCartBtn}}" stepKey="addToCart"/>
+        <waitForPageLoad stepKey="waitForProductAdded"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.SuccessMsg}}" stepKey="checkProductAdded"/>
+    </actionGroup>
+
+    <actionGroup name="StorefrontAddOpenAmountGiftCardProductToCartActionGroup" extends="StorefrontAddGiftCardProductToCartActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defOpenAmountGiftCardProduct"/>
+        </arguments>
+        <fillField selector="{{StorefrontGiftCardProductSection.OpenAmountField}}" userInput="{{giftCardProductData.amount}}"
+                   after="seeSelectedProductImage" stepKey="enterGiftCardProductAmount"/>
+        <click selector="{{StorefrontGiftCardProductSection.AddOpenAmountValue}}" after="enterGiftCardProductAmount" stepKey="addAmount"/>
+        <see selector="{{StorefrontProductInfoMainSection.price}}" after="addAmount"
+             userInput="{{giftCardProductData.amount}}" stepKey="seeCartSubtotal"/>
+    </actionGroup>
+
+    <!--check gift card product data on checkout-->
+    <actionGroup name="StorefrontCheckCardCodeProductOnCheckoutActionGroup">
+        <arguments>
+            <argument name="giftCardProductData" defaultValue="defaultGiftCardProduct"/>
+        </arguments>
+        <amOnPage url="{{CheckoutPaymentsPage.url}}" stepKey="navigateToStorefrontCheckoutPaymentsPage"/>
+        <waitForPageLoad stepKey="waitForCheckoutPageLoad"/>
+        <see selector="{{StorefrontCheckoutSection.CartSubtotal}}" userInput="{{giftCardProductData.subtotalCheckout}}" stepKey="seeCartSubtotal"/>
+        <see selector="{{FrontCartSection.OrderTotal}}" userInput="{{giftCardProductData.totalCheckout}}" stepKey="seeOrderTotal"/>
+        <conditionalClick selector="{{CheckoutOrderSummarySection.miniCartTab}}"
+                          dependentSelector="{{CheckoutOrderSummarySection.productItemName}}"
+                          visible="false" stepKey="openMiniCartTab"/>
+        <waitForElementVisible selector="{{CheckoutOrderSummarySection.productItemName}}" stepKey="waitForProductNameOnCheckoutPage"/>
+        <see selector="{{CheckoutOrderSummarySection.productItemName}}" userInput="{{giftCardProductData.name}}" stepKey="assertProductNameOnOrderSummaryBlock"/>
+        <see selector="{{CheckoutOrderSummarySection.productItemPrice}}" userInput="{{giftCardProductData.priceCheckout}}" stepKey="seeProductPrice"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_GiftCard
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="StorefrontOrderViewSection">
+        <element name="GiftCard" type="text" selector=".amgiftcard .amount"/>
+        <element name="GrandTotal" type="text" selector=".grand_total .amount"/>
+        <element name="ProductName" type="text" selector="//*[@data-th='Product Name']"/>
+        <element name="ProductSKU" type="text" selector="//*[@data-th='SKU']"/>
+        <element name="ProductPrice" type="text" selector="//*[@data-th='Price']"/>
+    </section>
+</sections>

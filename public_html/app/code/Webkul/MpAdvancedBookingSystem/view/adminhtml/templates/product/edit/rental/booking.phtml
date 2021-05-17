@@ -1,0 +1,523 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$product = $block->getProduct();
+$helper = $this->helper(\Webkul\MpAdvancedBookingSystem\Helper\Data::class);
+$bookingAvailableFrom = '';
+$bookingAvailableTo = '';
+$productSetId = '';
+$availableQty = !empty($product['available_qty']) ? $product['available_qty'] : '';
+$bookingSlotData = $helper->getJsonEcodedString([]);
+if (!empty($product) && !empty($product['entity_id'])) {
+    if ($product['booking_available_from'] != 'Invalid date') {
+        $bookingAvailableFrom = $product['booking_available_from'];
+    }
+    if ($product['booking_available_to'] != 'Invalid date') {
+        $bookingAvailableTo = $product['booking_available_to'];
+    }
+    $bookingInfo = $helper->getBookingInfo($product->getId());
+    if (!empty($bookingInfo['available_qty'])) {
+        $availableQty = $bookingInfo['available_qty'];
+    }
+    if (!empty($bookingInfo['info'])) {
+        $bookingSlotData = $bookingInfo['info'];
+    }
+    $productSetId = $product->getAttributeSetId();
+    $rentalType = $helper->getProductAttributeSetIdByLabel('Rental Booking');
+    if ($productSetId != $rentalType) {
+        $bookingSlotData = [];
+        $bookingSlotData = $helper->getJsonEcodedString($bookingSlotData);
+    }
+}
+?>
+<?php
+$optionId = '';
+$optionValues = [];
+$optionDailyValId = '';
+$optionDailyPrice = '';
+$optionHourlyValId = '';
+$optionHourlyPrice = !empty($product['options'][0]['values'][1]['price'])
+                        ? $product['options'][0]['values'][1]['price']
+                        : '';
+if (!empty($product) && !empty($product['entity_id'])) {
+    // preparing custom option data
+    $optionsArrData = $this->helper(
+        \Webkul\MpAdvancedBookingSystem\Helper\Options::class
+    )->getRentalProductOptions($product);
+    $options = $optionsArrData['options'];
+    $optionIndex = $optionsArrData['option_index'];
+    
+    if (!empty($options[$optionIndex]['option_id'])) {
+        $optionValues = $options[$optionIndex]['values'];
+        $optionId = $options[$optionIndex]['option_id'];
+    }
+    
+    if (isset($optionsArrData['option_daily_val_index'])) {
+        $optionDailyValIndex = $optionsArrData['option_daily_val_index'];
+        if (!empty($optionValues[$optionDailyValIndex]['option_type_id'])) {
+            $optionDailyValId = $optionValues[$optionDailyValIndex]['option_type_id'];
+            $optionDailyPrice = $optionValues[$optionDailyValIndex]['price'];
+        }
+    }
+    
+    if (isset($optionsArrData['option_hourly_val_index'])) {
+        $optionHourlyValIndex = $optionsArrData['option_hourly_val_index'];
+        if (!empty($optionValues[$optionHourlyValIndex]['option_type_id'])) {
+            $optionHourlyValId = $optionValues[$optionHourlyValIndex]['option_type_id'];
+            $optionHourlyPrice = $optionValues[$optionHourlyValIndex]['price'];
+        }
+    }
+}
+?>
+<?php if ($optionId == '') { ?>
+    <input type="hidden" name="product[options][0][record_id]" value="0" data-form-part="product_form"/>
+<?php } ?>
+<input type="hidden" name="product[options][0][option_id]" value="<?= /* @noEscape */ $optionId?>"
+        data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][sort_order]" value="1" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][title]" value="Choose Rent Type" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][is_require]" value="1" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][price]" value="" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][price_type]" value="fixed" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][sku]" value="" data-form-part="product_form"/>
+<input type="hidden" name="product[options][0][type]" value="radio" data-form-part="product_form"/>
+<div class="admin__field _required" data-index="available_qty">
+    <label class="admin__field-label" for="wk-available-qt">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Available Qty to Rent'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <input class="admin__control-text required-entry validate-integer" type="text"
+               data-form-part="product_form" name="product[available_qty]"
+               id="wk-available-qty" value="<?= $block->escapeHtml($availableQty)?>">
+    </div>
+</div>
+<div class="admin__field _required" data-index="renting_type">
+    <label class="admin__field-label" for="wk-renting-type">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Renting Type'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <select class="admin__control-select required-select" type="select"
+                data-form-part="product_form" name="product[renting_type]" id="wk-renting-type">
+            <option value="3" <?php if ($product['renting_type'] == 3) { echo 'selected="selected"'; }?>>
+                <?= $block->escapeHtml(__('Hourly Basis'))?>
+            </option>
+            <option value="1" <?php if ($product['renting_type'] == 1) { echo 'selected="selected"'; }?>>
+                <?= $block->escapeHtml(__('Daily Basis'))?>
+            </option>
+            <option value="2" <?php if ($product['renting_type'] == 2) { echo 'selected="selected"'; }?>>
+                <?= $block->escapeHtml(__('Both(Hourly + Daily Basis)'))?>
+            </option>
+        </select>
+    </div>
+</div>
+<div class="admin__fieldset" id="wk-daily-info-container">
+</div>
+
+<div class="admin__field">
+    <label class="admin__field-label" for="wk-available-every-week">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Available Always'))?>
+        </span>
+    </label>
+    <div class="admin__field-control">
+        <div class="admin__actions-switch" data-role="switcher">
+            <input type="checkbox" class="admin__actions-switch-checkbox"
+                   data-form-part="product_form" id="wk-available-every-week"
+                   name="product[available_every_week]"
+                   value="<?= $block->escapeHtml($product['available_every_week'])?>">
+            <label class="admin__actions-switch-label" for="wk-available-every-week">
+                <span class="admin__actions-switch-text" data-bind="
+                    attr: {
+                        'data-text-on': toggleLabels.on,
+                        'data-text-off': toggleLabels.off
+                    }" data-text-on="Yes" data-text-off="No"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="admin__field _required wk-booking-date-block"
+        <?php if ($product['available_every_week']) { ?>style="display: none;"<?php }?>>
+    <label class="admin__field-label" for="wk-booking-available-from">
+        <span data-config-scope="[GLOBAL]">
+            <?= $block->escapeHtml(__('Available From'))?>
+        </span>
+    </label>
+    <div class="admin__field-control admin__control-grouped-date admin__control-grouped">
+        <div class="admin__field admin__field-date">
+            <div class="admin__field-control">
+                <input class="admin__control-text required-entry" data-form-part="product_form"
+                       id="wk-booking-available-from" type="text" name="product[booking_available_from]"
+                       value="<?= /* @noEscape */ $bookingAvailableFrom?>" readonly/>
+            </div>
+        </div>
+        <div class="admin__field admin__field-date">
+            <label class="admin__field-label">
+                <span><?= $block->escapeHtml(__('To'))?></span>
+            </label>
+            <div class="admin__field-control">
+                <input class="admin__control-text required-entry" data-form-part="product_form"
+                       id="wk-booking-available-to" type="text" name="product[booking_available_to]"
+                       value="<?= /* @noEscape */ $bookingAvailableTo?>" readonly/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="admin__fieldset" id="wk-hourly-info-container">
+</div>
+<script id="wk-booking-daily-booking-container-template" type="text/x-magento-template">
+    <div class="admin__field _required" data-index="daily_price">
+        <label class="admin__field-label" for="wk-daily-price">
+            <span data-config-scope="[GLOBAL]">
+                <?= $block->escapeHtml(__('Daily Price'))?>
+            </span>
+        </label>
+        <div class="admin__field-control">
+            <input class="admin__control-text required-entry validate-number" type="price"
+                   data-form-part="product_form" name="product[options][0][values][0][price]"
+                   id="wk-daily-price" value="<?= /* @noEscape */ $optionDailyPrice?>">
+            <?php if ($optionDailyValId == '') { ?>
+                <input type="hidden" name="product[options][0][values][0][record_id]"
+                       value="0" data-form-part="product_form"/>
+            <?php } else { ?>
+                <input type="hidden" name="product[options][0][values][0][option_type_id]"
+                       value="<?= /* @noEscape */ $optionDailyValId?>" data-form-part="product_form"/>
+            <?php } ?>
+            <input type="hidden" name="product[options][0][values][0][title]" value="Daily Basis"
+                    data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][0][price_type]" value="fixed"
+                    data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][0][sort_order]" value="1"
+                    data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][0][sku]" value=""
+                    data-form-part="product_form"/>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-hourly-booking-container-template" type="text/x-magento-template">
+    <div class="admin__field _required" data-index="hourly_price">
+        <label class="admin__field-label" for="wk-hourly-price">
+            <span data-config-scope="[GLOBAL]">
+                <?= $block->escapeHtml(__('Hourly Price'))?>
+            </span>
+        </label>
+        <div class="admin__field-control">
+            <input class="admin__control-text required-entry validate-number" type="price"
+                    data-form-part="product_form" name="product[options][0][values][1][price]"
+                    id="wk-hourly-price" value="<?= /* @noEscape */ $optionHourlyPrice?>">
+            <?php if ($optionHourlyValId == '') { ?>
+                <input type="hidden" name="product[options][0][values][1][record_id]" value="0"
+                        data-form-part="product_form"/>
+            <?php } else { ?>
+                <input type="hidden" name="product[options][0][values][1][option_type_id]"
+                        value="<?= /* @noEscape */ $optionHourlyValId?>" data-form-part="product_form"/>
+            <?php } ?>
+            <input type="hidden" name="product[options][0][values][1][title]"
+                    value="Hourly Basis" data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][1][price_type]"
+                    value="fixed" data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][1][sort_order]"
+                    value="2" data-form-part="product_form"/>
+            <input type="hidden" name="product[options][0][values][1][sku]"
+                    value="" data-form-part="product_form"/>
+        </div>
+    </div>
+    <h3 style="margin-left: 6rem;"><?= $block->escapeHtml(__('Hourly Renting Information'))?></h3>
+    <div class="admin__scope-old">
+        <div class="admin__field _required" data-index="show_contact_btn">
+            <label class="admin__field-label" for="wk-prevent-scheduling-before">
+                <span data-config-scope="[GLOBAL]">
+                    <?= $block->escapeHtml(__('Prevent Scheduling(Mins)'))?>
+                </span>
+            </label>
+            <div class="admin__field-control">
+                <input class="admin__control-text required-entry validate-digits" type="text"
+                        data-form-part="product_form" name="product[prevent_scheduling_before]"
+                        id="wk-prevent-scheduling-before"
+                        value="<?= $block->escapeHtml($product['prevent_scheduling_before'])?>">
+            </div>
+        </div>
+        <div class="admin__field">
+            <label class="admin__field-label" for="wk-slot-all-days">
+                <span data-config-scope="[GLOBAL]">
+                    <?= $block->escapeHtml(__('Same Hours for All Days'))?>
+                </span>
+            </label>
+            <div class="admin__field-control">
+                <div class="admin__actions-switch" data-role="switcher">
+                    <input type="checkbox" class="admin__actions-switch-checkbox"
+                            data-form-part="product_form" id="wk-slot-all-days"
+                            name="product[slot_for_all_days]"
+                            value="<?= $block->escapeHtml($product['slot_for_all_days'])?>">
+                    <label class="admin__actions-switch-label" for="wk-slot-all-days">
+                        <span class="admin__actions-switch-text" data-bind="
+                            attr: {
+                                'data-text-on': toggleLabels.on,
+                                'data-text-off': toggleLabels.off
+                            }" data-text-on="Yes" data-text-off="No"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="admin__field" id="wk-slot-has-quantity-row">
+            <label class="admin__field-label" for="wk-slot-has-quantity">
+                <span data-config-scope="[GLOBAL]">
+                    <?= $block->escapeHtml(__('Hours has Quantity'))?>
+                </span>
+            </label>
+            <div class="admin__field-control">
+                <div class="admin__actions-switch" data-role="switcher">
+                    <input type="checkbox" class="admin__actions-switch-checkbox"
+                        data-form-part="product_form" id="wk-slot-has-quantity"
+                        name="product[slot_has_quantity]"
+                        value="<?= $block->escapeHtml($product['slot_has_quantity'])?>">
+                    <label class="admin__actions-switch-label" for="wk-slot-has-quantity">
+                        <span class="admin__actions-switch-text" data-bind="
+                            attr: {
+                                'data-text-on': toggleLabels.on,
+                                'data-text-off': toggleLabels.off
+                            }" data-text-on="Yes" data-text-off="No"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-same-slot-container-template" type="text/x-magento-template">
+    <div class="admin__field wk-booking-slot-row _show">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Hourly Booking Information'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container wk-bk-hide" id="wk-bk-label-slot-box-container1">
+        </div>
+        <div class="admin__collapsible-content _show">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container1">                
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="1">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-slot-container-template" type="text/x-magento-template">
+    <div class="admin__field wk-booking-slot-row _show">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Monday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container wk-bk-hide" id="wk-bk-label-slot-box-container1">
+        </div>
+        <div class="admin__collapsible-content _show">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container1">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="1">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Tuesday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container2">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container2">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="2">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Wednesday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container3">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container3">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="3">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Thursday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container4">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container4">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="4">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Friday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container5">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container5">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="5">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Saturday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container6">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container6">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="6">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="admin__field wk-booking-slot-row">
+        <label class="admin__field-label wk-booking-slot-container-label">
+            <span>
+                <?= $block->escapeHtml(__('Sunday'))?>
+            </span>
+        </label>
+        <div class="wk-bk-label-slot-box-container" id="wk-bk-label-slot-box-container7">
+        </div>
+        <div class="admin__collapsible-content wk-bk-hide">
+            <div class="wk-booking-slot-container" id="wk-booking-slot-container7">
+            </div>
+            <div class="wk-booking-page-actions">
+                <button class="action-primary wk-booking-row-add-btn"
+                        type="button" data-role="action" data-day-type="7">
+                    <span><?= $block->escapeHtml(__('Add More'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-slot-template" type="text/x-magento-template">
+    <div class="admin__field _required wk-booking-slot-block" id="wk-booking-slot-block<%- data.id %><%- data.index %>">
+        <label class="admin__field-label">
+            <span class="wk-booking-slot-label-span"><?= $block->escapeHtml(__('Can Book From'))?></span>
+        </label>
+        <div class="admin__field-control admin__control-grouped-date admin__control-grouped">
+            <div class="admin__field admin__field-date">
+                <div class="admin__field-control">
+                    <input class="admin__control-text required-entry wk-booking-slot-picker"
+                        data-form-part="product_form" type="text"
+                        name="product[slot_data][<%- data.id %>][<%- data.index %>][from]"
+                        value="<%- data.from %>" readonly>
+                </div>
+            </div>
+            <div class="admin__field admin__field-date wk-booking-row-field-date">
+                <label class="admin__field-label">
+                    <span><?= $block->escapeHtml(__('To'))?></span>
+                </label>
+                <div class="admin__field-control">
+                    <input class="admin__control-text required-entry wk-booking-slot-picker"
+                        data-form-part="product_form" type="text"
+                        name="product[slot_data][<%- data.id %>][<%- data.index %>][to]"
+                        value="<%- data.to %>" readonly>
+                </div>
+            </div>
+            <div class="admin__field admin__field-date wk-booking-row-field-date 
+                        wk-booking-row-field-qty <%- data.qtyclass %>">
+                <label class="admin__field-label">
+                    <span><?= $block->escapeHtml(__('Qty'))?></span>
+                </label>
+                <div class="admin__field-control">
+                    <input class="admin__control-text <%- data.qtyfieldclass %> wk-booking-qty-field"
+                        data-form-part="product_form" type="text"
+                        name="product[slot_data][<%- data.id %>][<%- data.index %>][qty]"
+                        value="<%- data.qty %>">
+                </div>
+            </div>
+            <div class="wk-booking-row-btn-container">
+                <button type="button" class="action-basic wk-booking-row-remove-btn" data-index="button_related">
+                    <span><?= $block->escapeHtml(__('Remove'))?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="wk-booking-label-slot-template" type="text/x-magento-template">
+    <div class="wk-bk-label-slot-box" id="wk-bk-label-slot-box<%- data.id %><%- data.index %>">
+        <%- data.from %> - <%- data.to %><span class="wk-span-label-qty">, QTY - <%- data.qty %></span>
+        <span class="wk-bk-label-slot-box-close"></span>
+    </div>
+</script>
+<?php
+$jsData = [
+    'rentingType' => $product['renting_type'],
+    'slotDataType' => $product['slot_for_all_days'],
+    'slotData' => $bookingSlotData,
+    'availableEveryWeek' => $product['available_every_week'],
+    'slotHasQuantity' => $product['slot_has_quantity']
+];
+$encodedJsData = $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($jsData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "rentalbooking": <?= /* @noEscape */ $encodedJsData; ?>
+        }
+    }
+</script>
+<script>
+    jQuery('body').trigger('contentUpdated');
+</script>

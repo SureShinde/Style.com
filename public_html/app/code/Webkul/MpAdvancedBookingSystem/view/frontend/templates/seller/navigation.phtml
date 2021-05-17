@@ -1,0 +1,82 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$_helper = $this->helper(\Webkul\Marketplace\Helper\Data::class);
+$isPartner = $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+$isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+$secure = $block->getRequest()->isSecure(); ?>
+
+<?php if ($isPartner) { ?>
+    <?php if (($isSellerGroup && $_helper->isAllowedAction('mpadvancebooking/product/create'))
+        || ($isSellerGroup && $_helper->isAllowedAction('mpadvancebooking/product/bookinglist'))
+        || ($isSellerGroup && $_helper->isAllowedAction('mpadvancebooking/hotelbooking/questions'))
+        || !$isSellerGroup
+    ) { ?>
+        <li class="wk-mp-item-product level-0 <?= /* @noEscape */
+                strpos($magentoCurrentUrl, 'mpadvancebooking/')? "current active":"";?>"
+            id="wk-mp-menu-product">
+            <a href="#" onclick="return false;" class="">
+                <span><?= /* @noEscape */ __('Booking Products')?></span>
+            </a>
+            <div class="wk-mp-submenu">
+                <strong class="wk-mp-submenu-title"><?= /* @noEscape */ __('Booking Products')?></strong>
+                <a href="#" class="action-close _close" data-role="wk-mp-close-submenu"></a>
+                <ul>
+                    <li data-ui-id="menu-webkul-marketplace-menu" class="item-menu  parent  level-1">
+                        <strong class="wk-mp-submenu-group-title">
+                            <span><?= /* @noEscape */ __('Menu')?></span>
+                        </strong>
+                        <div class="wk-mp-submenu">
+                            <ul>
+                            <?php if (($isSellerGroup && $_helper->isAllowedAction('mpadvancebooking/product/create'))
+                                || !$isSellerGroup
+                            ) { ?>
+                                <li class="level-2">
+                                    <a href="<?= /* @noEscape */
+                                        $block->getUrl('mpadvancebooking/product/create', ['_secure' => $secure]); ?>">
+                                        <span><?= /* @noEscape */ __('Add Booking Product') ?></span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            <?php if (($isSellerGroup &&
+                                $_helper->isAllowedAction('mpadvancebooking/product/bookinglist'))
+                                || !$isSellerGroup
+                            ) { ?>
+                                <li class="level-2">
+                                    <a href="<?= /* @noEscape */
+                                    $block->getUrl('mpadvancebooking/product/bookinglist', ['_secure' => $secure]); ?>">
+                                        <span><?= /* @noEscape */ __('Booking Products List') ?></span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            <?php if (($isSellerGroup &&
+                                $_helper->isAllowedAction('mpadvancebooking/hotelbooking/questions'))
+                                || !$isSellerGroup
+                            ) { ?>
+                                <li class="level-2">
+                                    <a href="<?= /* @noEscape */
+                                                $block->getUrl(
+                                                    'mpadvancebooking/hotelbooking/questions',
+                                                    ['_secure' => $secure]
+                                                ); ?>">
+                                        <span><?= /* @noEscape */ __('View Questions') ?></span>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    <?php } ?>
+<?php } ?>

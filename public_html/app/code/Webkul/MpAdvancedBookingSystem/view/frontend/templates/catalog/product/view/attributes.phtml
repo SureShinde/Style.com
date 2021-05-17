@@ -1,0 +1,49 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAdvancedBookingSystem
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Attributes
+ */
+?>
+<?php
+$viewModel = $block->getBookingViewModel();
+if ($viewModel === null) {
+    $viewModel = $block->getLayout()->createBlock(
+        \Webkul\MpAdvancedBookingSystem\Block\GetViewModel::class
+    )->getBookingViewModel();
+}
+
+$_helper = $viewModel->getOutputHelper();
+$_product = $block->getProduct();
+?>
+<?php if ($_additional = $block->getAdditionalData()): ?>
+    <div class="additional-attributes-wrapper table-wrapper">
+        <table class="data table additional-attributes" id="product-attribute-specs-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('More Information')) ?></caption>
+            <tbody>
+            <?php foreach ($_additional as $_data): ?>
+                <?php if ($_data['code']!=="amenities"): ?>
+                    <tr>
+                        <th class="col label" scope="row">
+                            <?= $block->escapeHtml(__($_data['label'])) ?>
+                        </th>
+                        <td class="col data" data-th="<?= $block->escapeHtml(__($_data['label'])) ?>">
+                            <?=/* @noEscape */ $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif;?>
